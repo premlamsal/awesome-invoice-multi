@@ -1,0 +1,7 @@
+
+function showLoadingText(){
+	
+}
+function hideLoadingText(){
+
+}
