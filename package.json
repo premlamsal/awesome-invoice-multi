@@ -11,31 +11,31 @@
     },
     "devDependencies": {
         "axios": "^0.19.2",
-        "bootstrap": "^4.5.0",
+        "bootstrap": "^4.5.2",
         "cross-env": "^5.1",
         "jquery": "^3.5.1",
         "laravel-mix": "^4.0.7",
-        "lodash": "^4.17.13",
+        "lodash": "^4.17.20",
         "popper.js": "^1.16.1",
         "resolve-url-loader": "^2.3.1",
-        "sass": "^1.26.8",
+        "sass": "^1.26.11",
         "sass-loader": "7.*",
-        "vue": "^2.6.11",
-        "vue-template-compiler": "^2.6.10"
+        "vue": "^2.6.12",
+        "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
         "@alfsnd/vue-bootstrap-select": "^0.4.4",
-        "bootstrap-vue": "^2.15.0",
+        "bootstrap-vue": "^2.17.3",
         "chart.js": "^2.9.3",
         "cxlt-vue2-toastr": "^1.1.1",
         "vue-bootstrap-datetimepicker": "^5.0.1",
-        "vue-chartjs": "^3.5.0",
+        "vue-chartjs": "^3.5.1",
         "vue-cookie": "^1.1.4",
         "vue-html-to-paper": "^1.3.1",
         "vue-moment": "^4.1.0",
         "vue-progressbar": "^0.7.5",
-        "vue-router": "^3.3.2",
-        "vue-sweetalert2": "^3.0.5",
-        "vuex": "^3.4.0"
+        "vue-router": "^3.4.5",
+        "vue-sweetalert2": "^3.0.8",
+        "vuex": "^3.5.1"
     }
 }
