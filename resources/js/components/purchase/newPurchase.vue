@@ -504,10 +504,7 @@ export default {
         Vue.set(this.items[index], "unit_id", unit_id);
 
         Vue.set(
-          this.items[index],
-          "price",
-          parseFloat(price) +
-          (parseFloat(price) * parseFloat(this.store.profit_percentage)) / 100
+          this.items[index], "price" , parseFloat(price)
         );
 
 
