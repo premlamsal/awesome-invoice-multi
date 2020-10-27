@@ -165,7 +165,9 @@ class PurchaseController extends Controller
                         }
 
                     }
-                    $jsonResponse=['msg' => 'Failed Saving the Data to the Stock.', 'status' => 'error'];
+                    else{
+                    $jsonResponse=['msg' => 'Failed Saving the Data to the Stock.', 'status' => 'error1'];
+                    }
 
                 } else {
                     $StockHistory = new StockHistory();
@@ -190,13 +192,16 @@ class PurchaseController extends Controller
 
                         }
                     }
-                    $jsonResponse=['msg' => 'Failed Saving the Data to the Stock History.', 'status' => 'error'];
+                    else{
+                    $jsonResponse=['msg' => 'Failed Saving the Data to the Stock History.', 'status' => 'error2'];
+                        
+                    }
 
 
                 }
             } else {
 
-                    $jsonResponse=['msg' => 'Failed Saving the Data to the Stock.', 'status' => 'error'];
+                    $jsonResponse=['msg' => 'Failed Saving the Data to the Stock.', 'status' => 'error3'];
 
 
             }

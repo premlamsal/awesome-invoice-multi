@@ -145,7 +145,7 @@
                   </div>
                 </div>
                 <div class="col-md-1">
-                  <input type="number" class="form-control" placeholder="Quantity" v-model="item.quantity" v-on:keydown="checkQuantityInStock(index)" @change="checkQuantityInStock(index)" :class="{'is-invalid':errors['items.' + index + '.quantity']}" />
+                  <input type="number" class="form-control" placeholder="Quantity" v-model="item.quantity" :class="{'is-invalid':errors['items.' + index + '.quantity']}" />
                 </div>
                 <div class="col-md-1">
                   <template v-if="units.length>0">
