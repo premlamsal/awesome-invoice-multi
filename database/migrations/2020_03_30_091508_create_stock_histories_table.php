@@ -14,9 +14,11 @@ class CreateStockHistoriesTable extends Migration
     public function up()
     {
         Schema::create('stock_histories', function (Blueprint $table) {
+            
             $table->bigIncrements('id');
 
             $table->unsignedBigInteger('product_id');
+            
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
 
             $table->date('date');
@@ -24,7 +26,9 @@ class CreateStockHistoriesTable extends Migration
             $table->decimal('quantity');
 
             $table->unsignedBigInteger('store_id');
+            
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
+            
             $table->timestamps();
 
         });

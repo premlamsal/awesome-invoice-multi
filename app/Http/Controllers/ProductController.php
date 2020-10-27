@@ -42,7 +42,8 @@ class ProductController extends Controller
         $this->validate($request, [
             'name'           => 'required|string|max:200',
             'description'    => 'required|string|max:1000',
-            'price'          => 'required|numeric ',
+            'cp'          => 'required|numeric ',
+            'sp'          => 'required|numeric ',
             'product_cat_id' => 'required|numeric ',
             'unit_id'        => 'required|numeric ',
             'image'          => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
@@ -69,7 +70,8 @@ class ProductController extends Controller
         $product->product_cat_id    = $request->input('product_cat_id');
         $product->unit_id           = $request->input('unit_id');
         $product->description       = $request->input('description');
-        $product->price             = $request->input('price');
+        $product->cp             = $request->input('cp');
+        $product->sp             = $request->input('sp');
         $product->store_id          = $store_id;
         $product->custom_product_id = $new_count_product_id; //asign new increase product custom id
 
@@ -136,7 +138,8 @@ class ProductController extends Controller
         $this->validate($request, [
             'name'           => 'required|string|max:200',
             'description'    => 'required|string|max:1000',
-            'price'          => 'required|numeric ',
+            'cp'          => 'required|numeric ',
+            'sp'          => 'required|numeric ',
             'product_cat_id' => 'required|numeric ',
             'unit_id'        => 'required|numeric ',
             'id'             => 'required|numeric ',
@@ -150,7 +153,8 @@ class ProductController extends Controller
         $product->product_cat_id = $request->input('product_cat_id');
         $product->unit_id        = $request->input('unit_id');
         $product->description    = $request->input('description');
-        $product->price          = $request->input('price');
+        $product->cp          = $request->input('cp');
+        $product->sp          = $request->input('sp');
 
         if ($request->hasFile('image')) {
 

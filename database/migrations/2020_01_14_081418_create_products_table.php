@@ -23,7 +23,9 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('product_cat_id');
             $table->foreign('product_cat_id')->references('id')->on('product_categories')->onDelete('cascade');
 
-            $table->decimal('price')->nullable();
+            $table->decimal('cp')->nullable();
+
+            $table->decimal('sp')->nullable();
             
             $table->unsignedBigInteger('unit_id');
             $table->foreign('unit_id')->references('id')->on('units')->onDelete('cascade');
