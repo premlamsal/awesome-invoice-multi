@@ -501,15 +501,15 @@ class InvoiceController extends Controller
 
         $this->authorize('hasPermission', 'edit_invoice');
 
-        $user = User::findOrFail(Auth::user()->id);
+        // $user = User::findOrFail(Auth::user()->id);
 
-        $store_id = $user->stores[0]->id;
+        // $store_id = $user->stores[0]->id;
 
         $key = $request->input('key');
 
         $value = $request->input('value');
 
-        $invoice             = Invoice::findOrFail($key)->where('store_id', $store_id);
+        $invoice             = Invoice::findOrFail($key);
         $invoice->status     = $value;
         $invoice->updated_at = time();
 
@@ -522,5 +522,6 @@ class InvoiceController extends Controller
         }
 
     }
+
 
 }

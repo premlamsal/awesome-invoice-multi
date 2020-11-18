@@ -248,6 +248,7 @@ export default {
       this.autoCompleteTable();
     },
      updateStatus(event,key){
+      
       this.tempStatus[key]=event;
 
       let formData=new FormData();

@@ -127,8 +127,6 @@ Route::put('changeInvoiceStatus','InvoiceController@changeInvoiceStatus');
 
 
 
-
-
 //List Units
 Route::get('units','UnitController@index');
 

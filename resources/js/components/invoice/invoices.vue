@@ -62,12 +62,12 @@
                 </td>
         
             
-               <td v-if="(purchase.status==='Paid')">
-                       <toggle-button v-bind:status="true" @statusChanges ="updateStatus($event,purchase.id)"/> 
+               <td v-if="(invoice.status==='Paid')">
+                       <toggle-button v-bind:status="true" @statusChanges ="updateStatus($event,invoice.id)"/> 
                 </td>
                 
-                <td v-else-if="(purchase.status==='To Pay')">
-                       <toggle-button v-bind:status="false" @statusChanges ="updateStatus($event,purchase.id)"/> 
+                <td v-else-if="(invoice.status==='To Pay')">
+                       <toggle-button v-bind:status="false" @statusChanges ="updateStatus($event,invoice.id)"/> 
                 </td>
 
                 <td>{{invoice.updated_at | moment("from", "now")}}</td>
@@ -247,12 +247,16 @@ export default {
     searchTableBtn() {
       this.autoCompleteTable();
     },
+
      updateStatus(event,key){
       this.tempStatus[key]=event;
 
       let formData=new FormData();
+
       formData.append("_method","PUT");
+      
       formData.append("key",key);
+      
       if(event==true){
         formData.append("value","Paid");  
       }

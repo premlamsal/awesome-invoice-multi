@@ -583,15 +583,15 @@ class PurchaseController extends Controller
 
         $this->authorize('hasPermission', 'edit_purchase');
 
-        $user = User::findOrFail(Auth::user()->id);
+        // $user = User::findOrFail(Auth::user()->id);
 
-        $store_id = $user->stores[0]->id;
+        // $store_id = $user->stores[0]->id;
 
         $key = $request->input('key');
 
         $value = $request->input('value');
 
-        $purchase             = Purchase::findOrFail($key)->where('store_id',$store_id);
+        $purchase             = Purchase::findOrFail($key);
         $purchase->status     = $value;
         $purchase->updated_at = time();
 
