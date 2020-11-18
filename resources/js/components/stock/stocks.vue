@@ -41,7 +41,7 @@
                 <th>Product Name</th>
                 <th>Quantity</th>
                 <th>Unit</th>
-                <th>Price</th>
+                <th>CP</th>
                 <th>Total</th>
               </tr>
             </thead>
@@ -62,8 +62,8 @@
                 <td>{{stock.product.name}}</td>
                 <td>{{stock.quantity}}</td>
                 <td>{{stock.product.unit.short_name}}</td>
-                <td>Rs. {{stock.product.price}}</td>
-                <td>Rs. {{(stock.quantity)*(stock.product.price)}}</td>
+                <td>Rs. {{stock.product.cp}}</td>
+                <td>Rs. {{(stock.quantity)*(stock.product.cp)}}</td>
               </tr>
             </tbody>
           </table>
@@ -241,7 +241,7 @@ export default {
     grandTotal: function() {
       //reduce function is used to sum the array elements
       this.stocks.grandTotal = this.stocks.reduce(function(carry, stock) {
-        return carry + (parseFloat(stock.quantity) * parseFloat(stock.product.price));
+        return carry + (parseFloat(stock.quantity) * parseFloat(stock.product.cp));
       }, 0);
       return this.stocks.grandTotal;
 

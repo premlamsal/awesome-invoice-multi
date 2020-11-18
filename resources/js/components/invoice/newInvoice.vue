@@ -27,10 +27,10 @@
                   </ul>
                 </div>
               </div>
-              <b-button id="show-btn" @click="$bvModal.show('bv-modal-example')" class="btn btn-warning" style="margin-top: 8px;">
+              <b-button id="show-btn" @click="$bvModal.show('bv-modal-add-customer')" class="btn btn-warning" style="margin-top: 8px;">
                 <span class="fa fa-plus-circle"></span> Add Customer
               </b-button>
-              <b-modal id="bv-modal-example" hide-footer>
+              <b-modal id="bv-modal-add-customer" hide-footer>
                 <template v-slot:modal-title>Add Customer</template>
                 <div class="d-block">
                   <div class="form-group">
@@ -384,8 +384,11 @@ export default {
       axios
         .post("/api/customer", this.customer)
         .then(function(response) {
+
           currObj.output = response.data.msg;
+          
           currObj.status = response.data.status;
+
           currObj.$swal("Info", currObj.output, currObj.status);
 
           currObj.$bvModal.hide("bv-modal-add-customer");
@@ -397,7 +400,6 @@ export default {
 
           currObj.errors = ""; //clearing errors
 
-          currObj.fetchCustomers();
         })
         .catch(function(error) {
           if (error.response.status == 422) {
