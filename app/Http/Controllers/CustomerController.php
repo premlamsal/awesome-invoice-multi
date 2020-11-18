@@ -173,7 +173,7 @@ class CustomerController extends Controller
 
         $user = User::findOrFail(Auth::user()->id);
 
-        $store_id = $user->stores()->first()->value('id');
+        $store_id = $user->stores[0]->id;
 
         $searchKey = $request->input('searchQuery');
         if ($searchKey != '') {
