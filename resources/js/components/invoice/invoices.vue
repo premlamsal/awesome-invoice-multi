@@ -60,18 +60,16 @@
                   <span v-if="(invoice.invoice_date === invoice.due_date)" class="bg-danger text-white p-2">{{invoice.due_date | moment("from", "now")}}</span>
                   <span v-else class="bg-success text-white p-2">{{invoice.due_date | moment("from", "now")}}</span>
                 </td>
-                <td style="color: #fff;text-align: center;" v-if="(invoice.status==='Paid')">
-                  <button class="btn btn-outline-success">
-                    {{invoice.status}}
-                    <span class="fa fa-check"></span>
-                  </button>
+        
+            
+               <td v-if="(purchase.status==='Paid')">
+                       <toggle-button v-bind:status="true" @statusChanges ="updateStatus($event,purchase.id)"/> 
                 </td>
-                <td style="color: #fff;text-align: center;" v-else-if="(invoice.status==='To Pay')">
-                  <button class="btn btn-outline-danger">
-                    {{invoice.status}}
-                    <span class="fa fa-times"></span>
-                  </button>
+                
+                <td v-else-if="(purchase.status==='To Pay')">
+                       <toggle-button v-bind:status="false" @statusChanges ="updateStatus($event,purchase.id)"/> 
                 </td>
+
                 <td>{{invoice.updated_at | moment("from", "now")}}</td>
                 <td>
                   <button class="btn btn-outline-primary custom_btn_table" @click="showInvoice(invoice.id)" v-if="hasPermission('show_invoice')">
@@ -121,7 +119,15 @@
 </template>
 
 <script>
+
+//custom toggle button 
+import ToggleButton from "../widgets/ToggleButton";
+
 export default {
+
+  components:{
+      ToggleButton,
+  },
   data() {
     return {
       invoices: [],
@@ -129,6 +135,7 @@ export default {
       pagination: {},
       edit: false,
       searchTableKey: "",
+      tempStatus:{},
       isLoading: ""
     };
   },
@@ -240,6 +247,43 @@ export default {
     searchTableBtn() {
       this.autoCompleteTable();
     },
+     updateStatus(event,key){
+      this.tempStatus[key]=event;
+
+      let formData=new FormData();
+      formData.append("_method","PUT");
+      formData.append("key",key);
+      if(event==true){
+        formData.append("value","Paid");  
+      }
+      else{
+        formData.append("value","To Pay");
+      }
+      
+      axios.post('/api/changeInvoiceStatus',formData)
+      .then(response=>{
+
+         this.$toast.success({
+          title: response.data.status,
+          message: response.data.msg
+        });
+
+
+
+      })
+      .catch(error=>{
+
+        this.$toast.error({
+          title: "Error",
+          message: "some error occured"
+        });
+
+        this.fetchInvoices();
+
+
+      });
+    },
+
     autoCompleteTable() {
       this.searchTableKey = this.searchTableKey.toLowerCase();
       if (this.searchTableKey != "") {

@@ -122,6 +122,10 @@ Route::delete('invoice/{id}','InvoiceController@destroy');
 Route::post('invoices/search','InvoiceController@searchInvoices');
 
 
+//update status of invoice i.e To Pay or Paid 
+Route::put('changeInvoiceStatus','InvoiceController@changeInvoiceStatus');
+
+
 
 
 
@@ -184,6 +188,10 @@ Route::put('purchase','PurchaseController@update');
 
 //return purchase
 // Route::put('purchase/return','PurchaseController@returnPurchase');
+
+
+//update status of invoice i.e To Pay or Paid 
+Route::put('changePurchaseStatus','PurchaseController@changePurchaseStatus');
 
 
 //Delete purchase

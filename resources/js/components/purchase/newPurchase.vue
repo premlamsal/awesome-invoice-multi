@@ -56,7 +56,7 @@
                     <span v-if="errors.details" :class="['errorText']">{{ errors.details[0] }}</span>
                   </div>
                 </div>
-                <b-button class="mt-3" block @click="addCustomer">Add Supplier</b-button>
+                <b-button class="mt-3" block @click="addSupplier">Add Supplier</b-button>
               </b-modal>
               <!-- Search suggestion block ends -->
             </div>

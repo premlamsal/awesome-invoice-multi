@@ -496,4 +496,31 @@ class InvoiceController extends Controller
         }
     }
 
+    public function changeInvoiceStatus(Request $request)
+    {
+
+        $this->authorize('hasPermission', 'edit_invoice');
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        $store_id = $user->stores[0]->id;
+
+        $key = $request->input('key');
+
+        $value = $request->input('value');
+
+        $invoice             = Invoice::findOrFail($key)->where('store_id', $store_id);
+        $invoice->status     = $value;
+        $invoice->updated_at = time();
+
+        if ($invoice->save()) {
+            return response()->json(['status' => 'success', 'msg' => $invoice->custom_invoice_id.' changed to ' . $value . '']);
+        } else {
+
+            return response()->json(['status' => 'failed', 'msg' => 'Invoice status changed Failed']);
+
+        }
+
+    }
+
 }

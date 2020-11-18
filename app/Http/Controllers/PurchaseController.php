@@ -17,9 +17,7 @@ class PurchaseController extends Controller
 {
     public function __construct()
     {
-
         $this->middleware('auth:api');
-
     }
 
     public function index()
@@ -579,5 +577,33 @@ class PurchaseController extends Controller
             ]);
         }
     }
+
+    public function changePurchaseStatus(Request $request)
+    {
+
+        $this->authorize('hasPermission', 'edit_purchase');
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        $store_id = $user->stores[0]->id;
+
+        $key = $request->input('key');
+
+        $value = $request->input('value');
+
+        $purchase             = Purchase::findOrFail($key)->where('store_id',$store_id);
+        $purchase->status     = $value;
+        $purchase->updated_at = time();
+
+        if ($purchase->save()) {
+            return response()->json(['status' => 'success', 'msg' => $purchase->custom_purchase_id . ' changed to ' . $value . '']);
+        } else {
+
+            return response()->json(['status' => 'failed', 'msg' => 'Purchase status changed Failed']);
+
+        }
+
+    }
+
 
 }

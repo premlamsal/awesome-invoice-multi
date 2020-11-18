@@ -62,18 +62,16 @@
                 <td>{{purchase.supplier_name}}</td>
                 <td>{{purchase.purchase_date}}</td>
                 <td>{{purchase.due_date | moment("from", "now")}}</td>
-                <td style="color: #fff;text-align: center;" v-if="(purchase.status==='Paid')">
-                  <button class="btn btn-outline-success">
-                    {{purchase.status}}
-                    <span class="fa fa-check"></span>
-                  </button>
+      
+            
+               <td v-if="(purchase.status==='Paid')">
+                       <toggle-button v-bind:status="true" @statusChanges ="updateStatus($event,purchase.id)"/> 
                 </td>
-                <td style="color: #fff;text-align: center;" v-else-if="(purchase.status==='To Pay')">
-                  <button class="btn btn-outline-danger">
-                    {{purchase.status}}
-                    <span class="fa fa-times"></span>
-                  </button>
+                
+                <td v-else-if="(purchase.status==='To Pay')">
+                       <toggle-button v-bind:status="false" @statusChanges ="updateStatus($event,purchase.id)"/> 
                 </td>
+
                 <td>{{purchase.updated_at | moment("from", "now")}}</td>
                 <td>
                   <button class="btn btn-outline-primary custom_btn_table" @click="showPurchase(purchase.id)">
@@ -123,7 +121,15 @@
 </template>
 
 <script>
+
+//custome toggle button
+import ToggleButton from "../widgets/ToggleButton";
+
 export default {
+
+  components:{
+      ToggleButton,
+  },
   data() {
     return {
       purchases: [],
@@ -131,6 +137,7 @@ export default {
       pagination: {},
       edit: false,
       searchTableKey: "",
+      tempStatus:{},
       isLoading: ""
     };
   },
@@ -212,6 +219,7 @@ export default {
         }
       });
     },
+
     editPurchase(id) {
       // named route
       // this.$router.push({ name: 'editPurchase', params: { id } });
@@ -238,6 +246,42 @@ export default {
     },
     searchTableBtn() {
       this.autoCompleteTable();
+    },
+     updateStatus(event,key){
+      this.tempStatus[key]=event;
+
+      let formData=new FormData();
+      formData.append("_method","PUT");
+      formData.append("key",key);
+      if(event==true){
+        formData.append("value","Paid");  
+      }
+      else{
+        formData.append("value","To Pay");
+      }
+      
+      axios.post('/api/changePurchaseStatus',formData)
+      .then(response=>{
+
+         this.$toast.success({
+          title: response.data.status,
+          message: response.data.msg
+        });
+
+
+
+      })
+      .catch(error=>{
+
+        this.$toast.error({
+          title: "Error",
+          message: "some error occured"
+        });
+
+        this.fetchPurchases();
+
+
+      });
     },
     autoCompleteTable() {
       this.searchTableKey = this.searchTableKey.toLowerCase();
