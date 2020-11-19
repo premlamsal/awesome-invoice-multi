@@ -272,16 +272,19 @@ export default {
     //methods codes here
     fetchProducts(page_url) {
       this.$Progress.start();
+      this.isLoading = "Loading all Data";
+
       let vm = this; // current pointer instance while going inside the another functional instance
       page_url = page_url || 'api/products'
       axios.get(page_url)
         .then(function(response) {
+          vm.isLoading = '';
           vm.products = response.data.data;
           if ((vm.products.length) != null) {
             vm.makePagination(response.data.meta, response.data.links);
             vm.$Progress.finish();
-          }
 
+          }
 
         })
         .catch(function(error) {
@@ -628,10 +631,7 @@ export default {
               currObj.isLoading = "No Data Found";
 
             }
-            // if((this.estimates.length)!=null){
-            // // currObj.makePagination(res.meta,res.links);
-            // }
-            // currObj.status=response.data.status;
+           
             currObj.errors = ''; //clearing errors
 
           })
@@ -645,7 +645,7 @@ export default {
             }
           });
       } else {
-        this.isLoading = "Loading all Data";
+        // console.log('hello');
         this.fetchProducts();
       }
 
