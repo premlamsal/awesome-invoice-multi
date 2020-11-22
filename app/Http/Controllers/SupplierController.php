@@ -165,10 +165,11 @@ class SupplierController extends Controller
 
         $user = User::findOrFail(Auth::user()->id);
 
-        $store_id = $user->stores()->first()->value('id');
+        $store_id = $user->stores[0]->id;
 
         $supplier = Supplier::where('id', $id)->where('store_id', $store_id)->first();
-        if ($supplier->save()) {
+
+        if ($supplier) {
             return response()->json([
                 'supplier' => $supplier,
                 'status'   => 'success',
