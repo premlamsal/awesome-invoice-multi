@@ -302,6 +302,7 @@ export default {
       formData.append('address', this.supplier.address);
       formData.append('phone', this.supplier.phone);
       formData.append('id', this.supplier.id);
+      formData.append('details',this.supplier.details);
 
       axios.post('/api/supplier', formData)
         .then(function(response) {

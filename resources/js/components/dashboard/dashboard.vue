@@ -164,8 +164,8 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row">
-          <div class="col-md-4">
+    <div class="row">
+          <div class="col-md-6">
             <div class="card ">
               <div class="card-header ">
                 <h5 class="card-title">Email Statistics</h5>
@@ -188,7 +188,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-8">
+          <div class="col-md-6">
             <div class="card card-chart">
               <div class="card-header">
                 <h5 class="card-title">NASDAQ: AAPL</h5>
@@ -209,7 +209,7 @@
               </div>
             </div>
           </div>
-        </div> -->
+        </div>
   </div>
 </template>
 
