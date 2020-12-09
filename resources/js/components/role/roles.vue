@@ -40,8 +40,8 @@
               @success="handleSuccessExportCSV"
               @error="handleErrorExportCSV"
               file-type="csv"
-              file-name="sample"
-              
+              file-name="roles"
+              :fields="roles_export_fileds"
               :data="roles">
               
               <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
@@ -141,6 +141,7 @@ export default {
       pagination: {},
       isLoading: '',
       permissions: [],
+      roles_export_fileds:["name","permissions"],
 
     }
   },

@@ -37,8 +37,8 @@
               @success="handleSuccessExportCSV"
               @error="handleErrorExportCSV"
               file-type="csv"
-              file-name="sample"
-             
+              file-name="units"
+             :fields="units_export_fileds"
               :data="units">
               
               <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
@@ -136,7 +136,8 @@ export default {
       searchTableKey: '',
       errors: [],
       pagination: {},
-      isLoading: ''
+      isLoading: '',
+      units_export_fileds:["short_name","long_name"],
 
     }
   },

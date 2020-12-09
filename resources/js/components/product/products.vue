@@ -79,8 +79,8 @@
               @success="handleSuccessExportCSV"
               @error="handleErrorExportCSV"
               file-type="csv"
-              file-name="sample"
-             
+              file-name="prdoucts"
+             :fields="products_export_fileds"
               :data="products">
               
               <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
@@ -192,6 +192,7 @@ export default {
         category: {},
         unit: {},
 
+
       }, //contains all the retrived units from the database
 
       product: {}, //for form single unit data
@@ -219,7 +220,7 @@ export default {
 
       imagePreview: '',
 
-
+      products_export_fileds:["custom_product_id","name","price","cp","sp","description"],
 
 
     }

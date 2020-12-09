@@ -38,12 +38,14 @@
               @error="handleErrorExportCSV"
               file-type="csv"
               file-name="categories"
+              :fields="categories_export_fileds"
               :data="categories">
               
               <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
                 <img src="img/icon-red-csv.png" class="icon-red-csv-export" alt="Export data to CSV">
             </vue-blob-json-csv>
           </template>
+
         </div>
 
         <div v-if="isLoading">{{isLoading}}</div>
@@ -133,7 +135,8 @@ export default {
       searchTableKey: '',
       errors: [],
       pagination: {},
-      isLoading: ''
+      isLoading: '',
+      categories_export_fileds:["name","description"],
 
     }
   },

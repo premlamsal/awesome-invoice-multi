@@ -19,8 +19,8 @@
               @success="handleSuccessExportCSV"
               @error="handleErrorExportCSV"
               file-type="csv"
-              file-name="sample"
-              
+              file-name="purchases"
+              :fields="purchases_export_fileds"
               :data="purchases">
               
               <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
@@ -154,7 +154,8 @@ export default {
       edit: false,
       searchTableKey: "",
       tempStatus:{},
-      isLoading: ""
+      isLoading: "",
+      purchases_export_fileds:["custom_purchase_id","grand_total","supplier_name","status","purchase_date","due_date"],
     };
   },
 

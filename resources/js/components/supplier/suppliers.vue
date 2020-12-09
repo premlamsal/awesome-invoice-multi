@@ -49,7 +49,7 @@
               @error="handleErrorExportCSV"
               file-type="csv"
               file-name="sample"
-            
+              :fields="suppliers_export_fileds"
               :data="suppliers">
               
               <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
@@ -156,6 +156,8 @@ export default {
       isLoading: '',
 
       // store_id: 3 ,
+
+      suppliers_export_fileds:["name","address","phone","details"],
 
     }
   },

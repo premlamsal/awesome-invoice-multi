@@ -15,7 +15,8 @@
               @success="handleSuccessExportCSV"
               @error="handleErrorExportCSV"
               file-type="csv"
-              file-name="sample"
+              file-name="invoices"
+              :fields="invoices_export_fileds"
               :data="invoices">
               
               <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
@@ -151,7 +152,8 @@ export default {
       edit: false,
       searchTableKey: "",
       tempStatus:{},
-      isLoading: ""
+      isLoading: "",
+      invoices_export_fileds:["custom_invoice_id","grand_total","customer_name","status","invoice_date","due_date"],
     };
   },
 

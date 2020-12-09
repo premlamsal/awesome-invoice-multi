@@ -63,7 +63,8 @@
               @success="handleSuccessExportCSV"
               @error="handleErrorExportCSV"
               file-type="csv"
-              file-name="sample"
+              file-name="users"
+              :fields="users_export_fileds"
               :data="users">
               
               <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
@@ -188,6 +189,8 @@ export default {
       store_id: '',
 
       roles: [],
+
+      users_export_fileds:["name","email","roles","email_verified_at"],
 
     }
   },
