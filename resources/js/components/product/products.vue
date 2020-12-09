@@ -73,6 +73,22 @@
         <!-- <div v-if="isLoading">{{isLoading}}</div> -->
         <!-- <p>As per {{new Date().toLocaleString()}}</p> -->
         <!-- <span>{{isLoading}}</span> -->
+          <div class="export-block">
+            <template>
+              <vue-blob-json-csv
+              @success="handleSuccessExportCSV"
+              @error="handleErrorExportCSV"
+              file-type="csv"
+              file-name="sample"
+             
+              :data="products">
+              
+              <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
+                <img src="img/icon-red-csv.png" class="icon-red-csv-export" alt="Export data to CSV">
+            </vue-blob-json-csv>
+          </template>
+        </div>
+
         <div class="searchTable">
           <!-- Topbar Search -->
           <!-- <div class="input-group"> -->
@@ -244,6 +260,13 @@ export default {
           vm.$Progress.fail();
         });
 
+    },
+
+     handleSuccessExportCSV(){
+      console.log("success Export");
+    },
+    handleErrorExportCSV(){
+      console.log("errorExport");
     },
     //methods codes here
     fetchCategories(page_url) {

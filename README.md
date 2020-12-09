@@ -8,6 +8,7 @@
 	<li>vue-router</li>
 	<li>bootstrap-vue</li>
 	<li>vue-sweetalert2</li>
+	<li>vue-blob-json-csv</li>
 	<li>vue-bootstrap-datetimepicker</li>
 </ul>
 

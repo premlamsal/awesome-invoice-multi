@@ -43,7 +43,26 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary" style="display: inline-block;">Customers</h6>
+            <h6 class="m-0 font-weight-bold text-primary" style="display: inline-block;">Customers</h6>
+       
+
+        <div class="export-block">
+            <template>
+              <vue-blob-json-csv
+              @success="handleSuccessExportCSV"
+              @error="handleErrorExportCSV"
+              file-type="csv"
+              file-name="sample"
+              :fields="customers_export_fileds"
+              :data="customers">
+              
+              <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
+                <img src="img/icon-red-csv.png" class="icon-red-csv-export" alt="Export data to CSV">
+            </vue-blob-json-csv>
+          </template>
+        </div>
+
+    
         <div v-if="isLoading">{{isLoading}}</div>
         <!-- <span>{{isLoading}}</span> -->
         <div class="searchTable">
@@ -143,7 +162,7 @@ export default {
 
       permissions: [],
 
-
+      customers_export_fileds:["name","address","phone","details"],
     }
   },
 
@@ -156,6 +175,12 @@ export default {
   // 
   //  
   methods: {
+    handleSuccessExportCSV(){
+      console.log("success Export");
+    },
+    handleErrorExportCSV(){
+      console.log("errorExport");
+    },
 
     getPermissions: async function() {
 

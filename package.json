@@ -28,6 +28,7 @@
         "bootstrap-vue": "^2.17.3",
         "chart.js": "^2.9.3",
         "cxlt-vue2-toastr": "^1.1.1",
+        "vue-blob-json-csv": "^0.1.7",
         "vue-bootstrap-datetimepicker": "^5.0.1",
         "vue-chartjs": "^3.5.1",
         "vue-cookie": "^1.1.4",

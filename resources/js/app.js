@@ -96,7 +96,10 @@ Vue.use(VueHtmlToPaper, options);
 
 //end of print div to paper
 
+//export json to csv
+import VueBlobJsonCsv from 'vue-blob-json-csv';
 
+Vue.use(VueBlobJsonCsv);
 
 
 

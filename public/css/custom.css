@@ -1,4 +1,10 @@
-
+.export-block{
+    display: inline-block;
+}
+img.icon-red-csv-export {
+    width: 43px;
+    cursor: pointer;
+}
 .errorText{
     color: red;
 }
