@@ -169,9 +169,7 @@ export default {
   data() {
     return {
 
-      users: {
-      
-      }, //contains all the retrived users from the database
+      users: [], //contains all the retrived users from the database
 
       user: {
 

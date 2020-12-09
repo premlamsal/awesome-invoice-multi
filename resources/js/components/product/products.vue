@@ -182,7 +182,7 @@ export default {
   data() {
     return {
 
-      products: {
+      products: [{
 
         custom_product_id: '',
         name: '',
@@ -193,7 +193,7 @@ export default {
         unit: {},
 
 
-      }, //contains all the retrived units from the database
+      }], //contains all the retrived units from the database
 
       product: {}, //for form single unit data
 
