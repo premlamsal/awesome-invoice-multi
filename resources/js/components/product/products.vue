@@ -70,6 +70,9 @@
     <div class="card shadow mb-4">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary" style="display: inline-block;">Products</h6>
+         <div class="text-center" v-if="isLoading=='Loading all Data'">
+          <b-spinner variant="success" label="Spinning"></b-spinner>
+        </div>
         <!-- <div v-if="isLoading">{{isLoading}}</div> -->
         <!-- <p>As per {{new Date().toLocaleString()}}</p> -->
         <!-- <span>{{isLoading}}</span> -->
@@ -104,9 +107,7 @@
         </div>
       </div>
       <div class="card-body" v-if="products.length > 0">
-        <div class="text-center" v-if="isLoading=='Loading all Data'">
-          <b-spinner variant="success" label="Spinning"></b-spinner>
-        </div>
+       
         <div class="table">
           <table class="table table-striped table-bordered" width="100%" cellspacing="0" v-if="isLoading!='Loading all Data'">
             <thead>

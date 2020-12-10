@@ -44,8 +44,11 @@
     <div class="card shadow mb-4">
       <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary" style="display: inline-block;">Customers</h6>
+               
+        <div class="text-center" v-if="isLoading=='Loading all Data'">
+          <b-spinner variant="success" label="Spinning"></b-spinner>
+        </div>
        
-
         <div class="export-block">
             <template>
               <vue-blob-json-csv
@@ -63,7 +66,6 @@
         </div>
 
     
-        <div v-if="isLoading">{{isLoading}}</div>
         <!-- <span>{{isLoading}}</span> -->
         <div class="searchTable">
           <!-- Topbar Search -->
@@ -80,6 +82,7 @@
         </div>
       </div>
       <div class="card-body" v-if="customers.length > 0 ">
+         
         <div class="table">
           <table class="table table-striped table-bordered" width="100%" cellspacing="0">
             <thead>
@@ -217,7 +220,8 @@ export default {
     //methods codes here
     fetchCustomers(page_url) {
       this.$Progress.start();
-      this.isLoading = "Loading Data";
+      this.isLoading = "Loading all Data";
+     
       let vm = this; // current pointer instance while going inside the another functional instance
       page_url = page_url || 'api/customers'
       axios.get(page_url)
@@ -225,10 +229,9 @@ export default {
           vm.customers = response.data.data;
           if ((vm.customers.length) != null) {
             vm.makePagination(response.data.meta, response.data.links);
-            vm.isLoading = "";
+             vm.isLoading ='';
             vm.$Progress.finish();
           }
-
 
         })
         .catch(function(error) {

@@ -6,7 +6,10 @@
     <div class="card shadow mb-4">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Company Profile</h6>
-        <div v-if="isLoading">{{isLoading}}</div>
+         <div class="text-center" v-if="isLoading=='Loading all Data'">
+          <b-spinner variant="success" label="Spinning"></b-spinner>
+        </div>
+       <!--  <div v-if="isLoading">{{isLoading}}</div> -->
       </div>
       <div class="card-body">
         <div class="row">
@@ -148,7 +151,7 @@ export default {
     fetchStore() {
       this.$Progress.start();
       let currObj = this;
-      this.isLoading = "Loading Data";
+     this.isLoading = "Loading all Data";
 
       axios.get('api/store')
 

@@ -42,6 +42,9 @@
     <div class="card shadow mb-4">
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary" style="display: inline-block;">Suppliers</h6>
+         <div class="text-center" v-if="isLoading=='Loading all Data'">
+          <b-spinner variant="success" label="Spinning"></b-spinner>
+        </div>
           <div class="export-block">
             <template>
               <vue-blob-json-csv
@@ -58,7 +61,7 @@
           </template>
         </div>
 
-        <div v-if="isLoading">{{isLoading}}</div>
+       
         <!-- <span>{{isLoading}}</span> -->
         <div class="searchTable">
           <!-- Topbar Search -->
@@ -176,7 +179,7 @@ export default {
     //methods codes here
     fetchSuppliers(page_url) {
       this.$Progress.start();
-      this.isLoading = "Loading Data";
+       this.isLoading = "Loading all Data";
       let vm = this; // current pointer instance while going inside the another functional instance
       page_url = page_url || 'api/suppliers'
       axios.get(page_url)
