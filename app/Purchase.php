@@ -8,7 +8,7 @@ class Purchase extends Model
 {
     public function purchaseDetail()
     {
-        return $this->hasMany('\App\purchaseDetail', 'purchase_id', 'id');
+        return $this->hasMany('\App\PurchaseDetail', 'purchase_id', 'id');
     }
 
     public function supplier()
