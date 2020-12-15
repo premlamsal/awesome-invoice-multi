@@ -147,6 +147,9 @@ class CategoryController extends Controller
 
         $searchKey = $request->input('searchQuery');
 
+        $user = User::findOrFail(Auth::user()->id);
+        $store_id = $user->stores[0]->id;
+
         if ($searchKey != '') {
             return CategoryResource::collection(Category::where('name', 'like', '%' . $searchKey . '%')->where('store_id', $store_id)->paginate(8));
         } else {
