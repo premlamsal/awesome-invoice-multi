@@ -81,7 +81,7 @@
           <!-- Topbar Search -->
           <!-- <div class="input-group"> -->
           <div class="input-group no-border">
-            <input type="text" value="" class="form-control" placeholder="Search..." v-model="searchTableKey">
+            <input type="text" value="" class="form-control" placeholder="Search..." v-model="searchTableKey" @keyup.enter="searchTableBtn">
             <div class="input-group-append">
               <div class="input-group-text">
                 <i class="nc-icon nc-zoom-split" @click="searchTableBtn"></i>
