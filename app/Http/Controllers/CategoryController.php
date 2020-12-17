@@ -151,7 +151,7 @@ class CategoryController extends Controller
         $store_id = $user->stores[0]->id;
 
         if ($searchKey != '') {
-            return CategoryResource::collection(Category::where('name', 'like', '%' . $searchKey . '%')->where('store_id', $store_id)->paginate(8));
+            return CategoryResource::collection(Category::where('store_id', $store_id)->where('name', 'like', '%' . $searchKey . '%')->paginate(8));
         } else {
             return response()->json([
                 'msg'    => 'Error while retriving Categories. No Data Supplied as key.',
