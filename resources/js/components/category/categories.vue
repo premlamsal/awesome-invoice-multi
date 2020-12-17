@@ -367,17 +367,20 @@ export default {
           .then(function(response) {
 
             currObj.isLoading = '';
+ 
+ 
 
-            currObj.customers = response.data.data;
+            currObj.categories=response.data.data;
+
+
+            console.log(currObj.categories);
+
             if (response.data.data == "") {
 
               currObj.isLoading = "No Data Found";
 
             }
-            // if((this.estimates.length)!=null){
-            // // currObj.makePagination(res.meta,res.links);
-            // }
-            // currObj.status=response.data.status;
+          
             currObj.errors = ''; //clearing errors
 
           })
