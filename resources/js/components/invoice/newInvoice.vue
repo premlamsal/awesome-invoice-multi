@@ -491,7 +491,7 @@ export default {
           message: "Invalid Quantity."
         });
 
-        this.items[index].quantity = 1;
+        // this.items[index].quantity = 1;
       }
     }, 300),
 
