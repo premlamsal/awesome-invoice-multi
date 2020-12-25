@@ -231,6 +231,8 @@ export default {
 
           currObj.errors = ''; //clearing errors
 
+          currObj.category.name = '';
+          currObj.category.description = '';
           currObj.$Progress.finish();
 
           currObj.fetchCategories();
