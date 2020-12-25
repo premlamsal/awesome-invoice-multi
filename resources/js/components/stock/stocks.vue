@@ -13,6 +13,14 @@
           <b-spinner variant="success" label="Spinning"></b-spinner>
         </div>
         <p>As per {{new Date().toLocaleString()}}</p>
+         
+         <div class="export-block">
+           
+            
+              
+              <!-- <button class="btn btn-warning-success"><i class="fa fa-file-excel-o" aria-hidden="true"></i></button> -->
+    
+        </div>
         <!-- <div class="dateSelector" style="float: left;">
                 <div class="form-group">
                   <label>Select Date for Stock</label>
@@ -128,11 +136,10 @@ export default {
         useCurrent: true,
         showClear: true,
         showClose: true,
-      }, //this variable for the date picker   
+      }, //this variable for the date picker  
 
-
-
-
+     
+      
     }
   },
   created() {

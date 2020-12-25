@@ -51,7 +51,7 @@
               @success="handleSuccessExportCSV"
               @error="handleErrorExportCSV"
               file-type="csv"
-              file-name="sample"
+              file-name="suppliers"
               :fields="suppliers_export_fileds"
               :data="suppliers">
               

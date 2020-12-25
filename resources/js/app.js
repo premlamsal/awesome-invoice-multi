@@ -103,6 +103,10 @@ Vue.use(VueBlobJsonCsv);
 
 
 
+
+
+
+
 //notification block ends//
 
 
@@ -333,6 +337,20 @@ let routes = [
      beforeEnter(to, from, next) {
         let hasAccess = store.getters.permissions
         if (hasAccess.includes('view_customers') || hasAccess.includes('all')) {
+          next()
+        }
+      }
+  },
+
+//customer profile routes
+  {
+    path: '/customer-profile',
+    name: 'customerProfile',
+    component: require('./components/customer/customerProfile.vue').default,
+
+     beforeEnter(to, from, next) {
+        let hasAccess = store.getters.permissions
+        if (hasAccess.includes('view_customer_profile') || hasAccess.includes('all')) {
           next()
         }
       }
