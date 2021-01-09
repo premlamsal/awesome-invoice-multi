@@ -56,6 +56,7 @@
               Unit
             </label>
           </div>
+         
         </div>
         <div class="col-md-2">
           <span>Add</span>
@@ -101,6 +102,7 @@
               Unit
             </label>
           </div>
+         
         </div>
         <div class="col-md-2">
           <span>Edit</span>
@@ -146,6 +148,7 @@
               Unit
             </label>
           </div>
+          
         </div>
         <div class="col-md-2">
           <span>Delete</span>
@@ -191,6 +194,7 @@
               Unit
             </label>
           </div>
+        
         </div>
         <div class="col-md-2">
           <span>Show</span>
@@ -236,6 +240,7 @@
               Unit
             </label>
           </div>
+          
         </div>
         <div class="col-md-2">
           <span>Search</span>
@@ -281,6 +286,7 @@
               Unit
             </label>
           </div>
+         
         </div>
       </div>
       <!-- end of one row -->

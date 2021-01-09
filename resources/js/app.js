@@ -516,6 +516,7 @@ let routes = [
     
   },
 
+
   {
     path: '/select/store',
     name: 'selectStore',
