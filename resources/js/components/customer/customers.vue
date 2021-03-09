@@ -372,6 +372,7 @@ export default {
       formData.append('address', this.customer.address);
       formData.append('phone', this.customer.phone);
       formData.append('id', this.customer.id);
+      formData.append('details', this.customer.details);
 
       axios.post('/api/customer', formData)
         .then(function(response) {
