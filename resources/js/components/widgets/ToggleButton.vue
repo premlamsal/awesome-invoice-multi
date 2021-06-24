@@ -1,5 +1,5 @@
 <template>
-  <div id="toogle-button">
+  <div id="toggle-button">
     <!-- Child:{{tempStatus}} -->
     <label class="switch">
       <input type="checkbox" v-model="tempStatus" @change="changeStatus">
