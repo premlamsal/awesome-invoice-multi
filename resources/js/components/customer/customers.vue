@@ -2,8 +2,8 @@
   <div>
     <!-- Page Heading -->
     <h1 class="h3 mb-2 text-gray-800">Customer</h1>
-    <p class="mb-4" v-if="hasPermission('add_customer')">
-      <div id="btn addcustomer">
+    <p class="mb-4" >
+      <div id="btn addcustomer" v-if="hasPermission('add_customer')">
         <b-button id="show-btn" @click="showAddModal" class="btn btn-success" style="margin-top: 8px;">
           <span class="fa fa-plus-circle"></span>Add Customer</b-button>
       </div>

@@ -92,16 +92,16 @@
 
                 <td>{{purchase.updated_at | moment("from", "now")}}</td>
                 <td>
-                  <button class="btn btn-outline-primary custom_btn_table" @click="showPurchase(purchase.id)">
-                    <span class="fa fa-align-justify custom_icon_table" v-if="hasPermission('show_purchase')"></span>
+                  <button class="btn btn-outline-primary custom_btn_table" @click="showPurchase(purchase.id)"  v-if="hasPermission('show_purchase')">
+                    <span class="fa fa-align-justify custom_icon_table"></span>
                   </button>
-                  <button class="btn btn-outline-success custom_btn_table" @click="editPurchase(purchase.id)">
-                    <span class="fa fa-edit custom_icon_table" v-if="hasPermission('edit_purchase')"></span>
+                  <button class="btn btn-outline-success custom_btn_table" @click="editPurchase(purchase.id)" v-if="hasPermission('edit_purchase')">
+                    <span class="fa fa-edit custom_icon_table" ></span>
                   </button>
                   <!--  <button class="btn btn-outline-success" @click="returnPurchase(purchase.id)" style="margin-right: 5px;"><span class="fa fa-reply" style="font-size: 15px"></span>
                   </button>-->
-                  <button class="btn btn-outline-danger custom_btn_table" @click="deletePurchase(purchase.id)">
-                    <span class="fa fa-trash custom_icon_table" v-if="hasPermission('delete_purchase')"></span>
+                  <button class="btn btn-outline-danger custom_btn_table" @click="deletePurchase(purchase.id)" v-if="hasPermission('delete_purchase')">
+                    <span class="fa fa-trash custom_icon_table"></span>
                   </button>
                 </td>
               </tr>

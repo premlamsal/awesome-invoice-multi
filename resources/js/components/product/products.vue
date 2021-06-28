@@ -138,7 +138,8 @@
                   <button class="btn btn-outline-success custom_btn_table" @click=editProduct(product.id) v-if="hasPermission('edit_product')">
                     <span class="fa fa-edit custom_icon_table"></span>
                   </button>
-                  <button class="btn btn-outline-danger custom_btn_table" @click=deleteProduct(product.id)><span class="fa fa-trash custom_icon_table" v-if="hasPermission('delete_product')"></span>
+                  <button class="btn btn-outline-danger custom_btn_table" @click=deleteProduct(product.id) v-if="hasPermission('delete_product')">
+                  <span class="fa fa-trash custom_icon_table"></span>
                   </button>
                 </td>
               </tr>
