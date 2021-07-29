@@ -114,3 +114,9 @@ button.btn.custom_btn_table{
     color: #ef8157 !important;
     background: #ffffff !important;
 }
+.cursor{
+    cursor: pointer!important;
+}
+.cursor:hover{
+    color: #ef8157;
+}

@@ -26,7 +26,7 @@ class StockController extends Controller
         $store_id = $user->stores[0]->id;
 
         // return StockResource::collection(Stock::with('product')->with('unit')->paginate(8));
-        return StockResource::collection(Stock::where('store_id', $store_id)->with('product.unit')
+        return StockResource::collection(Stock::with('product.unit')->where('store_id', $store_id)
                 ->paginate(8));
 
         // $data= DB::table('stocks as s')
@@ -61,8 +61,8 @@ class StockController extends Controller
         // ->get();
 
         // return $data;
-        return response()
-            ->json(['data' => $data]);
+        // return response()
+        //     ->json(['data' => $data]);
     }
 
     public function destroy($id)

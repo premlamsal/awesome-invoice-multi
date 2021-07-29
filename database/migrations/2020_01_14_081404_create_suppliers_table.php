@@ -18,8 +18,8 @@ class CreateSuppliersTable extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('phone');
-            $table->string('details');
-
+            $table->string('opening_balance');
+            $table->text('details');
             $table->unsignedBigInteger('store_id');
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             

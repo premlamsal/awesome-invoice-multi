@@ -29,6 +29,11 @@
           <input type="phone" v-model="supplier.phone" :class="['form-control']">
           <span v-if="errors.phone" :class="['errorText']">{{ errors.phone[0] }}</span>
         </div>
+         <div class="form-group">
+          <label for="Opening_balance">Opening Balance:</label>
+          <input type="text" v-model="supplier.opening_balance" :class="['form-control']">
+          <span v-if="errors.opening_balance" :class="['errorText']">{{ errors.opening_balance[0] }}</span>
+        </div>
         <div class="form-group">
           <label for="Phone">Details:</label>
           <textarea v-model="supplier.details" :class="['form-control']"></textarea>
@@ -94,7 +99,7 @@
             <tbody>
               <tr v-for="supplier in suppliers" v-bind:key="supplier.id">
                 <!-- <td>{{supplier.id}}</td> -->
-                <td>{{supplier.name}}</td>
+                <td @click="supplierProfile(supplier.id)" class="cursor">{{supplier.name}}</td>
                 <td>{{supplier.address}}</td>
                 <td>{{supplier.phone}}</td>
                 <td>{{supplier.details}}</td>
@@ -176,6 +181,9 @@ export default {
   },
 
   methods: {
+      supplierProfile(id){
+      this.$router.push({ path: `${id}/supplier-profile/` });
+    },
     //methods codes here
     fetchSuppliers(page_url) {
       this.$Progress.start();
@@ -246,6 +254,8 @@ export default {
       this.supplier.address = '';
       this.supplier.phone = '';
       this.supplier.details = '';
+      this.supplier.opening_balance = '';
+
 
       this.errors = ''; //clearing errors
 
@@ -279,6 +289,7 @@ export default {
           currObj.supplier.name = '';
           currObj.supplier.address = '';
           currObj.supplier.phone = '';
+          currObj.supplier.opening_balance = '';
           currObj.supplier.details = '';
 
           currObj.errors = ''; //clearing errors
@@ -312,6 +323,7 @@ export default {
           Vue.set(this.supplier, 'name', response.data.supplier.name);
           Vue.set(this.supplier, 'address', response.data.supplier.address);
           Vue.set(this.supplier, 'details', response.data.supplier.details);
+          Vue.set(this.supplier, 'opening_balance', response.data.supplier.opening_balance);
           Vue.set(this.supplier, 'phone', response.data.supplier.phone);
           Vue.set(this.supplier, 'id', id); //to send id to the update controller 
           this.$Progress.finish();
@@ -330,6 +342,7 @@ export default {
       formData.append('name', this.supplier.name);
       formData.append('address', this.supplier.address);
       formData.append('phone', this.supplier.phone);
+      formData.append('opening_balance', this.supplier.opening_balance);
       formData.append('id', this.supplier.id);
       formData.append('details',this.supplier.details);
 
@@ -346,6 +359,7 @@ export default {
           currObj.supplier.address = '';
           currObj.supplier.phone = '';
           currObj.supplier.details = '';
+          currObj.supplier.opening_balance = '';
           currObj.errors = ''; //clearing errors
           currObj.$Progress.finish();
           currObj.fetchSuppliers();

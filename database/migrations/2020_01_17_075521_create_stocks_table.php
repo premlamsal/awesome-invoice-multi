@@ -21,7 +21,7 @@ class CreateStocksTable extends Migration
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
 
-            $table->decimal('quantity');
+            $table->decimal('quantity')->default(0.00);
 
             $table->unsignedBigInteger('unit_id');
 

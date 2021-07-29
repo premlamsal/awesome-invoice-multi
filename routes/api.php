@@ -24,6 +24,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //List Customers
 Route::get('customers','CustomerController@index');
 
+//Get Customer Transactions
+Route::get('customer/transactions/{id}','CustomerTransactionController@index');
+
 //Create new Customer
 Route::post('customer','CustomerController@store');
 
@@ -44,6 +47,10 @@ Route::post('customers/search','CustomerController@searchCustomers');
 
 //List supplier
 Route::get('suppliers','SupplierController@index');
+
+//get all supplier Transactions
+
+Route::get('supplier/transactions/{id}','SupplierTransactionController@index');
 
 //Create new supplier
 Route::post('supplier','SupplierController@store');

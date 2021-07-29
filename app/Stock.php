@@ -12,8 +12,6 @@ class Stock extends Model
 
         $this->authorize('isAdmin'); //only admin will access this function
 
-        return UserResource::collection(User::paginate(8));
-
     }
 
     public function product()

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\CustomerTransaction;
 use App\Http\Resources\Customer as CustomerResource;
 use App\User;
 use Auth;
@@ -41,27 +42,46 @@ class CustomerController extends Controller
         $store_id = $user->stores[0]->id;
 
         $this->validate($request, [
-            'name'    => 'required|regex:/^[\pL\s\-]+$/u',
+            'name' => 'required|regex:/^[\pL\s\-]+$/u',
             'address' => 'required|string|max:200',
-            'phone'   => 'required|unique:customers,phone|digits:10',
+            'phone' => 'required|unique:customers,phone|digits:10',
             'details' => 'required|string|max:400',
+            'opening_balance' => 'required|numeric',
+
         ]);
 
-        $customer           = new Customer();
-        $customer->name     = $request->input('name');
-        $customer->address  = $request->input('address');
-        $customer->phone    = $request->input('phone');
-        $customer->details  = $request->input('details');
+        $customer = new Customer();
+        $customer->name = $request->input('name');
+        $customer->address = $request->input('address');
+        $customer->phone = $request->input('phone');
+        $customer->details = $request->input('details');
+        $customer->opening_balance = $request->input('opening_balance');
         $customer->store_id = $store_id;
 
         if ($customer->save()) {
-            return response()->json([
-                'msg'    => 'Customer added successfully',
-                'status' => 'success',
-            ]);
+
+            $customerTransaction = new CustomerTransaction();
+            $customerTransaction->transaction_type = 'opening_balance';
+            $customerTransaction->refID = '0';
+            $customerTransaction->amount = $request->input('opening_balance');
+            $customerTransaction->customer_id = $customer->id;
+            $customerTransaction->store_id = $store_id;
+            if ($customerTransaction->save()) {
+                return response()->json([
+                    'msg' => 'Customer added successfully',
+                    'status' => 'success',
+                ]);
+
+            } else {
+                return response()->json([
+                    'msg' => 'Error while adding customer transaction',
+                    'status' => 'error',
+                ]);
+            }
+
         } else {
             return response()->json([
-                'msg'    => 'Error while adding customer',
+                'msg' => 'Error while adding customer',
                 'status' => 'error',
             ]);
         }
@@ -78,28 +98,40 @@ class CustomerController extends Controller
         $store_id = $user->stores[0]->id;
 
         $this->validate($request, [
-            'name'    => 'required|regex:/^[\pL\s\-]+$/u',
+            'name' => 'required|regex:/^[\pL\s\-]+$/u',
             'address' => 'required|string|max:200',
-            'phone'   => 'required|digits:10',
+            'phone' => 'required|digits:10',
             'details' => 'required|string|max:400',
+            'opening_balance' => 'required|numeric',
         ]);
 
-        $id                 = $request->input('id'); //get id from edit modal
-        $customer           = Customer::where('store_id', $store_id)->where('id', $id)->first();
-        $customer->name     = $request->input('name');
-        $customer->address  = $request->input('address');
-        $customer->phone    = $request->input('phone');
-        $customer->details  = $request->input('details');
+        $id = $request->input('id'); //get id from edit modal
+        $customer = Customer::where('store_id', $store_id)->where('id', $id)->first();
+        $customer->name = $request->input('name');
+        $customer->address = $request->input('address');
+        $customer->phone = $request->input('phone');
+        $customer->details = $request->input('details');
+        $customer->opening_balance = $request->input('opening_balance');
         $customer->store_id = $store_id;
 
         if ($customer->save()) {
-            return response()->json([
-                'msg'    => 'Customer update successfully',
-                'status' => 'success',
-            ]);
+            $customerTransaction = CustomerTransaction::where('customer_id', $customer->id)->where('transaction_type', 'opening_balance')->first();
+            $customerTransaction->amount = $request->input('opening_balance');
+            if ($customerTransaction->save()) {
+                return response()->json([
+                    'msg' => 'Customer updated successfully',
+                    'status' => 'success',
+                ]);
+
+            } else {
+                return response()->json([
+                    'msg' => 'Error while updating customer transaction',
+                    'status' => 'error',
+                ]);
+            }
         } else {
             return response()->json([
-                'msg'    => 'Error while updating customer',
+                'msg' => 'Error while updating customer',
                 'status' => 'error',
             ]);
         }
@@ -130,13 +162,22 @@ class CustomerController extends Controller
 
         $customer = Customer::where('store_id', $store_id)->where('id', $id)->first();
         if ($customer->delete()) {
-            return response()->json([
-                'msg'    => 'successfully Deleted',
-                'status' => 'success',
-            ]);
+            $customerTransaction = CustomerTransaction::where('customer_id', $customer->id)->where('transaction_type', 'opening_balance')->first();
+            if ($customerTransaction->delete()) {
+                return response()->json([
+                    'msg' => 'successfully Deleted',
+                    'status' => 'success',
+                ]);
+            } else {
+                return response()->json([
+                    'msg' => 'Error while deleting customer transaction',
+                    'status' => 'error',
+                ]);
+            }
+
         } else {
             return response()->json([
-                'msg'    => 'Error while deleting data',
+                'msg' => 'Error while deleting data',
                 'status' => 'error',
             ]);
         }
@@ -153,14 +194,22 @@ class CustomerController extends Controller
         $store_id = $user->stores[0]->id;
 
         $customer = Customer::where('store_id', $store_id)->where('id', $id)->first();
+
+        // $invoice_amount=Invoice::where('store_id',$store_id)->where('id',$id)->;
+        // $paid_amount;
+        // $balance_due;
+
         if ($customer->save()) {
             return response()->json([
                 'customer' => $customer,
-                'status'   => 'success',
+                // 'invoice_amount'=>$invoice_amount,
+                // 'paid_amount'=>$paid_amount,
+                // 'balance_due'=>$balance_due,
+                'status' => 'success',
             ]);
         } else {
             return response()->json([
-                'msg'    => 'Error while retriving Customer',
+                'msg' => 'Error while retriving Customer',
                 'status' => 'error',
             ]);
         }
@@ -180,7 +229,7 @@ class CustomerController extends Controller
             return CustomerResource::collection(Customer::where('store_id', $store_id)->where('name', 'like', '%' . $searchKey . '%')->paginate(8));
         } else {
             return response()->json([
-                'msg'    => 'Error while retriving Customer. No Data Supplied as key.',
+                'msg' => 'Error while retriving Customer. No Data Supplied as key.',
                 'status' => 'error',
             ]);
         }

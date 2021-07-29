@@ -37,14 +37,17 @@
               <span v-if="errors.unit_id" :class="['errorText']">{{ errors.unit_id[0] }}</span>
             </template>
           </div>
+            <div class="form-group" v-if="modalForCode===0">
+            <label for="Opening Stock">Opening Stock:</label>
+            <input type="text" v-model="product.opening_stock" :class="['form-control']">
+            <span v-if="errors.opening_stock" :class="['errorText']">{{ errors.opening_stock[0] }}</span>
+          </div>
           <div class="form-group">
-            <input type="hidden" v-model="product.cp">
             <label for="Cost Price">Cost Price:</label>
             <input type="text" v-model="product.cp" :class="['form-control']">
             <span v-if="errors.cp" :class="['errorText']">{{ errors.cp[0] }}</span>
           </div>
            <div class="form-group">
-            <input type="hidden" v-model="product.sp">
             <label for="Selling Price">Selling Price:</label>
             <input type="text" v-model="product.sp" :class="['form-control']">
             <span v-if="errors.sp" :class="['errorText']">{{ errors.sp[0] }}</span>
@@ -117,6 +120,7 @@
                 <th>Image</th>
                 <th>Product Name</th>
                 <th>Description</th>
+                <th>Open.Stock</th>
                 <th>Unit</th>
                 <th>CP</th>
                 <th>SP</th>
@@ -131,6 +135,7 @@
                 <!-- <td @click="showProductDetail(product.id)">{{product.name}}</td> -->
                 <td>{{product.name}}</td>
                 <td>{{product.description}}</td>
+                <td>{{product.opening_stock}}</td>
                 <td>{{product.unit.short_name}}</td>
                 <td>Rs. {{product.cp}}</td>
                 <td>Rs. {{product.sp}}</td>
@@ -190,6 +195,7 @@ export default {
         name: '',
         cp: '',
         sp: '',
+        opening_stock:'',
         description: '',
         category: {},
         unit: {},
@@ -418,6 +424,7 @@ export default {
       this.product.address = '';
       this.product.phone = '';
       this.product.description = '';
+      this.opening_stock='';
       this.product.price = '';
 
       this.setAvtarUploadImage();
@@ -454,6 +461,7 @@ export default {
       // formData.append('id',this.product.id);
       formData.append('name', this.product.name);
       formData.append('product_cat_id', this.product.product_cat_id);
+      formData.append('opening_stock', this.product.opening_stock);
       formData.append('unit_id', this.product.unit_id);
       formData.append('description', this.product.description);
       formData.append('cp', this.product.cp);
@@ -477,6 +485,7 @@ export default {
           currObj.product.unit_id = '';
           currObj.product.address = '';
           currObj.product.phone = '';
+          currObj.opening_stock='';
           currObj.product.description = '';
           currObj.product.cp = '';
           currObj.product.sp = '';
@@ -515,6 +524,7 @@ export default {
           Vue.set(this.product, 'name', response.data.product.name);
           Vue.set(this.product, 'description', response.data.product.description);
           Vue.set(this.product, 'unit_id', response.data.product.unit_id);
+          // Vue.set(this.product, 'opening_stock', response.data.product.opening_stock);
           Vue.set(this.product, 'cp', response.data.product.cp);
           Vue.set(this.product, 'sp', response.data.product.sp);
           Vue.set(this.product, 'product_cat_id', response.data.product.product_cat_id);
@@ -552,6 +562,7 @@ export default {
       formData.append('name', this.product.name);
       formData.append('product_cat_id', this.product.product_cat_id);
       formData.append('unit_id', this.product.unit_id);
+      // formData.append('opening_stock',this.product.opening_stock);
       formData.append('description', this.product.description);
       formData.append('cp', this.product.cp);
       formData.append('sp', this.product.sp);
@@ -572,6 +583,7 @@ export default {
           currObj.product.unit_id = '';
           currObj.product.address = '';
           currObj.product.phone = '';
+          currObj.product.opening_stock = '';
           currObj.product.description = '';
           currObj.product.price = '';
 

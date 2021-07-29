@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomerTransaction;
 use App\Http\Resources\Invoice as InvoiceResource;
 use App\Invoice;
 use App\InvoiceDetail;
@@ -44,6 +45,8 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
+        $invoice_status_save = false;
+
         $this->authorize('hasPermission', 'add_invoice');
 
         $user = User::findOrFail(Auth::user()->id);
@@ -53,16 +56,17 @@ class InvoiceController extends Controller
         // //validation
         $this->validate($request, [
 
-            'info.note'            => 'required | string |max:200',
-            'info.customer_name'   => 'required | string| max:200',
-            'info.due_date'        => 'required | date',
-            'info.invoice_date'    => 'required | date',
-
-            'info.discount'        => 'required | numeric| max:200',
+            'info.note' => 'required | string |max:200',
+            'info.customer_name' => 'required | string| max:200',
+            'info.customer_id' => 'required',
+            'info.due_date' => 'required | date',
+            'info.invoice_date' => 'required | date',
+            'info.customer_id' => 'required',
+            'info.discount' => 'required | numeric| max:200',
 
             'items.*.product_name' => 'required | string |max:200',
-            'items.*.price'        => 'required | numeric',
-            'items.*.quantity'     => 'required | numeric',
+            'items.*.price' => 'required | numeric',
+            'items.*.quantity' => 'required | numeric',
 
         ]);
 
@@ -99,11 +103,11 @@ class InvoiceController extends Controller
                 ], 422);
         }
 
-        $data                      = $request->info;
-        $data['sub_total']         = $items->sum('line_total');
-        $data['tax_amount']        = $data['sub_total'] * $store_tax;
-        $data['grand_total']       = $data['sub_total'] + $data['tax_amount'] - $data['discount'];
-        $data['store_id']          = $store_id;
+        $data = $request->info;
+        $data['sub_total'] = $items->sum('line_total');
+        $data['tax_amount'] = $data['sub_total'] * $store_tax;
+        $data['grand_total'] = $data['sub_total'] + $data['tax_amount'] - $data['discount'];
+        $data['store_id'] = $store_id;
         $data['custom_invoice_id'] = $new_count_invoice_id;
 
         $invoice = Invoice::create($data);
@@ -165,9 +169,9 @@ class InvoiceController extends Controller
 
                             //set current invoice_id_count to store table
                             $store->invoice_id_count = $new_count_invoice_id;
-                            if ($store->save()) {
-                                $jsonResponse = ['msg' => 'You have successfully created the Invoice.', 'status' => 'success', 'id' => $invoice_id_count];
 
+                            if ($store->save()) {
+                                $invoice_status_save = true;
                             }
 
                         }
@@ -207,7 +211,21 @@ class InvoiceController extends Controller
             }
 
         }
+        if ($invoice_status_save) {
+            $CustomerTransaction = new CustomerTransaction();
+            $CustomerTransaction->transaction_type = "sales";
+            $CustomerTransaction->refId = $invoice->id;
+            $CustomerTransaction->amount = $data['grand_total'];
+            $CustomerTransaction->customer_id = $data['customer_id'];
+            $CustomerTransaction->store_id = $data['store_id'];
+            if ($CustomerTransaction->save()) {
+                $jsonResponse = ['msg' => 'Successfully created invoice', 'status' => 'success'];
+            } else {
 
+                $jsonResponse = ['msg' => 'Error adding invoice to customer transaction.', 'status' => 'error'];
+
+            }
+        }
         return response()->json($jsonResponse);
 
     }
@@ -222,10 +240,11 @@ class InvoiceController extends Controller
         // //validation
         $this->validate($request, [
 
-            'info.note'          => 'required | string |max:200',
+            'info.note' => 'required | string |max:200',
             'info.customer_name' => 'required | string| max:200',
-            'info.due_date'      => 'required | date',
-            'info.invoice_date'  => 'required | date',
+            'info.customer_id' => 'required',
+            'info.due_date' => 'required | date',
+            'info.invoice_date' => 'required | date',
 
             // 'info.discount' => 'required | numeric| max:200',
 
@@ -250,7 +269,7 @@ class InvoiceController extends Controller
         //     ], 422);
         // }
 
-        $store                = Store::findOrFail($store_id);
+        $store = Store::findOrFail($store_id);
         $store_tax_percentage = $store->tax_percentage;
 
         $store_tax = $store_tax_percentage / 100;
@@ -283,16 +302,16 @@ class InvoiceController extends Controller
         // //validation
         $this->validate($request, [
 
-            'info.note'            => 'required | string |max:200',
-            'info.supplier_name'   => 'required | string| max:200',
-            'info.due_date'        => 'required | date',
-            'info.invoice_date'    => 'required | date',
+            'info.note' => 'required | string |max:200',
+            'info.supplier_name' => 'required | string| max:200',
+            'info.due_date' => 'required | date',
+            'info.invoice_date' => 'required | date',
 
-            'info.discount'        => 'required | numeric| max:200',
+            'info.discount' => 'required | numeric| max:200',
 
             'items.*.product_name' => 'required | string |max:200',
-            'items.*.price'        => 'required | numeric',
-            'items.*.quantity'     => 'required | numeric',
+            'items.*.price' => 'required | numeric',
+            'items.*.quantity' => 'required | numeric',
 
         ]);
 
@@ -305,7 +324,7 @@ class InvoiceController extends Controller
             return new InvoiceDetail($item);
         });
 
-        $store                = Store::findOrFail($store_id);
+        $store = Store::findOrFail($store_id);
         $store_tax_percentage = $store->tax_percentage;
 
         $store_tax = $store_tax_percentage / 100;
@@ -319,10 +338,10 @@ class InvoiceController extends Controller
 
         $data = $request->info;
 
-        $data['sub_total']   = $items->sum('line_total');
-        $data['tax_amount']  = $data['sub_total'] * $store_tax;
+        $data['sub_total'] = $items->sum('line_total');
+        $data['tax_amount'] = $data['sub_total'] * $store_tax;
         $data['grand_total'] = $data['sub_total'] + $data['tax_amount'] - $data['discount'];
-        $data['store_id']    = $store_id;
+        $data['store_id'] = $store_id;
 
         //for inserting in stock and altering if already has one initialized stock and previous stock
         $items_raw = collect($request->items); //collecting new items from the submit form
@@ -444,12 +463,12 @@ class InvoiceController extends Controller
                     if ($Invoice->delete()) {
 
                         return response()->json([
-                            'msg'    => 'successfully Deleted',
+                            'msg' => 'successfully Deleted',
                             'status' => 'success',
                         ]);
                     } else {
                         return response()->json([
-                            'msg'    => 'Delete Failed',
+                            'msg' => 'Delete Failed',
                             'status' => 'error',
                         ]);
                     }
@@ -462,12 +481,12 @@ class InvoiceController extends Controller
             if ($Invoice->delete()) {
 
                 return response()->json([
-                    'msg'    => 'Successfully Deleted',
+                    'msg' => 'Successfully Deleted',
                     'status' => 'success',
                 ]);
             } else {
                 return response()->json([
-                    'msg'    => 'Delete Failed',
+                    'msg' => 'Delete Failed',
                     'status' => 'error',
                 ]);
             }
@@ -490,7 +509,7 @@ class InvoiceController extends Controller
             return InvoiceResource::collection(Invoice::where('store_id', $store_id)->where('customer_name', 'like', '%' . $searchKey . '%')->paginate(8));
         } else {
             return response()->json([
-                'msg'    => 'Error while retriving Invoices. No Data Supplied as key.',
+                'msg' => 'Error while retriving Invoices. No Data Supplied as key.',
                 'status' => 'error',
             ]);
         }
@@ -509,12 +528,12 @@ class InvoiceController extends Controller
 
         $value = $request->input('value');
 
-        $invoice             = Invoice::findOrFail($key);
-        $invoice->status     = $value;
+        $invoice = Invoice::findOrFail($key);
+        $invoice->status = $value;
         $invoice->updated_at = time();
 
         if ($invoice->save()) {
-            return response()->json(['status' => 'success', 'msg' => $invoice->custom_invoice_id.' changed to ' . $value . '']);
+            return response()->json(['status' => 'success', 'msg' => $invoice->custom_invoice_id . ' changed to ' . $value . '']);
         } else {
 
             return response()->json(['status' => 'failed', 'msg' => 'Invoice status changed Failed']);
@@ -522,6 +541,5 @@ class InvoiceController extends Controller
         }
 
     }
-
 
 }

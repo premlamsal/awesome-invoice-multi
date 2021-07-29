@@ -344,7 +344,7 @@ let routes = [
 
 //customer profile routes
   {
-    path: '/customer-profile',
+    path: '/:id/customer-profile',
     name: 'customerProfile',
     component: require('./components/customer/customerProfile.vue').default,
 
@@ -355,6 +355,7 @@ let routes = [
         }
       }
   },
+
 
   //supplier routes
   {
@@ -370,6 +371,21 @@ let routes = [
       }
 
   },
+  
+//supplier profile routes
+{
+  path: '/:id/supplier-profile',
+  name: 'supplierProfile',
+  component: require('./components/supplier/supplierProfile.vue').default,
+
+   beforeEnter(to, from, next) {
+      let hasAccess = store.getters.permissions
+      if (hasAccess.includes('view_supplier_profile') || hasAccess.includes('all')) {
+        next()
+      }
+    }
+},
+
 
   //units route
   {

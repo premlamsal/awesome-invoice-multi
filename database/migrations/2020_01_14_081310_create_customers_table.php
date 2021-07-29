@@ -19,7 +19,7 @@ class CreateCustomersTable extends Migration
             $table->string('address');
             $table->string('phone')->unique();
             $table->text('details');
-
+            $table->string('opening_balance');
             $table->unsignedBigInteger('store_id');
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             

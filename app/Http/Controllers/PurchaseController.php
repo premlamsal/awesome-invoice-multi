@@ -33,6 +33,8 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
+        $purchase_status_save=false;
+
         $this->authorize('hasPermission', 'add_purchase');
 
         $user = User::findOrFail(Auth::user()->id);
@@ -43,6 +45,7 @@ class PurchaseController extends Controller
 
             'info.note'            => 'required | string |max:200',
             'info.supplier_name'   => 'required | string| max:200',
+            'info.supplier_id'   => 'required',
             'info.due_date'        => 'required | date',
             'info.purchase_date'   => 'required | date',
 
@@ -158,7 +161,7 @@ class PurchaseController extends Controller
                         $store->purchase_id_count = $new_count_purchase_id;
                         if ($store->save()) {
 
-                            $jsonResponse=['msg' => 'Saved successfully', 'status' => 'success'];
+                            $purchase_status_save=true;
 
                         }
 
@@ -205,6 +208,21 @@ class PurchaseController extends Controller
             }
 
         }
+        if ($purchase_status_save) {
+            $SupplierTransaction = new SupplierTransaction();
+            $SupplierTransaction->transaction_type = "purchase";
+            $SupplierTransaction->refId = $purchase->id;
+            $SupplierTransaction->amount = $data['grand_total'];
+            $SupplierTransaction->supplier_id = $data['supplier_id'];
+            $SupplierTransaction->store_id = $data['store_id'];
+            if ($SupplierTransaction->save()) {
+                $jsonResponse = ['msg' => 'Successfully created purchase', 'status' => 'success'];
+            } else {
+
+                $jsonResponse = ['msg' => 'Error adding purchase to supplier transaction.', 'status' => 'error'];
+
+            }
+        }
 
         return response()->json($jsonResponse);
 
@@ -223,9 +241,9 @@ class PurchaseController extends Controller
 
             'info.note'          => 'required | string |max:200',
             'info.supplier_name' => 'required | string| max:200',
+            'info.supplier_id'   => 'required',
             'info.due_date'      => 'required | date',
             'info.purchase_date' => 'required | date',
-
             'info.discount'      => 'required | numeric| max:200',
 
             // 'items.*.product_name' => 'required | string |max:200',

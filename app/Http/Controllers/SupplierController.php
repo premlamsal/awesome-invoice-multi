@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\Supplier as SupplierResource;
 use App\Store;
 use App\Supplier;
+use App\SupplierTransaction;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -46,6 +47,8 @@ class SupplierController extends Controller
 
             'address' => 'required|string|max:200',
 
+            'opening_balance' => 'required|numeric',
+
             'phone'   => 'required|unique:customers,phone|digits:10',
 
             'details' => 'required|string|max:400',
@@ -65,12 +68,24 @@ class SupplierController extends Controller
 
         if ($supplier->save()) {
 
-            return response()->json([
+            $SupplierTransaction = new SupplierTransaction();
+            $SupplierTransaction->transaction_type = 'opening_balance';
+            $SupplierTransaction->refID = '0';
+            $SupplierTransaction->amount = $request->input('opening_balance');
+            $SupplierTransaction->supplier_id = $supplier->id;
+            $SupplierTransaction->store_id = $store_id;
+            if ($SupplierTransaction->save()) {
+                return response()->json([
+                    'msg' => 'Supplier added successfully',
+                    'status' => 'success',
+                ]);
 
-                'msg'    => 'Supplier added successfully',
-
-                'status' => 'success',
-            ]);
+            }else{
+                return response()->json([
+                    'msg' => 'Error while adding Supplier transaction',
+                    'status' => 'error',
+                ]); 
+            }
 
         } else {
             return response()->json([
@@ -117,12 +132,20 @@ class SupplierController extends Controller
 
         if ($supplier->save()) {
 
-            return response()->json([
+            $SupplierTransaction = SupplierTransaction::where('supplier_id',$supplier->id)->where('transaction_type','opening_balance')->first();
+            $SupplierTransaction->amount = $request->input('opening_balance');
+            if ($SupplierTransaction->save()) {
+                return response()->json([
+                    'msg' => 'Supplier updated successfully',
+                    'status' => 'success',
+                ]);
 
-                'msg'    => 'Supplier update successfully',
-
-                'status' => 'success',
-            ]);
+            }else{
+                return response()->json([
+                    'msg' => 'Error while updating Supplier transaction',
+                    'status' => 'error',
+                ]); 
+            }
         } else {
 
             return response()->json([
@@ -145,10 +168,18 @@ class SupplierController extends Controller
 
         $supplier = Supplier::where('id', $id)->where('store_id', $store_id)->first();
         if ($supplier->delete()) {
-            return response()->json([
-                'msg'    => 'successfully Deleted',
-                'status' => 'success',
-            ]);
+            $SupplierTransaction = SupplierTransaction::where('customer_id', $supplier->id)->where('transaction_type', 'opening_balance')->first();
+            if ($SupplierTransaction->delete()) {
+                return response()->json([
+                    'msg' => 'successfully Deleted',
+                    'status' => 'success',
+                ]);
+            } else {
+                return response()->json([
+                    'msg' => 'Error while deleting Supplier transaction',
+                    'status' => 'error',
+                ]);
+            }
         } else {
             return response()->json([
                 'msg'    => 'Error while deleting data',
