@@ -137,7 +137,7 @@
                       <!--  suggestion block -->
                       <div class="product-search-suggestion-invoice" >
                         <ul>
-                          <li v-for="queryResultsProduct in queryResultsProducts[index]" v-bind:key="queryResultsProduct.id" @click="clickSearchProductSuggestion(queryResultsProduct.id,queryResultsProduct.custom_product_id,queryResultsProduct.name,queryResultsProduct.unit.id,queryResultsProduct.sp,index)">
+                          <li v-for="queryResultsProduct in queryResultsProducts[index]" v-bind:key="queryResultsProduct.id" @click="clickSearchProductSuggestion(queryResultsProduct.product.id,queryResultsProduct.product.custom_product_id,queryResultsProduct.product.name,queryResultsProduct.product.unit.id,queryResultsProduct.product.sp,index)">
                            
                           {{queryResultsProduct.product.name}} -- {{queryResultsProduct.quantity}} {{queryResultsProduct.product.unit.short_name}} --  Rs. {{queryResultsProduct.product.cp}}
 
