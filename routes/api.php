@@ -30,6 +30,12 @@ Route::get('customer/transactions/{id}','CustomerTransactionController@index');
 //Create new Customer
 Route::post('customer','CustomerController@store');
 
+//Create new Customer payent
+Route::post('customer/add-payment','CustomerPaymentController@store');
+
+//Create new Customer payent
+Route::get('customer/payments/{customer_id}','CustomerController@getPayments');
+
 //List single customer
 Route::get('customer/{id}','CustomerController@show');
 

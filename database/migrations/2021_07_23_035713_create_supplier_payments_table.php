@@ -17,8 +17,9 @@ class CreateSupplierPaymentsTable extends Migration
             $table->bigIncrements('id');
             $table->text('notes');
             $table->decimal('amount');
-            $table->string('refId');
-            $table->text('image');
+            $table->unsignedBigInteger('supplier_id');
+            $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
+            $table->text('image')->nullable();
             $table->unsignedBigInteger('store_id');
             $table->foreign('store_id')->references('id')->on('stores')->onDelete('cascade');
             $table->timestamps();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\CustomerPayment;
 use App\CustomerTransaction;
 use App\Http\Resources\Customer as CustomerResource;
 use App\User;
@@ -86,6 +87,16 @@ class CustomerController extends Controller
             ]);
         }
 
+    }
+    public function getPayments($customer_id){
+        
+        $user = User::findOrFail(Auth::user()->id);
+
+        $store_id = $user->stores[0]->id;
+
+        $CustomerPayments=CustomerPayment::where('store_id',$store_id)->where('customer_id',$customer_id)->get();
+       
+        return response()->json(['data'=>$CustomerPayments,'status'=>'success']);
     }
 
     public function update(Request $request)
