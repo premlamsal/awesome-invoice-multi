@@ -218,8 +218,9 @@ class InvoiceController extends Controller
             $CustomerTransaction->amount = $data['grand_total'];
             $CustomerTransaction->customer_id = $data['customer_id'];
             $CustomerTransaction->store_id = $data['store_id'];
+            $CustomerTransaction->created_at = $data['invoice_date'];
             if ($CustomerTransaction->save()) {
-                $jsonResponse = ['msg' => 'Successfully created invoice', 'status' => 'success'];
+                $jsonResponse = ['msg' => 'Successfully created invoice & customer transactions', 'status' => 'success'];
             } else {
 
                 $jsonResponse = ['msg' => 'Error adding invoice to customer transaction.', 'status' => 'error'];

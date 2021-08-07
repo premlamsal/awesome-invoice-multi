@@ -36,6 +36,15 @@ Route::post('customer/add-payment','CustomerPaymentController@store');
 //Create new Customer payent
 Route::get('customer/payments/{customer_id}','CustomerController@getPayments');
 
+//get Customer payment 
+Route::get('customer/payment/{payment_id}','CustomerPaymentController@show');
+
+//Delete customer payment
+Route::delete('customer/delete-payment/{payment_id}','CustomerPaymentController@destroy');
+
+//Delete customer payment
+Route::post('customer/update-payment/','CustomerPaymentController@update');
+
 //List single customer
 Route::get('customer/{id}','CustomerController@show');
 

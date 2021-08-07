@@ -1,7 +1,7 @@
 <template>
     <div class="content">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <button
                     class="btn btn-primary"
                     style="margin-left:10px"
@@ -9,7 +9,10 @@
                 >
                     Add Payment
                 </button>
-
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
                 <!-- add payment model start -->
                 <b-modal id="bv-modal-add-payment" hide-footer>
                     <template v-slot:modal-title>
@@ -67,7 +70,7 @@
                 <div class="card">
                     <h4 style="margin-left:10px;margin-top:10px;">Payments</h4>
                     <div class="card-body" style="overflow:scroll;height:450px">
-                        <table class="table">
+                        <table class="table" v-if="payments.length != 0">
                             <thead>
                                 <tr>
                                     <th>Date</th>
@@ -76,13 +79,29 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="payment in payments" v-bind:key="payment.id">
-                                    <td>{{payment.created_at}}</td>
-                                    <td>Rs. {{payment.amount}}</td>
-                                    <td>View/ Edit/ Delete</td>
+                                <tr
+                                    v-for="payment in payments"
+                                    v-bind:key="payment.id"
+                                >
+                                    <td>{{ payment.created_at }}</td>
+                                    <td>Rs. {{ payment.amount }}</td>
+                                    <td>
+                                        <span
+                                            class="custom-link"
+                                            @click="editViewPayment(payment.id)"
+                                            >View | Edit
+                                        </span>
+                                        /
+                                        <span
+                                            class="custom-link"
+                                            @click="deletePayment(payment.id)"
+                                            >Delete
+                                        </span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
+                        <p v-else>Add Some Payments</p>
                     </div>
                 </div>
             </div>
@@ -295,6 +314,7 @@ export default {
             this.modalForCode = 0; //0 for add
             this.payment.amount = "";
             this.payment.notes = "";
+            this.setAvtarUploadImage();
             this.errors = ""; //clearing errors
             this.$bvModal.show("bv-modal-add-payment");
         },
@@ -305,18 +325,19 @@ export default {
                 this.updatePayment();
             }
         },
-        getCustomerPayments(){
-            axios.get('/api/customer/payments/'+this.customer_id)
-            .then((response)=>{
-                // console.log(response.data.data);
-                this.payments=response.data.data;
-            })
-            .catch((error)=>{
-                 this.$toast.error({
-                    title: "Error!!",
-                    message: "Couldn't retrive payments."
+        getCustomerPayments() {
+            axios
+                .get("/api/customer/payments/" + this.customer_id)
+                .then(response => {
+                    // console.log(response.data.data);
+                    this.payments = response.data.data;
+                })
+                .catch(error => {
+                    this.$toast.error({
+                        title: "Error!!",
+                        message: "Couldn't retrive payments."
+                    });
                 });
-            })
         },
         addPayment() {
             let currObj = this;
@@ -339,6 +360,8 @@ export default {
                     currObj.$swal("Info", currObj.output, currObj.status);
                     currObj.$Progress.finish();
                     currObj.$bvModal.hide("bv-modal-add-payment");
+                    currObj.getCustomerPayments();
+                    currObj.getCustomerTransactions();
                 })
                 .catch(function(error) {
                     if (error.response.status == 422) {
@@ -348,6 +371,101 @@ export default {
                     }
                     currObj.$Progress.fail();
                 });
+        },
+        editViewPayment(payment_id) {
+            this.$Progress.start();
+            this.modalForName = "Edit Customer";
+            this.modalForCode = 1; // 1 for Edit
+            this.$bvModal.show("bv-modal-add-payment");
+            this.errors = ""; //clearing errors
+            axios
+                .get("/api/customer/payment/" + payment_id)
+                .then(response => {
+                    this.payment.id = response.data.data[0].id;
+                    this.payment.notes = response.data.data[0].notes;
+                    this.payment.amount = response.data.data[0].amount;
+                    this.imagePreview = '/img/'+ response.data.data[0].image;
+                    this.$Progress.finish();
+                })
+                .catch(error => {
+                    this.$Progress.fail();
+                    this.$toast.error({
+                        title: "Error!!",
+                        message: "Couldn't retrive payment"
+                    });
+                });
+        },
+        updatePayment() {
+            let currObj = this;
+            let formData = new FormData();
+            formData.append("_METHOD", "POST");
+            formData.append("payment_id", this.payment.id);
+            formData.append("customer_id", this.customer_id);
+            formData.append("amount", this.payment.amount);
+            formData.append("notes", this.payment.notes);
+            formData.append("image", this.image);
+
+            const config = {
+                headers: { "content-type": "multipart/form-data" }
+            };
+            axios
+                .post("/api/customer/update-payment", formData, config)
+                .then(function(response) {
+                    currObj.output = response.data.msg;
+                    currObj.status = response.data.status;
+                    // alert(currObj.status);
+                    currObj.$swal("Info", currObj.output, currObj.status);
+                    currObj.$Progress.finish();
+                    currObj.$bvModal.hide("bv-modal-add-payment");
+                    currObj.getCustomerPayments();
+                    currObj.getCustomerTransactions();
+                })
+                .catch(function(error) {
+                    if (error.response.status == 422) {
+                        currObj.validationErrors = error.response.data.errors;
+                        currObj.errors = currObj.validationErrors;
+                        // console.log(currObj.errors);
+                    }
+                    currObj.$Progress.fail();
+                });
+        },
+        deletePayment(id) {
+            this.$Progress.start();
+            let currObj = this;
+            this.$swal({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, delete it!"
+            }).then(result => {
+                if (result.value) {
+                    axios
+                        .delete("/api/customer/delete-payment/" + id)
+                        .then(function(response) {
+                            currObj.output = response.data.msg;
+                            currObj.status = response.data.status;
+                            // alert(currObj.status);
+                            currObj.$swal(
+                                "Info",
+                                currObj.output,
+                                currObj.status
+                            );
+                            currObj.$Progress.finish();
+                            currObj.getCustomerTransactions();
+                            currObj.getCustomerPayments();
+                        })
+                        .catch(function(error) {
+                            currObj.$Progress.fail();
+
+                            // currObj.output=error;
+
+                            // console.log(currObj.output);
+                        });
+                }
+            });
         },
         setAvtarUploadImage() {
             this.imagePreview = "/img/upload_image.png";
@@ -448,10 +566,17 @@ export default {
     border: 3px solid #ffffff;
     position: relative;
 }
-.payment_image_upload{
+.payment_image_upload {
     width: 285px;
     height: 230px;
     margin: 0 auto;
     display: flex;
-    }
+}
+.custom-link {
+    text-decoration: underline;
+}
+.custom-link:hover {
+    color: orange;
+    cursor: pointer;
+}
 </style>

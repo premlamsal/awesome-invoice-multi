@@ -169,7 +169,7 @@ class CustomerController extends Controller
 
         $user = User::findOrFail(Auth::user()->id);
 
-        $store_id = $user->stores()->first()->value('id');
+        $store_id = $user->stores[0]->id;
 
         $customer = Customer::where('store_id', $store_id)->where('id', $id)->first();
         if ($customer->delete()) {
