@@ -133,23 +133,30 @@
                         <hr />
                         <div class="button-container">
                             <div class="row">
-                                <div class="col-lg-3 col-md-6 col-6 ml-auto">
+                                <div class="col-md-3 ml-auto">
                                     <h5 class="text-warning">
-                                        Rs. 20000<br /><small
-                                            >Total Sales</small
+                                        Rs. {{customer.opening_balance}}<br /><small
+                                            >Opening Bal</small
                                         >
                                     </h5>
                                 </div>
                                 <div
-                                    class="col-lg-4 col-md-6 col-6 ml-auto mr-auto"
+                                    class="col-md-3 ml-auto mr-auto"
                                 >
                                     <h5 class="text-success">
-                                        Rs. 2000<br /><small>Paid</small>
+                                        Rs. {{customer.invoice_amount}}<br /><small>Total Sales</small>
                                     </h5>
                                 </div>
-                                <div class="col-lg-3 mr-auto">
+                                 <div
+                                    class="col-md-3 ml-auto mr-auto"
+                                >
+                                    <h5 class="text-success">
+                                        Rs. {{customer.paid_amount}}<br /><small>Paid</small>
+                                    </h5>
+                                </div>
+                                <div class="col-md-3 mr-auto">
                                     <h5 class="text-danger">
-                                        Rs.890000<br /><small
+                                        Rs. {{customer.balance_due}}<br /><small
                                             >Due Balance</small
                                         >
                                     </h5>
@@ -551,6 +558,9 @@ export default {
                 .get("/api/customer/" + this.customer_id)
                 .then(response => {
                     this.customer = response.data.customer;
+                    this.customer.invoice_amount=response.data.invoice_amount;
+                    this.customer.paid_amount=response.data.paid_amount;
+                    this.customer.balance_due=response.data.balance_due;
                 })
                 .catch(error => {
                     console.log(error);

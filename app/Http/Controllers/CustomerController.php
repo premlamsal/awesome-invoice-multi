@@ -6,6 +6,7 @@ use App\Customer;
 use App\CustomerPayment;
 use App\CustomerTransaction;
 use App\Http\Resources\Customer as CustomerResource;
+use App\Invoice;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -206,16 +207,16 @@ class CustomerController extends Controller
 
         $customer = Customer::where('store_id', $store_id)->where('id', $id)->first();
 
-        // $invoice_amount=Invoice::where('store_id',$store_id)->where('id',$id)->;
-        // $paid_amount;
-        // $balance_due;
+        $invoice_amount=Invoice::where('store_id',$store_id)->where('customer_id',$id)->sum('grand_total');
+        $paid_amount=CustomerPayment::where('store_id',$store_id)->where('customer_id',$id)->sum('amount');
+        $balance_due=$customer->opening_balance-$invoice_amount-$paid_amount;
 
         if ($customer->save()) {
             return response()->json([
                 'customer' => $customer,
-                // 'invoice_amount'=>$invoice_amount,
-                // 'paid_amount'=>$paid_amount,
-                // 'balance_due'=>$balance_due,
+                'invoice_amount'=>$invoice_amount,
+                'paid_amount'=>$paid_amount,
+                'balance_due'=>$balance_due,
                 'status' => 'success',
             ]);
         } else {
