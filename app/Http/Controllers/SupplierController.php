@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Supplier as SupplierResource;
+use App\Invoice;
+use App\Purchase;
 use App\Store;
 use App\Supplier;
+use App\SupplierPayment;
 use App\SupplierTransaction;
 use App\User;
 use Auth;
@@ -156,6 +159,17 @@ class SupplierController extends Controller
         }
 
     }
+    public function getPayments($supplier_id){
+        
+        $user = User::findOrFail(Auth::user()->id);
+
+        $store_id = $user->stores[0]->id;
+
+        $SupplierPayments=SupplierPayment::where('store_id',$store_id)->where('supplier_id',$supplier_id)->get();
+       
+        return response()->json(['data'=>$SupplierPayments,'status'=>'success']);
+    }
+
 
     public function destroy($id)
     {
@@ -200,14 +214,21 @@ class SupplierController extends Controller
 
         $supplier = Supplier::where('id', $id)->where('store_id', $store_id)->first();
 
-        if ($supplier) {
+        $invoice_amount=Purchase::where('store_id',$store_id)->where('supplier_id',$id)->sum('grand_total');
+        $paid_amount=SupplierPayment::where('store_id',$store_id)->where('supplier_id',$id)->sum('amount');
+        $balance_due=$supplier->opening_balance-$invoice_amount-$paid_amount;
+
+        if ($supplier->save()) {
             return response()->json([
                 'supplier' => $supplier,
-                'status'   => 'success',
+                'invoice_amount'=>$invoice_amount,
+                'paid_amount'=>$paid_amount,
+                'balance_due'=>$balance_due,
+                'status' => 'success',
             ]);
         } else {
             return response()->json([
-                'msg'    => 'Error while retriving Supplier',
+                'msg' => 'Error while retriving Customer',
                 'status' => 'error',
             ]);
         }

@@ -24,11 +24,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 //List Customers
 Route::get('customers','CustomerController@index');
 
-//Get Customer Transactions
-Route::get('customer/transactions/{id}','CustomerTransactionController@index');
 
 //Create new Customer
 Route::post('customer','CustomerController@store');
+
+//List single customer
+Route::get('customer/{id}','CustomerController@show');
+
+//Update customer
+Route::put('customer','CustomerController@update');
+
+//Delete customer
+Route::delete('customer/{id}','CustomerController@destroy');
+
+//Search Customer
+Route::post('customers/search','CustomerController@searchCustomers');
+
+//Get Customer Transactions
+Route::get('customer/transactions/{id}','CustomerTransactionController@index');
 
 //Create new Customer payent
 Route::post('customer/add-payment','CustomerPaymentController@store');
@@ -45,27 +58,11 @@ Route::delete('customer/delete-payment/{payment_id}','CustomerPaymentController@
 //Delete customer payment
 Route::post('customer/update-payment/','CustomerPaymentController@update');
 
-//List single customer
-Route::get('customer/{id}','CustomerController@show');
-
-//Update customer
-Route::put('customer','CustomerController@update');
-
-//Delete customer
-Route::delete('customer/{id}','CustomerController@destroy');
-
-//Search Customer
-Route::post('customers/search','CustomerController@searchCustomers');
-
 
 
 
 //List supplier
 Route::get('suppliers','SupplierController@index');
-
-//get all supplier Transactions
-
-Route::get('supplier/transactions/{id}','SupplierTransactionController@index');
 
 //Create new supplier
 Route::post('supplier','SupplierController@store');
@@ -83,6 +80,23 @@ Route::delete('supplier/{id}','SupplierController@destroy');
 Route::post('suppliers/search','SupplierController@searchSuppliers');
 
 
+//Get Supplier Transactions
+Route::get('supplier/transactions/{id}','SupplierTransactionController@index');
+
+//Create new Supplier payent
+Route::post('supplier/add-payment','SupplierPaymentController@store');
+
+//Create new Supplier payent
+Route::get('supplier/payments/{supplier_id}','SupplierController@getPayments');
+
+//get Supplier payment 
+Route::get('supplier/payment/{payment_id}','SupplierPaymentController@show');
+
+//Delete supplier payment
+Route::delete('supplier/delete-payment/{payment_id}','SupplierPaymentController@destroy');
+
+//Delete supplier payment
+Route::post('supplier/update-payment/','SupplierPaymentController@update');
 
 
 

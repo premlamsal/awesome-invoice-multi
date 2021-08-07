@@ -381,7 +381,7 @@ export default {
         },
         editViewPayment(payment_id) {
             this.$Progress.start();
-            this.modalForName = "Edit Customer";
+            this.modalForName = "Edit Payment";
             this.modalForCode = 1; // 1 for Edit
             this.$bvModal.show("bv-modal-add-payment");
             this.errors = ""; //clearing errors
