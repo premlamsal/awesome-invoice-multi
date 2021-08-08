@@ -294,15 +294,15 @@ export default {
 
         Vue.set(
           currObj.store,
-          "invoice_id_count",
-          response.data.store.invoice_id_count
+          "purchase_id_count",
+          response.data.store.purchase_id_count
         );
 
-        currObj.invoice_number = currObj.store.invoice_id_count.split("-");
+        currObj.purchase_number = currObj.store.purchase_id_count.split("-");
 
-        currObj.invoice_number[1] = parseInt(currObj.invoice_number[1]) + 1;
+        currObj.purchase_number[1] = parseInt(currObj.purchase_number[1]) + 1;
 
-        currObj.invoice_number = currObj.invoice_number.join("-");
+        currObj.purchase_number = currObj.purchase_number.join("-");
 
         currObj.isLoading = "";
       });
