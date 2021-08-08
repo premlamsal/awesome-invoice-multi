@@ -24,6 +24,7 @@ class CreatePurchasesTable extends Migration
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
             $table->string('supplier_name');
             $table->string('sub_total');
+            $table->string('purchase_reference_id');
             $table->decimal('discount');
             $table->decimal('tax_amount');
             $table->decimal('grand_total');

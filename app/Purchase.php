@@ -16,5 +16,5 @@ class Purchase extends Model
         return $this->belongsTo('\App\Supplier', 'supplier_id', 'id');
     }
 
-    protected $fillable = ['purchase_date', 'due_date', 'image', 'supplier_id', 'supplier_name', 'sub_total', 'discount', 'tax_amount', 'grand_total', 'status', 'store_id', 'custom_purchase_id', 'note'];
+    protected $fillable = ['purchase_date','purchase_reference_id', 'due_date', 'image', 'supplier_id', 'supplier_name', 'sub_total', 'discount', 'tax_amount', 'grand_total', 'status', 'store_id', 'custom_purchase_id', 'note'];
 }

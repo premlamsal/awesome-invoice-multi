@@ -9,9 +9,18 @@
         <div class="row">
           <div class="col-sm-4">
             <div class="form-group">
-              <label>Purchase No.</label>
+              <label>Purchase No. (auto generated)</label>
               {{purchase_number}}
             </div>
+            <div class="form-group" v-if="info.supplier_id!=null">
+              <label>Actual Purchase Number(Reference Purchase ID)</label>
+              <span>{{info.supplier_short_name}} - {{info.purchase_reference_number}}</span>
+              <input type="text" v-model="info.purchase_reference_number" class="form-control"/>
+              <span v-if="errors['info.purchase_reference_number']" :class="['errorText']">
+                {{errors['info.purchase_reference_number'][0]}}
+                <br />
+              </span>
+              </div>
             <div class="form-group" style="position: relative;">
               <label>Supplier</label>
               <input type="text" v-model="info.supplier_name" v-on:keyup="autoComplete" class="form-control" />
@@ -239,6 +248,7 @@ export default {
       queryResultsProducts: [],
       errors: [],
       units: [],
+      tempCustomPurchaseID:'',
 
       showProductSuggestion: false,
 
@@ -422,6 +432,9 @@ export default {
       let currObj = this;
       if (this.info.supplier_name === "") {
         this.queryResults = new Array();
+        this.info.supplier_short_name='';
+        this.info.supplier_id=null;
+        this.info.purchase_reference_number='';
       } else {
         axios
           .post("api/suppliers/search", {
@@ -547,6 +560,10 @@ export default {
       Vue.set(this.info, "supplier_id", supplier_id);
       Vue.set(this.info, "supplier_name", supplier_name);
       this.queryResults = null;
+      let matches = supplier_name.match(/\b(\w)/g);
+      this.tempCustomPurchaseID=matches.join('');
+      this.tempCustomPurchaseID=this.tempCustomPurchaseID + '-' + supplier_id;
+      this.info.supplier_short_name=this.tempCustomPurchaseID;
     },
     displayToastErrorMessage(title, message) {
       this.$toast.error({

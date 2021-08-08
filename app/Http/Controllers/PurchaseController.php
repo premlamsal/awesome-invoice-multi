@@ -48,6 +48,8 @@ class PurchaseController extends Controller
             'info.supplier_id'   => 'required',
             'info.due_date'        => 'required | date',
             'info.purchase_date'   => 'required | date',
+           
+            'info.purchase_reference_number'=>'required | string| max:200',
 
             'info.discount'        => 'required | numeric| max:200',
 
@@ -97,6 +99,8 @@ class PurchaseController extends Controller
         $data['grand_total'] = $data['sub_total'] + $data['tax_amount'] - $data['discount'];
 
         $data['store_id'] = $store_id;
+
+        $data['purchase_reference_id'] = $data['supplier_short_name'].'-'.$data['purchase_reference_number'];
 
         $data['custom_purchase_id'] = $new_count_purchase_id;
 
@@ -242,6 +246,7 @@ class PurchaseController extends Controller
             'info.note'          => 'required | string |max:200',
             'info.supplier_name' => 'required | string| max:200',
             'info.supplier_id'   => 'required',
+            'info.purchase_reference_number'=>'required | string| max:200',
             'info.due_date'      => 'required | date',
             'info.purchase_date' => 'required | date',
             'info.discount'      => 'required | numeric| max:200',
@@ -274,6 +279,8 @@ class PurchaseController extends Controller
         // }
 
         $data = $request->info;
+
+        $data['purchase_reference_id'] = $data['supplier_short_name'].'-'.$data['purchase_reference_number'];
 
         // $data['sub_total'] = $items->sum('line_total');
         // $data['tax_amount'] = $data['sub_total'] * $store_tax;
