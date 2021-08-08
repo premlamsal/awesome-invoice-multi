@@ -558,7 +558,7 @@ export default {
                 .get("/api/supplier/" + this.supplier_id)
                 .then(response => {
                     this.supplier = response.data.supplier;
-                    this.supplier.invoice_amount=response.data.invoice_amount;
+                    this.supplier.purchase_amount=response.data.purchase_amount;
                     this.supplier.paid_amount=response.data.paid_amount;
                     this.supplier.balance_due=response.data.balance_due;
                 })

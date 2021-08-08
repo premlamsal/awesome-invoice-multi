@@ -55,6 +55,9 @@ class SupplierController extends Controller
             'phone'   => 'required|unique:customers,phone|digits:10',
 
             'details' => 'required|string|max:400',
+
+            'opening_balance' => 'required|numeric',
+
         ]);
 
         $supplier = new Supplier();
@@ -66,6 +69,8 @@ class SupplierController extends Controller
         $supplier->phone = $request->input('phone');
 
         $supplier->details = $request->input('details');
+
+        $supplier->opening_balance = $request->input('opening_balance');
 
         $supplier->store_id = $store_id;
 
@@ -119,6 +124,9 @@ class SupplierController extends Controller
 
             'details' => 'required|string|max:400',
 
+            'opening_balance' => 'required|numeric',
+
+
         ]);
 
         $id = $request->input('id'); //get id from edit modal
@@ -130,6 +138,8 @@ class SupplierController extends Controller
         $supplier->address = $request->input('address');
 
         $supplier->phone = $request->input('phone');
+
+        $supplier->opening_balance = $request->input('opening_balance');
 
         $supplier->store_id = $store_id;
 
@@ -214,14 +224,14 @@ class SupplierController extends Controller
 
         $supplier = Supplier::where('id', $id)->where('store_id', $store_id)->first();
 
-        $invoice_amount=Purchase::where('store_id',$store_id)->where('supplier_id',$id)->sum('grand_total');
+        $purchase_amount=Purchase::where('store_id',$store_id)->where('supplier_id',$id)->sum('grand_total');
         $paid_amount=SupplierPayment::where('store_id',$store_id)->where('supplier_id',$id)->sum('amount');
-        $balance_due=$supplier->opening_balance-$invoice_amount-$paid_amount;
+        $balance_due=floatval($supplier->opening_balance)-floatval($purchase_amount)-floatval($paid_amount);
 
         if ($supplier->save()) {
             return response()->json([
                 'supplier' => $supplier,
-                'invoice_amount'=>$invoice_amount,
+                'purchase_amount'=>$purchase_amount,
                 'paid_amount'=>$paid_amount,
                 'balance_due'=>$balance_due,
                 'status' => 'success',

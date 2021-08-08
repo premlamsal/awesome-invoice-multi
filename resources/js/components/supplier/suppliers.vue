@@ -91,6 +91,7 @@
                 <th>Name</th>
                 <th>Address</th>
                 <th>Phone</th>
+                <th>Open.Bal</th>
                 <th>Details</th>
                 <th>Updated at</th>
                 <th>Modify</th>
@@ -102,6 +103,7 @@
                 <td @click="supplierProfile(supplier.id)" class="cursor">{{supplier.name}}</td>
                 <td>{{supplier.address}}</td>
                 <td>{{supplier.phone}}</td>
+                <td>{{supplier.opening_balance}}</td>
                 <td>{{supplier.details}}</td>
                 <td>{{supplier.updated_at | moment("from", "now")}}</td>
                 <td>
