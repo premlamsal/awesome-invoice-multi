@@ -45,6 +45,11 @@
                     <input type="text" v-model="customer.address" class="form-control" />
                     <span v-if="errors.address" :class="['errorText']">{{ errors.address[0] }}</span>
                   </div>
+                   <div class="form-group">
+                    <label for="Opening_balance">Opening Balance:</label>
+                    <input type="text" v-model="customer.opening_balance" :class="['form-control']">
+                    <span v-if="errors.opening_balance" :class="['errorText']">{{ errors.opening_balance[0] }}</span>
+                  </div>
                   <div class="form-group">
                     <label for="Phone">Phone:</label>
                     <input type="phone" v-model="customer.phone" class="form-control" />

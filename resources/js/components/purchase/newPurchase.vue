@@ -59,6 +59,11 @@
                     <input type="phone" v-model="supplier.phone" :class="['form-control']" />
                     <span v-if="errors.phone" :class="['errorText']">{{ errors.phone[0] }}</span>
                   </div>
+                      <div class="form-group">
+          <label for="Opening_balance">Opening Balance:</label>
+          <input type="text" v-model="supplier.opening_balance" :class="['form-control']">
+          <span v-if="errors.opening_balance" :class="['errorText']">{{ errors.opening_balance[0] }}</span>
+        </div>
                   <div class="form-group">
                     <label for="Phone">Details:</label>
                     <textarea v-model="supplier.details" :class="['form-control']"></textarea>
@@ -143,8 +148,12 @@
                       <span v-if="errors['items.' + index + '.product_name']" :class="['errorText']">{{errors['items.' + index + '.product_name'][0]}}</span>
                       <!--  suggestion block -->
                       <div class="product-search-suggestion-purchase" v-for="queryResultsProduct in queryResultsProducts[index]" v-bind:key="queryResultsProduct.id">
-                        <ul>
-                          <li @click="clickSearchProductSuggestion(queryResultsProduct.id,queryResultsProduct.custom_product_id,queryResultsProduct.name,queryResultsProduct.unit.id,queryResultsProduct.cp,index)">{{queryResultsProduct.name}} -></li>
+                           <ul>
+                          <li v-for="queryResultsProduct in queryResultsProducts[index]" v-bind:key="queryResultsProduct.id" @click="clickSearchProductSuggestion(queryResultsProduct.product.id,queryResultsProduct.product.custom_product_id,queryResultsProduct.product.name,queryResultsProduct.product.unit.id,queryResultsProduct.product.cp,index)">
+                           
+                          {{queryResultsProduct.product.name}} -- {{queryResultsProduct.quantity}} {{queryResultsProduct.product.unit.short_name}} --  Rs. {{queryResultsProduct.product.cp}}
+
+                          </li>
                         </ul>
                       </div>
                       <!--  <span v-if="errors['items.' + index + '.product_name']">

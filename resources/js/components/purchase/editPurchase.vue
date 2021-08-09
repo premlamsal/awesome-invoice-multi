@@ -59,11 +59,17 @@
                     <input type="text" v-model="supplier.address" :class="['form-control']" />
                     <span v-if="errors.address" :class="['errorText']">{{ errors.address[0] }}</span>
                   </div>
+
                   <div class="form-group">
                     <label for="Phone">Phone:</label>
                     <input type="phone" v-model="supplier.phone" :class="['form-control']" />
                     <span v-if="errors.phone" :class="['errorText']">{{ errors.phone[0] }}</span>
                   </div>
+                      <div class="form-group">
+          <label for="Opening_balance">Opening Balance:</label>
+          <input type="text" v-model="supplier.opening_balance" :class="['form-control']">
+          <span v-if="errors.opening_balance" :class="['errorText']">{{ errors.opening_balance[0] }}</span>
+        </div>
                   <div class="form-group">
                     <label for="Phone">Details:</label>
                     <textarea v-model="supplier.details" :class="['form-control']"></textarea>
