@@ -127,12 +127,14 @@ class InvoiceController extends Controller
 
             $p_id = $items[$i]['product_id'];
 
-            $stock = Stock::where('product_id', $p_id)->where('store_id', $store_id);
+            $stock_id = $items[$i]['stock_id'];
+
+            $stock = Stock::where('id',$stock_id)->where('product_id', $p_id)->where('store_id', $store_id);
 
             //retirving current product-> stock quantity
             $in_stock_quantity = $stock->value('quantity');
 
-            //get stock id
+            //get stock id //instead we already have stock_id but picking from quered varible.
             $stock_id = $stock->value('id');
 
             if ($in_stock_quantity >= $items[$i]['quantity'] && $items[$i]['quantity'] > 0) {
@@ -140,7 +142,7 @@ class InvoiceController extends Controller
                 //adding current stock with new purchased product quantity
                 $new_stock_quantity = $in_stock_quantity - $items[$i]['quantity'];
 
-                $stock = Stock::where('store_id', $store_id)->first();
+                $stock = Stock::findOrFail($stock_id);
 
                 $stock->quantity = $new_stock_quantity;
 

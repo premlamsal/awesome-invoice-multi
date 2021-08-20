@@ -11,10 +11,17 @@ class Product extends Model
         return $this->belongsTo('\App\ProductCategory', 'product_cat_id', 'id');
     }
 
+
     public function productDetail()
     {
 
         return $this->hasMany('\App\productDetail', 'product_id', 'id');
+    }
+
+    public function stock()
+    {
+
+        return $this->hasMany('\App\Stock', 'product_id', 'id');
     }
     public function unit()
     {

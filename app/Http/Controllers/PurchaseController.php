@@ -9,6 +9,7 @@ use App\Stock;
 use App\StockHistory;
 use App\Store;
 use App\Supplier;
+use App\SupplierTransaction;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -129,22 +130,48 @@ class PurchaseController extends Controller
             //get stock id
             $stock_id = $stock->value('id');
 
+            $stock_price_old = $stock->value('price');
+
+
             //adding current stock with new purchased product quantity
             $new_stock_quantity = $in_stock_quantity + $items[$i]['quantity'];
 
-            $stock = Stock::findOrFail($stock_id);
 
-            $stock->quantity = $new_stock_quantity;
+                //found product on stock
+            if($stock_id!=0){
+                //found product that have same price on stock so updating the quanity for the product but same price
+                if($stock_price_old == $items[$id]['price'])
+                {
+                
+                   $stock = Stock::findOrFail($stock_id);
 
-            $stock->unit_id = $items[$i]['unit_id'];
+                    $stock->quantity = $new_stock_quantity;
 
-            $stock->created_at = $timeStamp;
+                    $stock->updated_at = $timeStamp;
 
-            $stock->updated_at = $timeStamp;
 
-            $stock->store_id = $store_id;
+                }
+                else{//the price is diff so we have to add new stock for the new price of that product
 
-            if ($stock->save()) {
+                    $stock = new Stock();
+
+                    $stock->quantity = $new_stock_quantity;
+
+                    $stock->updated_at = $timeStamp;
+
+                    $stock->quantity = $new_stock_quantity;
+
+                    $stock->price = $items[$i]['price'];
+
+                    $stock->unit_id = $items[$i]['unit_id'];
+
+                    $stock->created_at = $timeStamp;
+
+                    $stock->updated_at = $timeStamp;
+
+                    $stock->store_id = $store_id;
+
+                     if ($stock->save()) {
 
                 // $today = date('Y-m-d');
                 $date_stock_histroy=$data['purchase_date'];
@@ -211,6 +238,17 @@ class PurchaseController extends Controller
 
             }
 
+
+                }
+            }
+            else{
+
+                //couldn't find the product on stock
+
+            }
+
+           
+
         }
         if ($purchase_status_save) {
             $SupplierTransaction = new SupplierTransaction();
@@ -219,6 +257,7 @@ class PurchaseController extends Controller
             $SupplierTransaction->amount = $data['grand_total'];
             $SupplierTransaction->supplier_id = $data['supplier_id'];
             $SupplierTransaction->store_id = $data['store_id'];
+            $SupplierTransaction->created_at = $data['purchase_date'];
             if ($SupplierTransaction->save()) {
                 $jsonResponse = ['msg' => 'Successfully created purchase', 'status' => 'success'];
             } else {

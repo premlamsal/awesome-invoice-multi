@@ -92,9 +92,12 @@ class ProductController extends Controller
                 $stock->quantity = 0.00;
             }
             $stock->product_id = $product->id;
+            
             $stock->unit_id = $request->input('unit_id');
 
             $stock->store_id = $store_id;
+
+            $stock->price = $request->input('cp');
 
             if ($stock->save()) {
                 //set current product_id_count to store table
@@ -155,8 +158,8 @@ class ProductController extends Controller
         $product->product_cat_id = $request->input('product_cat_id');
         $product->unit_id = $request->input('unit_id');
         $product->description = $request->input('description');
-        $product->cp = $request->input('cp');
-        $product->sp = $request->input('sp');
+        // $product->cp = $request->input('cp');
+        // $product->sp = $request->input('sp');
 
         if ($request->hasFile('image')) {
 
@@ -246,15 +249,15 @@ class ProductController extends Controller
 
         $searchKey = $request->input('searchQuery');
         if ($searchKey != '') {
-            $product=Product::where('store_id', $store_id)->where('name', 'like', '%' . $searchKey . '%')->with('unit')->with('category')->get();
+            $product=Product::where('name', 'like', '%' . $searchKey . '%')->where('store_id', $store_id)->with('unit')->with('category')->get();
             $product_suggestion=array();
             for($i=0;$i<$product->count();$i++){
                 $temp=array();
                 $temp=Stock::where('product_id',$product[$i]->id)->with('product.unit')->get();
-                $product_suggestion[$i]=$temp[0];
+                $product_suggestion[$i]=$temp;
             }
             return response()->json([
-                'data' => $product_suggestion,
+                'data' => $product_suggestion[0],
             ]);
         
         } else {

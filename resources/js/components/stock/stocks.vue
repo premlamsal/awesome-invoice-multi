@@ -68,7 +68,7 @@
                                 <th>Product Name</th>
                                 <th>Quantity</th>
                                 <th>Unit</th>
-                                <th>CP</th>
+                                <th>Price</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -89,9 +89,9 @@
                                 <td>{{ stock.product.name }}</td>
                                 <td>{{ stock.quantity }}</td>
                                 <td>{{ stock.product.unit.short_name }}</td>
-                                <td>Rs. {{ stock.product.cp }}</td>
+                                <td>Rs. {{ stock.price }}</td>
                                 <td>
-                                    Rs. {{ stock.quantity * stock.product.cp }}
+                                    Rs. {{ stock.quantity * stock.price }}
                                 </td>
                             </tr>
                         </tbody>
@@ -313,7 +313,7 @@ export default {
             this.stocks.grandTotal = this.stocks.reduce(function(carry, stock) {
                 return (
                     carry +
-                    parseFloat(stock.quantity) * parseFloat(stock.product.cp)
+                    parseFloat(stock.quantity) * parseFloat(stock.price)
                 );
             }, 0);
             return this.stocks.grandTotal;
