@@ -28,6 +28,8 @@ class CustomerPaymentController extends Controller
         $this->validate($request, [
             'notes' => 'required|string|max:400',
             'amount' => 'required|numeric',
+            'date' => 'required|date',
+
         ]);
 
         // $this->authorize('hasPermission', 'add_customer_payment');
@@ -41,6 +43,7 @@ class CustomerPaymentController extends Controller
         $payment->store_id = $store_id;
         $payment->amount = $request->input('amount');
         $payment->notes = $request->input('notes');
+        $payment->date = $request->input('date');
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->getClientOriginalExtension();
             $request->image->move(public_path('img'), $imageName);
@@ -54,6 +57,7 @@ class CustomerPaymentController extends Controller
             $customerTransaction->amount = $payment->amount;
             $customerTransaction->customer_id = $payment->customer_id;
             $customerTransaction->store_id = $store_id;
+            $customerTransaction->date = $payment->date;
             if ($customerTransaction->save()) {
                 //success code
                 return response()->json([
@@ -107,6 +111,7 @@ class CustomerPaymentController extends Controller
         $payment->store_id = $store_id;
         $payment->amount = $request->input('amount');
         $payment->notes = $request->input('notes');
+        $payment->date = $request->input('date');
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->getClientOriginalExtension();
             $request->image->move(public_path('img'), $imageName);
@@ -120,6 +125,7 @@ class CustomerPaymentController extends Controller
                 ->where('store_id',$store_id)
                 ->first();
             $customerTransaction->amount = $payment->amount;
+            $customerTransaction->date = $payment->date;
             if ($customerTransaction->save()) {
                 //success code
                 return response()->json([

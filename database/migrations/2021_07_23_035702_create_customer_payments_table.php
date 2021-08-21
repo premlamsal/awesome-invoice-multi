@@ -17,6 +17,7 @@ class CreateCustomerPaymentsTable extends Migration
             $table->bigIncrements('id');
             $table->text('notes');
             $table->decimal('amount');
+            $table->text('date');
             $table->text('image')->nullable();
             $table->unsignedBigInteger('customer_id');
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');

@@ -18,11 +18,6 @@ class SupplierPaymentController extends Controller
         // $this->authorize('hasPermission','delete_supplier');
 
     }
-
-    public function index()
-    {
-
-    }
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -41,6 +36,7 @@ class SupplierPaymentController extends Controller
         $payment->store_id = $store_id;
         $payment->amount = $request->input('amount');
         $payment->notes = $request->input('notes');
+        $payment->date = $request->input('date');
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->getClientOriginalExtension();
             $request->image->move(public_path('img'), $imageName);
@@ -54,6 +50,7 @@ class SupplierPaymentController extends Controller
             $supplierTransaction->amount = $payment->amount;
             $supplierTransaction->supplier_id = $payment->supplier_id;
             $supplierTransaction->store_id = $store_id;
+            $supplierTransaction->date = $payment->date;
             if ($supplierTransaction->save()) {
                 //success code
                 return response()->json([
@@ -107,6 +104,7 @@ class SupplierPaymentController extends Controller
         $payment->store_id = $store_id;
         $payment->amount = $request->input('amount');
         $payment->notes = $request->input('notes');
+        $payment->date = $request->input('date');
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->getClientOriginalExtension();
             $request->image->move(public_path('img'), $imageName);
@@ -117,9 +115,10 @@ class SupplierPaymentController extends Controller
             $supplierTransaction = SupplierTransaction::where('supplier_id', $payment->supplier_id)
                 ->where('transaction_type', 'payment')
                 ->where('refID', $request->input('payment_id'))
-                ->where('store_id',$store_id)
+                ->where('store_id', $store_id)
                 ->first();
             $supplierTransaction->amount = $payment->amount;
+            $supplierTransaction->date = $payment->date;
             if ($supplierTransaction->save()) {
                 //success code
                 return response()->json([

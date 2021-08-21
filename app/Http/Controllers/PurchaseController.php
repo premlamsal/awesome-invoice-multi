@@ -34,7 +34,7 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
-        $purchase_status_save=false;
+        $purchase_status_save = false;
 
         $this->authorize('hasPermission', 'add_purchase');
 
@@ -44,30 +44,29 @@ class PurchaseController extends Controller
         //validation
         $this->validate($request, [
 
-            'info.note'            => 'required | string |max:200',
-            'info.supplier_name'   => 'required | string| max:200',
-            'info.supplier_id'   => 'required',
-            'info.due_date'        => 'required | date',
-            'info.purchase_date'   => 'required | date',
-           
-            'info.purchase_reference_number'=>'required | string| max:200',
+            'info.note' => 'required | string |max:200',
+            'info.supplier_name' => 'required | string| max:200',
+            'info.supplier_id' => 'required',
+            'info.due_date' => 'required | date',
+            'info.purchase_date' => 'required | date',
 
-            'info.discount'        => 'required | numeric| max:200',
+            'info.purchase_reference_number' => 'required | string| max:200',
+
+            'info.discount' => 'required | numeric| max:200',
 
             'items.*.product_name' => 'required | string |max:200',
-            'items.*.price'        => 'required | numeric',
-            'items.*.quantity'     => 'required | numeric',
+            'items.*.price' => 'required | numeric',
+            'items.*.quantity' => 'required | numeric',
 
         ]);
 
-        $store                = Store::findOrFail($store_id);
+        $store = Store::findOrFail($store_id);
         $store_tax_percentage = $store->tax_percentage;
 
         $store_tax = $store_tax_percentage / 100;
-        
+
         //old invoice id
         $purchase_id_count = $store->purchase_id_count;
-
 
         //explode invoice id from database
 
@@ -101,7 +100,7 @@ class PurchaseController extends Controller
 
         $data['store_id'] = $store_id;
 
-        $data['purchase_reference_id'] = $data['supplier_short_name'].'-'.$data['purchase_reference_number'];
+        $data['purchase_reference_id'] = $data['supplier_short_name'] . '-' . $data['purchase_reference_number'];
 
         $data['custom_purchase_id'] = $new_count_purchase_id;
 
@@ -116,7 +115,7 @@ class PurchaseController extends Controller
 
         $timeStamp = now();
 
-        $jsonResponse=array();
+        $jsonResponse = array();
 
         for ($i = 0; $i < $countItems; $i++) {
 
@@ -132,26 +131,21 @@ class PurchaseController extends Controller
 
             $stock_price_old = $stock->value('price');
 
-
             //adding current stock with new purchased product quantity
             $new_stock_quantity = $in_stock_quantity + $items[$i]['quantity'];
 
-
-                //found product on stock
-            if($stock_id!=0){
+            //found product on stock
+            if ($stock_id != 0) {
                 //found product that have same price on stock so updating the quanity for the product but same price
-                if($stock_price_old == $items[$id]['price'])
-                {
-                
-                   $stock = Stock::findOrFail($stock_id);
+                if ($stock_price_old == $items[$id]['price']) {
+
+                    $stock = Stock::findOrFail($stock_id);
 
                     $stock->quantity = $new_stock_quantity;
 
                     $stock->updated_at = $timeStamp;
 
-
-                }
-                else{//the price is diff so we have to add new stock for the new price of that product
+                } else { //the price is diff so we have to add new stock for the new price of that product
 
                     $stock = new Stock();
 
@@ -171,83 +165,75 @@ class PurchaseController extends Controller
 
                     $stock->store_id = $store_id;
 
-                     if ($stock->save()) {
+                    if ($stock->save()) {
 
-                // $today = date('Y-m-d');
-                $date_stock_histroy=$data['purchase_date'];
+                        // $today = date('Y-m-d');
+                        $date_stock_histroy = $data['purchase_date'];
 
-                $StockHistoryID = StockHistory::where('store_id', $store_id)->where('date', '=', $date_stock_histroy)->where('product_id', $p_id)->value('id');
+                        $StockHistoryID = StockHistory::where('store_id', $store_id)->where('date', '=', $date_stock_histroy)->where('product_id', $p_id)->value('id');
 
-                if ($StockHistoryID != null) {
+                        if ($StockHistoryID != null) {
 
-                    $StockHistory = StockHistory::findOrFail($StockHistoryID);
+                            $StockHistory = StockHistory::findOrFail($StockHistoryID);
 
-                    $StockHistory->quantity = $new_stock_quantity;
+                            $StockHistory->quantity = $new_stock_quantity;
 
-                    $StockHistory->store_id = $store_id;
+                            $StockHistory->store_id = $store_id;
 
-                    if ($StockHistory->save()) {
+                            if ($StockHistory->save()) {
 
-                        //set current purchase_id_count to store table
-                        $store->purchase_id_count = $new_count_purchase_id;
-                        if ($store->save()) {
+                                //set current purchase_id_count to store table
+                                $store->purchase_id_count = $new_count_purchase_id;
+                                if ($store->save()) {
 
-                            $purchase_status_save=true;
+                                    $purchase_status_save = true;
+
+                                }
+
+                            } else {
+                                $jsonResponse = ['msg' => 'Failed Saving the Data to the Stock.', 'status' => 'error1'];
+                            }
+
+                        } else {
+                            $StockHistory = new StockHistory();
+
+                            $StockHistory->product_id = $p_id;
+
+                            $StockHistory->quantity = $new_stock_quantity;
+
+                            // $StockHistory->date = $today;
+
+                            $StockHistory->date = $date_stock_histroy;
+
+                            $StockHistory->store_id = $store_id;
+
+                            if ($StockHistory->save()) {
+
+                                //set current purchase_id_count to store table
+                                $store->purchase_id_count = $new_count_purchase_id;
+                                if ($store->save()) {
+
+                                    $jsonResponse = ['msg' => 'Saved successfully', 'status' => 'success'];
+
+                                }
+                            } else {
+                                $jsonResponse = ['msg' => 'Failed Saving the Data to the Stock History.', 'status' => 'error2'];
+
+                            }
 
                         }
+                    } else {
+
+                        $jsonResponse = ['msg' => 'Failed Saving the Data to the Stock.', 'status' => 'error3'];
 
                     }
-                    else{
-                    $jsonResponse=['msg' => 'Failed Saving the Data to the Stock.', 'status' => 'error1'];
-                    }
-
-                } else {
-                    $StockHistory = new StockHistory();
-
-                    $StockHistory->product_id = $p_id;
-
-                    $StockHistory->quantity = $new_stock_quantity;
-
-                    // $StockHistory->date = $today;
-
-                    $StockHistory->date = $date_stock_histroy;
-
-                    $StockHistory->store_id = $store_id;
-
-                    if ($StockHistory->save()) {
-
-                        //set current purchase_id_count to store table
-                        $store->purchase_id_count = $new_count_purchase_id;
-                        if ($store->save()) {
-
-                    $jsonResponse=['msg' => 'Saved successfully', 'status' => 'success'];
-
-                        }
-                    }
-                    else{
-                    $jsonResponse=['msg' => 'Failed Saving the Data to the Stock History.', 'status' => 'error2'];
-                        
-                    }
-
 
                 }
             } else {
 
-                    $jsonResponse=['msg' => 'Failed Saving the Data to the Stock.', 'status' => 'error3'];
-
-
-            }
-
-
-                }
-            }
-            else{
-
                 //couldn't find the product on stock
 
             }
-
-           
 
         }
         if ($purchase_status_save) {
@@ -257,7 +243,7 @@ class PurchaseController extends Controller
             $SupplierTransaction->amount = $data['grand_total'];
             $SupplierTransaction->supplier_id = $data['supplier_id'];
             $SupplierTransaction->store_id = $data['store_id'];
-            $SupplierTransaction->created_at = $data['purchase_date'];
+            $SupplierTransaction->date = $data['purchase_date'];
             if ($SupplierTransaction->save()) {
                 $jsonResponse = ['msg' => 'Successfully created purchase', 'status' => 'success'];
             } else {
@@ -282,13 +268,13 @@ class PurchaseController extends Controller
         // //validation
         $this->validate($request, [
 
-            'info.note'          => 'required | string |max:200',
+            'info.note' => 'required | string |max:200',
             'info.supplier_name' => 'required | string| max:200',
-            'info.supplier_id'   => 'required',
-            'info.purchase_reference_number'=>'required | string| max:200',
-            'info.due_date'      => 'required | date',
+            'info.supplier_id' => 'required',
+            'info.purchase_reference_number' => 'required | string| max:200',
+            'info.due_date' => 'required | date',
             'info.purchase_date' => 'required | date',
-            'info.discount'      => 'required | numeric| max:200',
+            'info.discount' => 'required | numeric| max:200',
 
             // 'items.*.product_name' => 'required | string |max:200',
             // 'items.*.price' => 'required | numeric',
@@ -305,7 +291,7 @@ class PurchaseController extends Controller
         //     return new PurchaseDetail($item);
         // });
 
-        $store                = Store::findOrFail($store_id);
+        $store = Store::findOrFail($store_id);
         $store_tax_percentage = $store->tax_percentage;
 
         $store_tax = $store_tax_percentage / 100;
@@ -319,7 +305,7 @@ class PurchaseController extends Controller
 
         $data = $request->info;
 
-        $data['purchase_reference_id'] = $data['supplier_short_name'].'-'.$data['purchase_reference_number'];
+        $data['purchase_reference_id'] = $data['supplier_short_name'] . '-' . $data['purchase_reference_number'];
 
         // $data['sub_total'] = $items->sum('line_total');
         // $data['tax_amount'] = $data['sub_total'] * $store_tax;
@@ -445,16 +431,16 @@ class PurchaseController extends Controller
         // //validation
         $this->validate($request, [
 
-            'info.note'            => 'required | string |max:200',
-            'info.supplier_name'   => 'required | string| max:200',
-            'info.due_date'        => 'required | date',
-            'info.purchase_date'   => 'required | date',
+            'info.note' => 'required | string |max:200',
+            'info.supplier_name' => 'required | string| max:200',
+            'info.due_date' => 'required | date',
+            'info.purchase_date' => 'required | date',
 
-            'info.discount'        => 'required | numeric| max:200',
+            'info.discount' => 'required | numeric| max:200',
 
             'items.*.product_name' => 'required | string |max:200',
-            'items.*.price'        => 'required | numeric',
-            'items.*.quantity'     => 'required | numeric',
+            'items.*.price' => 'required | numeric',
+            'items.*.quantity' => 'required | numeric',
 
         ]);
 
@@ -467,7 +453,7 @@ class PurchaseController extends Controller
             return new PurchaseDetail($item);
         });
 
-        $store                = Store::findOrFail($store_id);
+        $store = Store::findOrFail($store_id);
         $store_tax_percentage = $store->tax_percentage;
 
         $store_tax = $store_tax_percentage / 100;
@@ -481,10 +467,10 @@ class PurchaseController extends Controller
 
         $data = $request->info;
 
-        $data['sub_total']   = $items->sum('line_total');
-        $data['tax_amount']  = $data['sub_total'] * $store_tax;
+        $data['sub_total'] = $items->sum('line_total');
+        $data['tax_amount'] = $data['sub_total'] * $store_tax;
         $data['grand_total'] = $data['sub_total'] + $data['tax_amount'] - $data['discount'];
-        $data['store_id']    = $store_id;
+        $data['store_id'] = $store_id;
 
         //for inserting in stock and altering if already has one initialized stock and previous stock
         $items_raw = collect($request->items); //collecting new items from the submit form
@@ -553,9 +539,9 @@ class PurchaseController extends Controller
         $store_id = $user->stores[0]->id;
         // Get Purchase
 
-        $Purchase    = Purchase::where('store_id', $store_id)->with('purchaseDetail.product.unit')->with('supplier')->findOrFail($id);
+        $Purchase = Purchase::where('store_id', $store_id)->with('purchaseDetail.product.unit')->with('supplier')->findOrFail($id);
         $supplier_id = $Purchase->supplier_id;
-        $Supplier    = Supplier::where('id', $supplier_id)->where('store_id', $store_id);
+        $Supplier = Supplier::where('id', $supplier_id)->where('store_id', $store_id);
 
         return response()
             ->json([
@@ -607,13 +593,13 @@ class PurchaseController extends Controller
                 if ($Purchase->delete()) {
 
                     return response()->json([
-                        'msg'    => 'successfully Deleted',
+                        'msg' => 'successfully Deleted',
                         'status' => 'success',
                     ]);
 
                 } else {
                     return response()->json([
-                        'msg'    => 'Delete Failed',
+                        'msg' => 'Delete Failed',
                         'status' => 'error',
                     ]);
                 }
@@ -636,7 +622,7 @@ class PurchaseController extends Controller
             return PurchaseResource::collection(Purchase::where('store_id', $store_id)->where('customer_name', 'like', '%' . $searchKey . '%')->get());
         } else {
             return response()->json([
-                'msg'    => 'Error while retriving Purchases. No Data Supplied as key.',
+                'msg' => 'Error while retriving Purchases. No Data Supplied as key.',
                 'status' => 'error',
             ]);
         }
@@ -655,8 +641,8 @@ class PurchaseController extends Controller
 
         $value = $request->input('value');
 
-        $purchase             = Purchase::findOrFail($key);
-        $purchase->status     = $value;
+        $purchase = Purchase::findOrFail($key);
+        $purchase->status = $value;
         $purchase->updated_at = time();
 
         if ($purchase->save()) {
@@ -668,6 +654,5 @@ class PurchaseController extends Controller
         }
 
     }
-
 
 }

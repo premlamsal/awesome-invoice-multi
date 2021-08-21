@@ -32,6 +32,17 @@
                             }}</span>
                         </div>
                         <div class="form-group">
+                            <label for="Date">Date:</label>
+                            <input
+                                type="date"
+                                v-model="payment.date"
+                                :class="['form-control']"
+                            />
+                            <span v-if="errors.date" :class="['errorText']">{{
+                                errors.date[0]
+                            }}</span>
+                        </div>
+                        <div class="form-group">
                             <label for="Phone">Notes:</label>
                             <textarea
                                 v-model="payment.notes"
@@ -83,7 +94,7 @@
                                     v-for="payment in payments"
                                     v-bind:key="payment.id"
                                 >
-                                    <td>{{ payment.created_at }}</td>
+                                    <td>{{ payment.date }}</td>
                                     <td>Rs. {{ payment.amount }}</td>
                                     <td>
                                         <span
@@ -191,7 +202,7 @@
                                     v:bind:key="transaction.id"
                                 >
                                     <th scope="row">
-                                        {{ transaction.created_at }}
+                                        {{ transaction.date }}
                                     </th>
                                     <td
                                         v-if="

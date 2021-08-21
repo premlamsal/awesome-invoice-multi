@@ -18,6 +18,7 @@ class CreateSupplierTransactionsTable extends Migration
             $table->enum('transaction_type', ['purchase', 'payment','opening_balance']);
             $table->integer('refID');
             $table->decimal('amount');
+            $table->text('date');
             $table->unsignedBigInteger('supplier_id');
             $table->foreign('supplier_id')->references('id')->on('suppliers')->onDelete('cascade');
             $table->unsignedBigInteger('store_id');

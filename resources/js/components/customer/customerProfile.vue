@@ -32,6 +32,17 @@
                             }}</span>
                         </div>
                         <div class="form-group">
+                            <label for="Date">Date:</label>
+                            <input
+                                type="date"
+                                v-model="payment.date"
+                                :class="['form-control']"
+                            />
+                            <span v-if="errors.date" :class="['errorText']">{{
+                                errors.date[0]
+                            }}</span>
+                        </div>
+                        <div class="form-group">
                             <label for="Phone">Notes:</label>
                             <textarea
                                 v-model="payment.notes"
@@ -83,7 +94,7 @@
                                     v-for="payment in payments"
                                     v-bind:key="payment.id"
                                 >
-                                    <td>{{ payment.created_at }}</td>
+                                    <td>{{ payment.date }}</td>
                                     <td>Rs. {{ payment.amount }}</td>
                                     <td>
                                         <span
@@ -191,7 +202,7 @@
                                     v:bind:key="transaction.id"
                                 >
                                     <th scope="row">
-                                        {{ transaction.created_at }}
+                                        {{ transaction.date }}
                                     </th>
                                     <td
                                         v-if="
@@ -321,6 +332,7 @@ export default {
             this.modalForCode = 0; //0 for add
             this.payment.amount = "";
             this.payment.notes = "";
+            this.payment.date = "";
             this.setAvtarUploadImage();
             this.errors = ""; //clearing errors
             this.$bvModal.show("bv-modal-add-payment");
@@ -353,6 +365,7 @@ export default {
             formData.append("customer_id", this.customer_id);
             formData.append("amount", this.payment.amount);
             formData.append("notes", this.payment.notes);
+            formData.append("date", this.payment.date);
             formData.append("image", this.image);
 
             const config = {
@@ -390,6 +403,7 @@ export default {
                 .then(response => {
                     this.payment.id = response.data.data[0].id;
                     this.payment.notes = response.data.data[0].notes;
+                    this.payment.date = response.data.data[0].date;
                     this.payment.amount = response.data.data[0].amount;
                     this.imagePreview = '/img/'+ response.data.data[0].image;
                     this.$Progress.finish();
@@ -408,6 +422,7 @@ export default {
             formData.append("_METHOD", "POST");
             formData.append("payment_id", this.payment.id);
             formData.append("customer_id", this.customer_id);
+            formData.append("date", this.date);
             formData.append("amount", this.payment.amount);
             formData.append("notes", this.payment.notes);
             formData.append("image", this.image);
