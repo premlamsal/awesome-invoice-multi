@@ -215,7 +215,7 @@ class PurchaseController extends Controller
                                 $store->purchase_id_count = $new_count_purchase_id;
                                 if ($store->save()) {
 
-                                    $jsonResponse = ['msg' => 'Saved successfully', 'status' => 'success'];
+                                    $purchase_status_save = true;
 
                                 }
                             } else {

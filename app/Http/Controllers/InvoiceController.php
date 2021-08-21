@@ -197,7 +197,8 @@ class InvoiceController extends Controller
                             $store->invoice_id_count = $new_count_invoice_id;
 
                             if ($store->save()) {
-                                $jsonResponse = ['msg' => 'You have successfully created the Invoice.', 'status' => 'success', 'id' => $invoice_id_count];
+
+                                $invoice_status_save = true;
 
                             }
                         }
