@@ -23,6 +23,10 @@ class SupplierPaymentController extends Controller
         $this->validate($request, [
             'notes' => 'required|string|max:400',
             'amount' => 'required|numeric',
+            'date' => 'required',
+
+
+
         ]);
 
         // $this->authorize('hasPermission', 'add_supplier_payment');
@@ -91,6 +95,9 @@ class SupplierPaymentController extends Controller
         $this->validate($request, [
             'notes' => 'required|string|max:400',
             'amount' => 'required|numeric',
+            'date' => 'required',
+
+
         ]);
 
         // $this->authorize('hasPermission', 'add_supplier_payment');

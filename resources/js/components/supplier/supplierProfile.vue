@@ -364,6 +364,7 @@ export default {
             formData.append("supplier_id", this.supplier_id);
             formData.append("amount", this.payment.amount);
             formData.append("notes", this.payment.notes);
+            formData.append("date", this.payment.date);
             formData.append("image", this.image);
 
             const config = {
@@ -402,6 +403,7 @@ export default {
                     this.payment.id = response.data.data[0].id;
                     this.payment.notes = response.data.data[0].notes;
                     this.payment.amount = response.data.data[0].amount;
+                    this.payment.date = response.data.data[0].date;
                     this.imagePreview = '/img/'+ response.data.data[0].image;
                     this.$Progress.finish();
                 })
@@ -421,6 +423,7 @@ export default {
             formData.append("supplier_id", this.supplier_id);
             formData.append("amount", this.payment.amount);
             formData.append("notes", this.payment.notes);
+            formData.append("date", this.payment.date);
             formData.append("image", this.image);
 
             const config = {

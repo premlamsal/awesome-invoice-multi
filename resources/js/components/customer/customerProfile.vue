@@ -422,7 +422,7 @@ export default {
             formData.append("_METHOD", "POST");
             formData.append("payment_id", this.payment.id);
             formData.append("customer_id", this.customer_id);
-            formData.append("date", this.date);
+            formData.append("date", this.payment.date);
             formData.append("amount", this.payment.amount);
             formData.append("notes", this.payment.notes);
             formData.append("image", this.image);

@@ -28,7 +28,8 @@ class CustomerPaymentController extends Controller
         $this->validate($request, [
             'notes' => 'required|string|max:400',
             'amount' => 'required|numeric',
-            'date' => 'required|date',
+            'date' => 'required',
+
 
         ]);
 
@@ -98,6 +99,9 @@ class CustomerPaymentController extends Controller
         $this->validate($request, [
             'notes' => 'required|string|max:400',
             'amount' => 'required|numeric',
+            'date' => 'required',
+
+
         ]);
 
         // $this->authorize('hasPermission', 'add_customer_payment');
