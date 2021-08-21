@@ -137,7 +137,7 @@ class PurchaseController extends Controller
             //found product on stock
             if ($stock_id != 0) {
                 //found product that have same price on stock so updating the quanity for the product but same price
-                if ($stock_price_old == $items[$id]['price']) {
+                if ($stock_price_old == $items[$i]['price']) {
 
                     $stock = Stock::findOrFail($stock_id);
 
@@ -152,6 +152,8 @@ class PurchaseController extends Controller
                     $stock->quantity = $new_stock_quantity;
 
                     $stock->updated_at = $timeStamp;
+
+                    $stock->product_id = $p_id;
 
                     $stock->quantity = $new_stock_quantity;
 

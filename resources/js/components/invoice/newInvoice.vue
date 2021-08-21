@@ -14,7 +14,7 @@
             </div>
             <div class="form-group" style="position: relative;">
               <label>Customer</label>
-              <input type="text" v-model="info.customer_name" v-on:keyup="autoComplete" ref="txtCustomer" v-bind:class="[errors['info.customer_name'] ?  'is-invalid' : '' , 'form-control']" />
+              <input type="text" v-model="info.customer_name" v-on:keydown="autoComplete" ref="txtCustomer" v-bind:class="[errors['info.customer_name'] ?  'is-invalid' : '' , 'form-control']" />
               <span v-if="errors['info.customer_name']" :class="['errorText']">
                 {{errors['info.customer_name'][0]}}
                 <br />
@@ -265,6 +265,7 @@ export default {
     this.fetchUnits();
     this.fetchStore();
   },
+   
 
   methods: {
     //list of methods goes here
@@ -661,6 +662,7 @@ export default {
   }, //end of computed
 
   watch: {
+    
     "info.note": function(val, oldVal) {
       // console.log(this.errors['info.note'][0]);
       if (this.errors != "") {

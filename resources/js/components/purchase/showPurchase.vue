@@ -21,6 +21,7 @@
 
                         <div class="col-md-6 text-right">
                             <p class="font-weight-bold mb-1">Purchase # {{info.custom_purchase_id}}</p>
+                            <p class="font-weight-bold mb-1">Purchase RefID # {{info.purchase_reference_id}}</p>
                             <p class="text-muted">Purchase on: {{info.purchase_date}}</p>
                             <p class="text-muted">Due to: {{info.due_date}}</p>
 
@@ -189,6 +190,7 @@
             Vue.set(currObj.info, 'custom_purchase_id', response.data.purchase.custom_purchase_id),
             Vue.set(currObj.info, 'note', response.data.purchase.note),
             Vue.set(currObj.info, 'status', response.data.purchase.status),
+            Vue.set(currObj.info, 'purchase_reference_id', response.data.purchase.purchase_reference_id),
             Vue.set(currObj.info, 'purchase_date', response.data.purchase.purchase_date),
             Vue.set(currObj.info, 'due_date', response.data.purchase.due_date),
             Vue.set(currObj.info, 'discount', response.data.purchase.discount),

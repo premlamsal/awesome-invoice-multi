@@ -149,9 +149,9 @@
                       <!--  suggestion block -->
                       <div class="product-search-suggestion-purchase" v-for="queryResultsProduct in queryResultsProducts[index]" v-bind:key="queryResultsProduct.id">
                            <ul>
-                          <li v-for="queryResultsProduct in queryResultsProducts[index]" v-bind:key="queryResultsProduct.id" @click="clickSearchProductSuggestion(queryResultsProduct.product.id,queryResultsProduct.product.custom_product_id,queryResultsProduct.product.name,queryResultsProduct.product.unit.id,queryResultsProduct.product.cp,index)">
+                          <li v-for="queryResultsProduct in queryResultsProducts[index]" v-bind:key="queryResultsProduct.id" @click="clickSearchProductSuggestion(queryResultsProduct.id,queryResultsProduct.product.id,queryResultsProduct.product.custom_product_id,queryResultsProduct.product.name,queryResultsProduct.product.unit.id,queryResultsProduct.price,index)">
                            
-                          {{queryResultsProduct.product.name}} -- {{queryResultsProduct.quantity}} {{queryResultsProduct.product.unit.short_name}} --  Rs. {{queryResultsProduct.product.cp}}
+                          {{queryResultsProduct.product.name}} -- {{queryResultsProduct.quantity}} {{queryResultsProduct.product.unit.short_name}} --  Rs. {{queryResultsProduct.price}}
 
                           </li>
                         </ul>
@@ -497,7 +497,7 @@ export default {
     //used to elimate duplicate produt/item in items/products
     hasItem(key) {
 
-      if (this.items.find(item => item.product_name === key)) {
+      if (this.items.find(item => item.stock_id === key)) {
 
         return true;
       } else {
@@ -507,6 +507,7 @@ export default {
 
 
     clickSearchProductSuggestion(
+      stock_id,
       product_id,
       custom_product_id,
       product_name,
@@ -516,7 +517,7 @@ export default {
     ) {
 
 
-      if (!this.hasItem(product_name)) {
+      if (!this.hasItem(stock_id)) {
         // console.log("Item not in List. So adding");
         Vue.set(this.items[index], "product_id", product_id);
 
@@ -525,6 +526,9 @@ export default {
         Vue.set(this.items[index], "product_name", product_name);
 
         Vue.set(this.items[index], "unit_id", unit_id);
+
+        Vue.set(this.items[index], "stock_id", stock_id);
+
 
         Vue.set(
           this.items[index], "price" , parseFloat(cp)
@@ -538,6 +542,8 @@ export default {
         Vue.set(this.cloneItems[index], "product_name", product_name);
 
         Vue.set(this.cloneItems[index], "unit_id", unit_id);
+
+        Vue.set(this.items[index], "stock_id", stock_id);
 
         Vue.set(
           this.cloneItems[index],
@@ -554,7 +560,7 @@ export default {
 
       } else {
         // console.log("Item exits in list so deleting the current index item to remove duplicate entry in items array");
-        this.displayToastErrorMessage('Opps', product_name + ' already on the list. You can increase the quantity');
+        this.displayToastErrorMessage('Opps', product_name + ' already on the list. You can increase the quantity or choose different stock ');
 
 
         this.items.splice(index);
@@ -562,7 +568,7 @@ export default {
         this.cloneItems.splice(index);
 
         this.queryResultsProducts = new Array();
-
+        
       }
     },
     clickSearchSuggestion(supplier_id, supplier_name) {
