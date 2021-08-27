@@ -58,7 +58,7 @@
                 <th>Supplier</th>
                 <th>Purchase Date</th>
                 <th>Due Date</th>
-                <th>Status</th>
+               <!-- <th>Status</th> -->
                 <th>Last Modified at</th>
                 <th>Modify</th>
               </tr>
@@ -81,7 +81,7 @@
                 <td>{{purchase.purchase_date}}</td>
                 <td>{{purchase.due_date | moment("from", "now")}}</td>
       
-            
+              <!--
                <td v-if="(purchase.status==='Paid')">
                        <toggle-button v-bind:status="true" @statusChanges ="updateStatus($event,purchase.id)"/> 
                 </td>
@@ -89,6 +89,7 @@
                 <td v-else-if="(purchase.status==='To Pay')">
                        <toggle-button v-bind:status="false" @statusChanges ="updateStatus($event,purchase.id)"/> 
                 </td>
+                -->
 
                 <td>{{purchase.updated_at | moment("from", "now")}}</td>
                 <td>

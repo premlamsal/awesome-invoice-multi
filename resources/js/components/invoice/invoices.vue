@@ -56,7 +56,7 @@
                 <th>Client</th>
                 <th>Invoice Date</th>
                 <th>Due Date</th>
-                <th>Status</th>
+               <!-- <th>Status</th> -->
                 <th>Last Modified at</th>
                 <th>Modify</th>
               </tr>
@@ -82,7 +82,7 @@
                   <span v-else class="bg-success text-white p-2">{{invoice.due_date | moment("from", "now")}}</span>
                 </td>
         
-            
+            <!--
                <td v-if="(invoice.status==='Paid')">
                        <toggle-button v-bind:status="true" @statusChanges ="updateStatus($event,invoice.id)"/> 
                 </td>
@@ -90,6 +90,7 @@
                 <td v-else-if="(invoice.status==='To Pay')">
                        <toggle-button v-bind:status="false" @statusChanges ="updateStatus($event,invoice.id)"/> 
                 </td>
+                -->
 
                 <td>{{invoice.updated_at | moment("from", "now")}}</td>
                 <td>

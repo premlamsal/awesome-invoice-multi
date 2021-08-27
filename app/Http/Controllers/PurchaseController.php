@@ -168,62 +168,15 @@ class PurchaseController extends Controller
                     $stock->store_id = $store_id;
 
                     if ($stock->save()) {
-
-                        // $today = date('Y-m-d');
-                        $date_stock_histroy = $data['purchase_date'];
-
-                        $StockHistoryID = StockHistory::where('store_id', $store_id)->where('date', '=', $date_stock_histroy)->where('product_id', $p_id)->value('id');
-
-                        if ($StockHistoryID != null) {
-
-                            $StockHistory = StockHistory::findOrFail($StockHistoryID);
-
-                            $StockHistory->quantity = $new_stock_quantity;
-
-                            $StockHistory->store_id = $store_id;
-
-                            if ($StockHistory->save()) {
-
                                 //set current purchase_id_count to store table
                                 $store->purchase_id_count = $new_count_purchase_id;
                                 if ($store->save()) {
 
                                     $purchase_status_save = true;
+                                }else{
+                        $jsonResponse = ['msg' => 'Failed updating the Data to the store.', 'status' => 'error3'];
 
                                 }
-
-                            } else {
-                                $jsonResponse = ['msg' => 'Failed Saving the Data to the Stock.', 'status' => 'error1'];
-                            }
-
-                        } else {
-                            $StockHistory = new StockHistory();
-
-                            $StockHistory->product_id = $p_id;
-
-                            $StockHistory->quantity = $new_stock_quantity;
-
-                            // $StockHistory->date = $today;
-
-                            $StockHistory->date = $date_stock_histroy;
-
-                            $StockHistory->store_id = $store_id;
-
-                            if ($StockHistory->save()) {
-
-                                //set current purchase_id_count to store table
-                                $store->purchase_id_count = $new_count_purchase_id;
-                                if ($store->save()) {
-
-                                    $purchase_status_save = true;
-
-                                }
-                            } else {
-                                $jsonResponse = ['msg' => 'Failed Saving the Data to the Stock History.', 'status' => 'error2'];
-
-                            }
-
-                        }
                     } else {
 
                         $jsonResponse = ['msg' => 'Failed Saving the Data to the Stock.', 'status' => 'error3'];
