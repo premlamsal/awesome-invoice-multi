@@ -113,7 +113,7 @@
           <div class="invoice-head">
             <div class="row">
               <div class="col-md-1">
-                <h6>ID</h6>
+                <h6>PID | Stock ID</h6>
               </div>
               <div class="col-md-3">
                 <h6>Product Name</h6>
@@ -135,35 +135,63 @@
               </div>
             </div>
           </div>
-          <!-- end of invoice head-->
+              <!-- end of invoice head-->
           <div class="invoice-body">
             <div class="invoice-items" v-for="(item,index) in items" v-bind:key="item.id">
               <div class="row">
-                <div class="col-md-1" v-if="item.custom_product_id!=null">
-                  {{item.custom_product_id}}
+                <div class="col-md-1" v-if="item.product.custom_product_id!=null">
+                  {{item.product.custom_product_id}} | {{item.stock_id}}
                 </div>
+
                 <div class="col-md-1" v-else>
                   #
                 </div>
                 <div class="col-md-3">
-                  {{item.product_name}}
+                  <div class="auto-complete-product-container">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Product Name" v-model="item.product_name" v-on:keydown="autoCompleteProduct(index)" :class="{'is-invalid':errors['items.' + index + '.product_name']}" />
+
+                      <span v-if="errors['items.' + index + '.product_name']" :class="['errorText']">{{errors['items.' + index + '.product_name'][0]}}</span>
+
+
+                      <!--  suggestion block -->
+                      <div class="product-search-suggestion-invoice" >
+                        <ul>
+                          <li v-for="queryResultsProduct in queryResultsProducts[index]" v-bind:key="queryResultsProduct.id" @click="clickSearchProductSuggestion(queryResultsProduct.id,queryResultsProduct.product.id,queryResultsProduct.product.custom_product_id,queryResultsProduct.product.name,queryResultsProduct.product.unit.id,queryResultsProduct.product.sp,index)">
+                           
+                          {{queryResultsProduct.product.name}} -- {{queryResultsProduct.quantity}} {{queryResultsProduct.product.unit.short_name}} --  Rs. {{queryResultsProduct.price}}
+
+                          </li>
+                        </ul>
+                      </div>
+                      <!--  <span v-if="errors['items.' + index + '.product_name']">
+                      {{ errors['items.' + index + '.product_name'] }}
+                    </span> -->
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-1">
-                  {{item.quantity}}
+                  <input type="number" class="form-control" placeholder="Quantity" v-model="item.quantity" 
+                   :class="{'is-invalid':errors['items.' + index + '.quantity']}" />
                 </div>
                 <div class="col-md-1">
-                  {{item.product.unit.short_name}}
+                  <template v-if="units.length>0">
+                    <select class="form-control" v-model="item.unit_id" v-if="item.product_id" :class="{'is-invalid':errors['items.' + index + '.id']}">
+                      <option selected v-for="unit in units" :value="unit.id" v-bind:key="unit.id">{{unit.short_name}}</option>
+                    </select>
+                  </template>
+                  <template v-else>add some unit</template>
                 </div>
                 <div class="col-md-2">
-                  {{item.price}}
+                  <input type="text" class="form-control" placeholder="Enter the price" v-model="item.price" v-if="item.product_id" :class="{'is-invalid':errors['items.' + index + '.price']}" />
                 </div>
                 <div class="col-md-2">
                   <span class="table-text">{{item.quantity * item.price}}</span>
                 </div>
                 <div class="col-md-2">
-                  <!--  <button href class="btn btn-danger" style="border: none" @click="removeLine(index)">
-                    <span class="nc-icon nc-simple-remove" style="font-size: 15px"></span> -->
-                 <!--  </button> -->
+                  <button href class="btn btn-danger" style="border: none" @click="removeLine(index)">
+                    <span class="nc-icon nc-simple-remove" style="font-size: 15px"></span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -351,6 +379,60 @@ export default {
       this.cloneItems[index].line_total = this.items[index].line_total
 
     },
+     checkQuantityInStock: _.debounce(function(index) {
+      //checks user type non-negative number
+
+      let currObj = this;
+
+      if (this.items[index].quantity > 0) {
+        if (
+          this.items[index].product_id != null &&
+          this.items[index].product_id != ""
+        ) {
+          let formData = new FormData();
+
+          formData.append("product_id", this.items[index].product_id);
+          formData.append("quantity", this.items[index].quantity);
+          formData.append("_method", "POST"); //add this otherwise data won't pass to backend
+
+          axios
+            .post("/api/checkQuantityInStock", formData)
+
+          .then(function(response) {
+              if (response.data.status === 1) {
+                currObj.$toast.success({
+                  note: response.data.note,
+                  message: response.data.msg
+                });
+              } else {
+                currObj.$toast.error({
+                  note: response.data.note,
+                  message: response.data.msg
+                });
+                currObj.items[index].quantity = response.data.quantity;
+              }
+            })
+            .catch(function(error) {
+              currObj.$toast.error({
+                note: "Error!!",
+                message: "Something went wrong!!."
+              });
+            });
+        } else {
+          this.$toast.error({
+            title: "Opps!!",
+            message: "Select Product First."
+          });
+        }
+      } else {
+        this.$toast.warn({
+          title: "Warning",
+          message: "Invalid Quantity."
+        });
+
+        // this.items[index].quantity = 1;
+      }
+    }, 300),
     updateInvoice() {
 
       if (this.info.discount == null || this.info.discount == "") {
@@ -451,44 +533,55 @@ export default {
 
     }, 500),
 
-    autoCompleteProduct: _.debounce(function(index) {
-
+     autoCompleteProduct: _.debounce(function(index) {
       if (this.items[index].product_name === "") {
-
+        this.items[index].product_id = "";
+        this.cloneItems[index].product_id=="";
         this.queryResultsProducts = new Array();
         this.showProductSuggestion = false;
-
       } else {
+        axios
+          .post('/api/products/search',{
+              searchQuery:this.items[index].product_name
+          })
+          .then(response => {
+            this.queryResultsProducts[index] = response.data.data;
 
-        axios.post('api/products/search', {
-          searchQuery: this.items[index].product_name
-
-        }).then(response => {
-          this.queryResultsProducts[index] = response.data.queryResults;
-          if (this.queryResultsProducts[index].length > 0) {
-            this.showProductSuggestion = true;
-          } else {
-            this.showProductSuggestion = false;
-          }
-        }).catch(error => {
-          if (error.response.status) {
-            this.errors = error.response.data.errors;
-            console.log(this.errors);
-          }
-        });
-
+            if (this.queryResultsProducts[index].length > 0) {
+              this.showProductSuggestion = true;
+            } else {
+              this.showProductSuggestion = false;
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
       }
       // alert(this.items[index].product_name);
-
     }, 300),
-    clickSearchProductSuggestion(product_id,
+    //will find item exits in that items array or not
+    //used to elimate duplicate produt/item in items/products
+    hasItem(key) {
+
+      if (this.items.find(item => item.stock_id === key)) {
+
+        return true;
+      } else {
+        return false;
+      }
+    },
+    clickSearchProductSuggestion(
+      stock_id,
+      product_id,
       custom_product_id,
       product_name,
       unit_id,
-      price,
-      index) {
+      sp,
+      index
+    ) {
 
-      if (!this.hasItem(product_name)) {
+      
+      if (!this.hasItem(stock_id)) {
         // console.log("Item not in List. So adding");
         Vue.set(this.items[index], "product_id", product_id);
 
@@ -498,11 +591,12 @@ export default {
 
         Vue.set(this.items[index], "unit_id", unit_id);
 
+        Vue.set(this.items[index], "stock_id", stock_id);
+
         Vue.set(
           this.items[index],
           "price",
-          parseFloat(price) +
-          (parseFloat(price) * parseFloat(this.store.profit_percentage)) / 100
+          parseFloat(sp)
         );
 
 
@@ -514,11 +608,13 @@ export default {
 
         Vue.set(this.cloneItems[index], "unit_id", unit_id);
 
+        Vue.set(this.items[index], "stock_id", stock_id);
+
         Vue.set(
           this.cloneItems[index],
           "price",
-          parseFloat(price) +
-          (parseFloat(price) * parseFloat(this.store.profit_percentage)) / 100
+          parseFloat(sp) 
+       
         );
 
         // this.items[index] = this.items[index] + (this.store.profit_percentage)/100;
@@ -530,7 +626,7 @@ export default {
 
       } else {
         // console.log("Item exits in list so deleting the current index item to remove duplicate entry in items array");
-        this.displayToastErrorMessage('Opps', product_name + ' already on the list. You can increase the quantity');
+        this.displayToastErrorMessage('Opps', product_name + ' already on the list. You can increase the quantity or choose different stock');
 
 
         this.items.splice(index);
@@ -541,7 +637,6 @@ export default {
 
       }
     },
-
     clickSearchSuggestion(customer_id, customer_name) {
 
       Vue.set(this.info, 'customer_id', customer_id);

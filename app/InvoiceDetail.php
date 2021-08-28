@@ -21,6 +21,6 @@ class InvoiceDetail extends Model
         return $this->belongsTo('\App\Product', 'product_id', 'id');
     }
     
-    protected $fillable = ['invoice_id', 'product_id', 'product_name', 'quantity', 'unit_id', 'price', 'line_total'];
+    protected $fillable = ['invoice_id', 'product_id','stock_id','product_name', 'quantity', 'unit_id', 'price', 'line_total'];
 
 }

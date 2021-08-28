@@ -221,24 +221,24 @@ class InvoiceController extends Controller
             'items.*.quantity' => 'required | numeric',
 
         ]);
-        $id = $request->id; //we will get invoice id here 
+        $id = $request->id; //we will get invoice id here
 
         $invoice = Invoice::where('id', $id)->where('store_id', $store_id)->first();
 
-        $items = collect($request->items)->transform(function($item) {
-            $item['line_total'] = $item['quantity'] *$item['price'];
+        $items = collect($request->items)->transform(function ($item) {
+            $item['line_total'] = $item['quantity'] * $item['price'];
             return new InvoiceDetail($item);
         });
 
-        if($items->isEmpty()) {
+        if ($items->isEmpty()) {
             return response()
-            ->json([
-                'items_empty' => ['One or more Item is required.']
-            ], 422);
+                ->json([
+                    'items_empty' => ['One or more Item is required.'],
+                ], 422);
         }
 
         $store = Store::findOrFail($store_id);
-        
+
         $store_tax_percentage = $store->tax_percentage;
 
         $store_tax = $store_tax_percentage / 100;
@@ -248,20 +248,71 @@ class InvoiceController extends Controller
         $data['sub_total'] = $items->sum('line_total');
         $data['tax_amount'] = $data['sub_total'] * $store_tax;
         $data['grand_total'] = $data['sub_total'] + $data['tax_amount'] - $data['discount'];
-        $data['store_id']=$store_id;
-
-        $invoice->update($data);
-
-
+        $data['store_id'] = $store_id;
 
         //first get old items
+        // Get Invoice
+        $Invoice = Invoice::where('id', $id)->where('store_id', $store_id)->first();
 
-        
-        InvoiceDetail::where('invoice_id', $invoice->id)->delete();
+        //get invoice details
+        $invoiceDetail = InvoiceDetail::where('invoice_id', $id)->get();
 
-        $invoice->invoiceDetail()->saveMany($items);
+        $countItems = count($invoiceDetail);
 
-        return response()->json(['msg' => 'You have successfully updated the Invoice.', 'status' => 'success']);
+        $check_save_stock = false;
+
+        // $timeStamp=now();
+        if ($countItems != 0) {
+
+            for ($i = 0; $i < $countItems; $i++) {
+                //get product id from each invoice details
+                $p_id = $invoiceDetail[$i]['product_id'];
+
+                $old_invoice_detail_qty = $invoiceDetail[$i]['quantity'];
+
+                //finding stock to decrease the quantity of this invoice
+                $stock = Stock::where('product_id', $p_id)->where('store_id', $store_id);
+
+                $stock_id = $stock->value('id');
+
+                $stock_qty = $stock->value('quantity');
+
+                $old_stock_qty = $stock_qty + $old_invoice_detail_qty;
+
+                $stock = Stock::where('id', $stock_id)->where('store_id', $store_id)->first();
+
+                $stock->quantity = $old_stock_qty - $items[$i]['quantity'];
+
+                if ($stock->save()) {
+                    $check_save_stock = true;
+                } else {
+                    $check_save_stock = false;
+                }
+            }
+            if ($check_save_stock) {
+
+                $invoice->update($data);
+
+                InvoiceDetail::where('invoice_id', $invoice->id)->delete();
+
+                $invoice->invoiceDetail()->saveMany($items);
+
+                return response()->json(['msg' => 'You have successfully updated the Invoice.', 'status' => 'success']);
+
+            } else {
+                //saving stock fails
+                return response()->json(['msg' => 'Initial update to stock failed.', 'status' => 'error']);
+            }
+
+            // check stock save status and do following
+
+        } else {
+
+            return response()->json([
+                'msg' => 'Update Failed. There is no items in this invoice',
+                'status' => 'error',
+            ], 500);
+        }
 
     }
 
@@ -309,7 +360,6 @@ class InvoiceController extends Controller
                     'items_empty' => ['One or more Item is required.'],
                 ], 422);
         }
-
 
         $data = $request->info;
 

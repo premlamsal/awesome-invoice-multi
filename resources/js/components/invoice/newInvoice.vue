@@ -99,7 +99,7 @@
           <div class="invoice-head">
             <div class="row">
               <div class="col-md-1">
-                <h6>ID</h6>
+                <h6>PID | Stock ID</h6>
               </div>
               <div class="col-md-3">
                 <h6>Product Name</h6>
@@ -125,8 +125,8 @@
           <div class="invoice-body">
             <div class="invoice-items" v-for="(item,index) in items" v-bind:key="item.id">
               <div class="row">
-                <div class="col-md-1" v-if="item.custom_product_id!=null">
-                  {{item.custom_product_id}}
+                <div class="col-md-1" v-if="item!=null">
+                  {{item.custom_product_id}} | {{item.stock_id}}
                 </div>
                 <div class="col-md-1" v-else>
                   #
