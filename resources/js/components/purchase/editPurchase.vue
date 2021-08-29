@@ -139,34 +139,62 @@
             </div>
           </div>
           <!-- end of purchase head-->
-          <div class="purchase-body">
+             <div class="purchase-body">
             <div class="purchase-items" v-for="(item,index) in items" v-bind:key="item.id">
               <div class="row">
-                <div class="col-md-1" v-if="item.custom_product_id!=null">
-                  {{item.custom_product_id}}
+                <div class="col-md-1" v-if="item.product.custom_product_id!=null">
+                  {{item.product.custom_product_id}} | {{item.stock_id}}
                 </div>
+
                 <div class="col-md-1" v-else>
                   #
                 </div>
                 <div class="col-md-3">
-                  {{item.product_name}}
+                  <div class="auto-complete-product-container">
+                    <div class="form-group">
+                      <input type="text" class="form-control" placeholder="Product Name" v-model="item.product_name" v-on:keydown="autoCompleteProduct(index)" :class="{'is-invalid':errors['items.' + index + '.product_name']}" />
+
+                      <span v-if="errors['items.' + index + '.product_name']" :class="['errorText']">{{errors['items.' + index + '.product_name'][0]}}</span>
+
+
+                      <!--  suggestion block -->
+                      <div class="product-search-suggestion-purchase" >
+                        <ul>
+                          <li v-for="queryResultsProduct in queryResultsProducts[index]" v-bind:key="queryResultsProduct.id" @click="clickSearchProductSuggestion(queryResultsProduct.id,queryResultsProduct.product.id,queryResultsProduct.product.custom_product_id,queryResultsProduct.product.name,queryResultsProduct.product.unit.id,queryResultsProduct.product.sp,index)">
+                           
+                          {{queryResultsProduct.product.name}} -- {{queryResultsProduct.quantity}} {{queryResultsProduct.product.unit.short_name}} --  Rs. {{queryResultsProduct.price}}
+
+                          </li>
+                        </ul>
+                      </div>
+                      <!--  <span v-if="errors['items.' + index + '.product_name']">
+                      {{ errors['items.' + index + '.product_name'] }}
+                    </span> -->
+                    </div>
+                  </div>
                 </div>
                 <div class="col-md-1">
-                  {{item.quantity}}
+                  <input type="number" class="form-control" placeholder="Quantity" v-model="item.quantity" 
+                   :class="{'is-invalid':errors['items.' + index + '.quantity']}" />
                 </div>
                 <div class="col-md-1">
-                  {{item.product.unit.short_name}}
+                  <template v-if="units.length>0">
+                    <select class="form-control" disabled="" v-model="item.unit_id" v-if="item.product_id" :class="{'is-invalid':errors['items.' + index + '.id']}">
+                      <option selected v-for="unit in units" :value="unit.id" v-bind:key="unit.id">{{unit.short_name}}</option>
+                    </select>
+                  </template>
+                  <template v-else>add some unit</template>
                 </div>
                 <div class="col-md-2">
-                  {{item.price}}
+                  <input type="text" class="form-control" placeholder="Enter the price" v-model="item.price" v-if="item.product_id" :class="{'is-invalid':errors['items.' + index + '.price']}" />
                 </div>
                 <div class="col-md-2">
                   <span class="table-text">{{item.quantity * item.price}}</span>
                 </div>
                 <div class="col-md-2">
-                  <!--  <button href class="btn btn-danger" style="border: none" @click="removeLine(index)">
-                    <span class="nc-icon nc-simple-remove" style="font-size: 15px"></span> -->
-                 <!--  </button> -->
+                  <button href class="btn btn-danger" style="border: none" @click="removeLine(index)">
+                    <span class="nc-icon nc-simple-remove" style="font-size: 15px"></span>
+                  </button>
                 </div>
               </div>
             </div>
@@ -259,7 +287,7 @@ export default {
     //methods to be executed while this page is created
     await this.getIdFromUrl();
     await this.fetchPurchase();
-    // this.fetchUnits();
+    this.fetchUnits();
   },
 
   methods: {
@@ -439,15 +467,18 @@ export default {
 
     autoCompleteProduct: _.debounce(function(index) {
       if (this.items[index].product_name === "") {
+        this.items[index].product_id = "";
+        this.cloneItems[index].product_id=="";
         this.queryResultsProducts = new Array();
         this.showProductSuggestion = false;
       } else {
         axios
-          .post("/api/products/search", {
-            searchQuery: this.items[index].product_name
+          .post('/api/products/search',{
+              searchQuery:this.items[index].product_name
           })
           .then(response => {
-            this.queryResultsProducts[index] = response.data.queryResults;
+            this.queryResultsProducts[index] = response.data.data;
+
             if (this.queryResultsProducts[index].length > 0) {
               this.showProductSuggestion = true;
             } else {
@@ -455,26 +486,37 @@ export default {
             }
           })
           .catch(error => {
-            if (error.response.status) {
-              this.errors = error.response.data.errors;
-              console.log(this.errors);
-            }
+            console.log(error);
           });
       }
       // alert(this.items[index].product_name);
     }, 300),
+ //will find item exits in that items array or not
+    //used to elimate duplicate produt/item in items/products
+    hasItem(key) {
 
+      if (this.items.find(item => item.stock_id === key)) {
+
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+
+  
     clickSearchProductSuggestion(
+      stock_id,
       product_id,
       custom_product_id,
       product_name,
       unit_id,
-      price,
+      cp,
       index
     ) {
 
 
-      if (!this.hasItem(product_name)) {
+      if (!this.hasItem(stock_id)) {
         // console.log("Item not in List. So adding");
         Vue.set(this.items[index], "product_id", product_id);
 
@@ -484,11 +526,11 @@ export default {
 
         Vue.set(this.items[index], "unit_id", unit_id);
 
+        Vue.set(this.items[index], "stock_id", stock_id);
+
+
         Vue.set(
-          this.items[index],
-          "price",
-          parseFloat(price) +
-          (parseFloat(price) * parseFloat(this.store.profit_percentage)) / 100
+          this.items[index], "price" , parseFloat(cp)
         );
 
 
@@ -500,11 +542,12 @@ export default {
 
         Vue.set(this.cloneItems[index], "unit_id", unit_id);
 
+        Vue.set(this.items[index], "stock_id", stock_id);
+
         Vue.set(
           this.cloneItems[index],
           "price",
-          parseFloat(price) +
-          (parseFloat(price) * parseFloat(this.store.profit_percentage)) / 100
+          parseFloat(cp) 
         );
 
         // this.items[index] = this.items[index] + (this.store.profit_percentage)/100;
@@ -516,7 +559,7 @@ export default {
 
       } else {
         // console.log("Item exits in list so deleting the current index item to remove duplicate entry in items array");
-        this.displayToastErrorMessage('Opps', product_name + ' already on the list. You can increase the quantity');
+        this.displayToastErrorMessage('Opps', product_name + ' already on the list. You can increase the quantity or choose different stock ');
 
 
         this.items.splice(index);
@@ -524,7 +567,7 @@ export default {
         this.cloneItems.splice(index);
 
         this.queryResultsProducts = new Array();
-
+        
       }
     },
 

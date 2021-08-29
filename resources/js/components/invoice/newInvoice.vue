@@ -160,7 +160,7 @@
                 </div>
                 <div class="col-md-1">
                   <template v-if="units.length>0">
-                    <select class="form-control" v-model="item.unit_id" v-if="item.product_id" :class="{'is-invalid':errors['items.' + index + '.id']}">
+                    <select class="form-control" disabled="" v-model="item.unit_id" v-if="item.product_id" :class="{'is-invalid':errors['items.' + index + '.id']}">
                       <option selected v-for="unit in units" :value="unit.id" v-bind:key="unit.id">{{unit.short_name}}</option>
                     </select>
                   </template>
