@@ -297,11 +297,25 @@ class InvoiceController extends Controller
 
                 $invoice->invoiceDetail()->saveMany($items);
 
+                $CustomerTransaction = new CustomerTransaction();
+                // $CustomerTransaction->transaction_type = "sales";
+                // $CustomerTransaction->refId = $invoice->id;
+                $CustomerTransaction->amount = $data['grand_total'];
+                $CustomerTransaction->customer_id = $data['customer_id'];
+                // $CustomerTransaction->store_id = $data['store_id'];
+                $CustomerTransaction->date = $data['invoice_date'];
+                if ($CustomerTransaction->save()) {
                 return response()->json(['msg' => 'You have successfully updated the Invoice.', 'status' => 'success']);
+
+                } else {
+                return response()->json(['msg' => 'Error adding invoice to customer transaction.', 'status' => 'success'],500);
+
+                }
+
 
             } else {
                 //saving stock fails
-                return response()->json(['msg' => 'Initial update to stock failed.', 'status' => 'error']);
+                return response()->json(['msg' => 'Initial update to stock failed.', 'status' => 'error'],500);
             }
 
             // check stock save status and do following

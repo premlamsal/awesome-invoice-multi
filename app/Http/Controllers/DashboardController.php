@@ -67,7 +67,7 @@ class DashboardController extends Controller
         //select past months records
             ->where('invoice_date', '>', now()->subMonthNoOverflow($before_month)->format('Y-m-d'))
 
-            ->where('status', 'Paid') //only select paid invoice sales
+            // ->where('status', 'Paid') //only select paid invoice sales
         // ->orderBy('year','desc')
             ->groupBy('year', 'month') //grouping by year and month
 

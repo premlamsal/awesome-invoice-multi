@@ -54,6 +54,7 @@
             <thead>
               <tr>
                 <th>Purchase No.</th>
+                <th>Purchase RefId.</th>
                 <th>Grand Total</th>
                 <th>Supplier</th>
                 <th>Purchase Date</th>
@@ -76,6 +77,7 @@
             <tbody>
               <tr v-for="purchase in purchases" v-bind:key="purchase.id">
                 <td>{{purchase.custom_purchase_id}}</td>
+                <td>{{purchase.purchase_reference_id}}</td>
                 <td>Rs. {{purchase.grand_total}}</td>
                 <td>{{purchase.supplier_name}}</td>
                 <td>{{purchase.purchase_date}}</td>

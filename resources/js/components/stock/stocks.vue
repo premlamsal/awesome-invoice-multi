@@ -70,6 +70,8 @@
                                 <th>Unit</th>
                                 <th>Price</th>
                                 <th>Total</th>
+                                <th>Action</th>
+
                             </tr>
                         </thead>
                         <tfoot>
@@ -93,6 +95,7 @@
                                 <td>
                                     Rs. {{ stock.quantity * stock.price }}
                                 </td>
+                                <td><button class="btn btn-danger"><i class="fa fa-cog" style="font-size:20px"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
