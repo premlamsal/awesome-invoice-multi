@@ -7,6 +7,103 @@
                 >Stock History</router-link
             >
         </p>
+        <b-modal id="bv-modal-adjust-stock" hide-footer>
+            <template v-slot:modal-title>
+                <span class="text-primary">Adjust Stock</span>
+            </template>
+            <div class="d-block">
+                <div class="form-group">
+                    <input type="hidden" v-model="adjustment.stock_id" />
+                    Adjusting Stock for : <b>{{ adjustment.product_name }}</b>
+                    <br />
+                    Current Stock is : <b>{{ adjustment.current_stock }}</b>
+                    <hr />
+
+                    <label for="reason">Reason for Adjustment</label>
+                    <input
+                        type="text"
+                        v-model="adjustment.reason"
+                        :class="['form-control']"
+                        placeholder="Physical Damage"
+                    />
+                    <span v-if="errors.reason" :class="['errorText']">{{
+                        errors.reason[0]
+                    }}</span>
+                </div>
+                <div class="form-group">
+                    <b-form-group
+                        label="Adjustment Type"
+                        v-slot="{ ariaDescribedby }"
+                    >
+                        <b-form-radio
+                            v-model="adjustment.type"
+                            :aria-describedby="ariaDescribedby"
+                            name="some-radios"
+                            value="increment"
+                            >Increase (+)</b-form-radio
+                        >
+                        <b-form-radio
+                            v-model="adjustment.type"
+                            :aria-describedby="ariaDescribedby"
+                            name="some-radios"
+                            value="decrement"
+                            >Decrease (-)</b-form-radio
+                        >
+                    </b-form-group>
+
+                    <span v-if="errors.adjusted_stock" :class="['errorText']">{{
+                        errors.adjusted_stock[0]
+                    }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="AdjustedStock">Adjustment quantity:</label>
+                    <input
+                        type="text"
+                        v-model="adjustment.quantity"
+                        :class="['form-control']"
+                    />
+                    <span v-if="errors.quantity" :class="['errorText']">{{
+                        errors.quantity[0]
+                    }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="AdjustedStock">Adjustment Amount/ Price:</label>
+                    <input
+                        type="text"
+                        v-model="adjustment.price"
+                        :class="['form-control']"
+                    />
+                    <span v-if="errors.price" :class="['errorText']">{{
+                        errors.price[0]
+                    }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="AdjustedStock">Adjustment Date:</label>
+                    <input
+                        type="date"
+                        v-model="adjustment.date"
+                        :class="['form-control']"
+                    />
+                    <span v-if="errors.date" :class="['errorText']">{{
+                        errors.date[0]
+                    }}</span>
+                </div>
+                <div class="form-group">
+                    <label for="Notes">Adjustment Notes:</label>
+                    <textarea
+                        type="text"
+                        v-model="adjustment.notes"
+                        :class="['form-control']"
+                    ></textarea>
+                    <span v-if="errors.notes" :class="['errorText']">{{
+                        errors.notes[0]
+                    }}</span>
+                </div>
+            </div>
+            <b-button class="btn-primary mt-3" block @click="updateStock()"
+                >Update Stock</b-button
+            >
+        </b-modal>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -64,6 +161,7 @@
                     >
                         <thead>
                             <tr>
+                                <th>Stock ID</th>
                                 <th>Product ID</th>
                                 <th>Product Name</th>
                                 <th>Quantity</th>
@@ -71,11 +169,11 @@
                                 <th>Price</th>
                                 <th>Total</th>
                                 <th>Action</th>
-
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -86,16 +184,33 @@
                         </tfoot>
                         <tbody>
                             <tr v-for="stock in stocks" v-bind:key="stock.id">
+                                <td>{{ stock.id }}</td>
                                 <td>{{ stock.product.custom_product_id }}</td>
                                 <!-- <td @click="showStock(stock.product_id)">{{stock.product.name}}</td> -->
                                 <td>{{ stock.product.name }}</td>
                                 <td>{{ stock.quantity }}</td>
                                 <td>{{ stock.product.unit.short_name }}</td>
                                 <td>Rs. {{ stock.price }}</td>
+                                <td>Rs. {{ stock.quantity * stock.price }}</td>
                                 <td>
-                                    Rs. {{ stock.quantity * stock.price }}
+                                    <button
+                                        class="btn btn-danger"
+                                        @click="editStock(stock)"
+                                    >
+                                        <i
+                                            class="fa fa-cog"
+                                            style="font-size:20px"
+                                        ></i>
+                                    </button>
+                                    <button class="btn btn-success"
+                                    @click="showStock(stock.id)"
+                                   >
+                                    <i
+                                    class="fa fa-align-justify"
+                                    style="font-size:20px"
+                                    ></i>
+                                    </button>
                                 </td>
-                                <td><button class="btn btn-danger"><i class="fa fa-cog" style="font-size:20px"></i></button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -207,6 +322,16 @@ export default {
             isLoading: "",
 
             date: "",
+            adjustment: {
+                current_stock: "",
+                product_name: "",
+                quantity: "",
+                price: "",
+                notes: "",
+                date: "",
+                type: "increment",
+                reason: ""
+            },
 
             options: {
                 format: "YYYY-MM-DD",
@@ -261,7 +386,52 @@ export default {
             };
             this.pagination = pagination;
         },
+        editStock(stock) {
+            this.$bvModal.show("bv-modal-adjust-stock");
+            this.adjustment.current_stock = stock.quantity;
+            this.adjustment.stock_id = stock.id;
+            this.adjustment.product_name = stock.product.name;
+        },
+        clearAdjustmentField() {
+            this.adjustment.stock_id = "";
+            this.adjustment.quantity = "";
+            this.adjustment.date = "";
+            this.adjustment.reason = "";
+            this.adjustment.price = "";
+            this.adjustment.notes = "";
+            this.adjustment.type = "";
+        },
+        updateStock() {
+            //hit api for adjusting stock
+            let formData = new FormData();
+            formData.append("_METHOD", "POST");
+            formData.append("stock_id", this.adjustment.stock_id);
+            formData.append("quantity", this.adjustment.quantity);
+            formData.append("date", this.adjustment.date);
+            formData.append("type", this.adjustment.type);
+            formData.append("reason", this.adjustment.reason);
+            formData.append("price", this.adjustment.price);
+            formData.append("notes", this.adjustment.notes);
 
+            axios
+                .post("/api/adjust_stock", formData)
+                .then(response => {
+                    // console.log(response);
+                    this.$swal("Info", response.data.msg, response.data.status);
+                    this.$bvModal.hide("bv-modal-adjust-stock");
+                    this.clearAdjustmentField();
+                    this.fetchStocks();
+                })
+                .catch(error => {
+                    let currObj = this;
+                    // console.log(error);
+                    if (error.response.status == 422) {
+                        currObj.validationErrors = error.response.data.errors;
+                        currObj.errors = currObj.validationErrors;
+                        // console.log(currObj.errors);
+                    }
+                });
+        },
         searchTableBtn() {
             this.autoCompleteTable();
         },
@@ -302,9 +472,9 @@ export default {
             }
         }, //end of autoCOmpleteTable
 
-        showStock(product_id) {
+        showStock(stock_id) {
             // named route
-            this.$router.push({ path: `/${product_id}/showStock/` });
+            this.$router.push({ path: `/${stock_id}/showStock/` });
         }
 
         //end of methods block
@@ -315,8 +485,7 @@ export default {
             //reduce function is used to sum the array elements
             this.stocks.grandTotal = this.stocks.reduce(function(carry, stock) {
                 return (
-                    carry +
-                    parseFloat(stock.quantity) * parseFloat(stock.price)
+                    carry + parseFloat(stock.quantity) * parseFloat(stock.price)
                 );
             }, 0);
             return this.stocks.grandTotal;

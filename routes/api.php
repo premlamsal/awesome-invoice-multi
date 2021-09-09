@@ -246,6 +246,9 @@ Route::get('stock/{id}','StockController@show');
 //Create new stock
 Route::post('stock','StockController@store');
 
+//adjust stock
+Route::post('adjust_stock','StockController@adjustStock');
+
 //Update stock
 Route::put('stock','StockController@update');
 
@@ -271,6 +274,9 @@ Route::post('stock/search','StockController@searchPurchases');
 Route::get('stockDetail/{id}','StockDetailController@show');
 
 
+
+//get stock adjustment for single stock
+Route::get('stock_adjustments/{id}','StockController@showStockAdjustments');
 
 
 
