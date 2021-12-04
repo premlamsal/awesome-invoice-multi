@@ -61,9 +61,9 @@ class AccountController extends Controller
             $transaction = new Transaction();
             $transaction->transaction_type = 'opening_balance';
             $transaction->image = $request->input('image');
-            $transaction->notes = $request->input('notes');
-            $transaction->amount = $request->input('opening_balance');
-            $transaction->purpose = $request->input('purpose');
+            $transaction->notes = $request->input('notes'); //some notes
+            $transaction->amount = $request->input('amount');
+            $transaction->purpose = $request->input('purpose'); //some purpose
             $transaction->account_id = $account->id;
             $transaction->store_id = $store_id;
 
