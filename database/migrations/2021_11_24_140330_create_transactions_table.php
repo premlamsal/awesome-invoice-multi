@@ -15,11 +15,11 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enum('type',['income','expense','opening_balance']);
+            $table->enum('transaction_type',['income','expense','opening_balance']);
             $table->text('image')->nullable();
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->decimal('amount');
-            $table->string('purpose');
+            $table->string('purpose')->nullable();
             $table->unsignedBigInteger('account_id');
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
             $table->unsignedBigInteger('store_id');

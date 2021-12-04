@@ -33,8 +33,8 @@
         </div>
         <div class="form-group">
           <label for="Phone">Account Number:</label>
-          <input type="phone" v-model="account.holder_name" :class="['form-control']">
-          <span v-if="errors.phone" :class="['errorText']">{{ errors.holder_name[0] }}</span>
+          <input type="phone" v-model="account.bank_acc_num" :class="['form-control']">
+          <span v-if="errors.phone" :class="['errorText']">{{ errors.bank_acc_num[0] }}</span>
         </div>
          <div class="form-group">
           <label for="Opening_balance">Opening Balance:</label>

@@ -44,7 +44,6 @@ class AccountController extends Controller
             'bank_acc_num' => 'required|unique:accounts',
             'account_info' => 'required|string|max:400',
             'opening_balance' => 'required|numeric',
-            'balance' => 'required|numeric',
         ]);
 
         $account = new Account();
@@ -137,7 +136,6 @@ class AccountController extends Controller
             'bank_acc_num' => 'required|unique:accounts',
             'account_info' => 'required|string|max:400',
             'opening_balance' => 'required|numeric',
-            'balance' => 'required|numeric',
         ]);
 
         $id = $request->input('id'); //get id from edit modal
