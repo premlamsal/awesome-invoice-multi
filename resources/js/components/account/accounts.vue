@@ -286,11 +286,13 @@ export default {
       // Vue.set(this.modalForName,"Add Account");
       this.modalForCode = 0; //0 for add 
 
-      this.account.name = '';
-      this.account.address = '';
-      this.account.opening_balance = '';
-      this.account.phone = '';
-      this.account.details = '';
+        this.account.name = '';
+          this.account.balance = '';
+          this.account.opening_balance = '';
+          this.account.bank_name = '';
+          this.account.holder_name = '';
+          this.account.account_info = '';
+          this.account.bank_acc_num = '';
 
       this.errors = ''; //clearing errors
 
@@ -331,11 +333,13 @@ export default {
 
 
           currObj.account.name = '';
-          currObj.account.address = '';
-          currObj.account.phone = '';
+          currObj.account.balance = '';
           currObj.account.opening_balance = '';
+          currObj.account.bank_name = '';
+          currObj.account.holder_name = '';
+          currObj.account.account_info = '';
+          currObj.account.bank_acc_num = '';
 
-          currObj.account.details = '';
 
           currObj.errors = ''; //clearing errors
 
@@ -367,10 +371,13 @@ export default {
         .then(response => {
           // console.log(response.data.account)
           Vue.set(this.account, 'name', response.data.account.name);
-          Vue.set(this.account, 'address', response.data.account.address);
-          Vue.set(this.account, 'details', response.data.account.details);
+          Vue.set(this.account, 'balance', response.data.account.balance);
+          Vue.set(this.account, 'bank_name', response.data.account.bank_name);
           Vue.set(this.account, 'opening_balance', response.data.account.opening_balance);
-          Vue.set(this.account, 'phone', response.data.account.phone);
+          Vue.set(this.account, 'balance', response.data.account.balance);
+          Vue.set(this.account, 'account_info', response.data.account.account_info);
+          Vue.set(this.account, 'holder_name', response.data.account.holder_name);
+
           Vue.set(this.account, 'id', id); //to send id to the update controller 
           this.$Progress.finish();
         })
@@ -387,11 +394,13 @@ export default {
       let formData = new FormData();
       formData.append('_method', 'PUT'); //add this otherwise data won't pass to backend
       formData.append('name', this.account.name);
-      formData.append('address', this.account.address);
-      formData.append('phone', this.account.phone);
+      formData.append('balance', this.account.balance);
+      formData.append('bank_name', this.account.bank_name);
       formData.append('opening_balance', this.account.opening_balance);
+      formData.append('account_info', this.account.account_info);
+      formData.append('bank_acc_num', this.account.bank_acc_num);
+      formData.append('holder_name', this.account.holder_name);
       formData.append('id', this.account.id);
-      formData.append('details', this.account.details);
 
       axios.post('/api/account', formData)
         .then(function(response) {
@@ -402,10 +411,12 @@ export default {
           currObj.$bvModal.hide('bv-modal-add-account');
 
           currObj.account.name = '';
-          currObj.account.address = '';
-          currObj.account.phone = '';
+          currObj.account.balance = '';
           currObj.account.opening_balance = '';
-          currObj.account.details = '';
+          currObj.account.bank_name = '';
+          currObj.account.holder_name = '';
+          currObj.account.account_info = '';
+          currObj.account.bank_acc_num = '';
           currObj.errors = ''; //clearing errors
           currObj.$Progress.finish();
           currObj.fetchAccounts();

@@ -67,7 +67,7 @@ class AccountController extends Controller
             $transaction->purpose = $request->input('purpose');
             $transaction->account_id = $account->id;
             $transaction->store_id = $store_id;
-            
+
             if ($transaction->save()) {
                 return response()->json([
                     'msg' => 'Account added successfully',
@@ -89,4 +89,144 @@ class AccountController extends Controller
         }
 
     }
+    public function destroy($id)
+    {
+
+        $this->authorize('hasPermission', 'delete_account');
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        $store_id = $user->stores[0]->id;
+
+        $account = Account::where('store_id', $store_id)->where('id', $id)->first();
+        if ($account->delete()) {
+            $accountTransaction = Transaction::where('account_id', $account->id)->where('transaction_type', 'opening_balance')->first();
+            if ($accountTransaction->delete()) {
+                return response()->json([
+                    'msg' => 'successfully Deleted',
+                    'status' => 'success',
+                ]);
+            } else {
+                return response()->json([
+                    'msg' => 'Error while deleting account transaction',
+                    'status' => 'error',
+                ]);
+            }
+
+        } else {
+            return response()->json([
+                'msg' => 'Error while deleting data',
+                'status' => 'error',
+            ]);
+        }
+
+    }
+    public function update(Request $request)
+    {
+
+        $this->authorize('hasPermission', 'edit_account');
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        $store_id = $user->stores[0]->id;
+
+        $this->validate($request, [
+            'name' => 'required|regex:/^[\pL\s\-]+$/u',
+            'holder_name' => 'required|string|max:200',
+            'bank_name' => 'required|string|max:200',
+            'bank_acc_num' => 'required|unique:accounts',
+            'account_info' => 'required|string|max:400',
+            'opening_balance' => 'required|numeric',
+            'balance' => 'required|numeric',
+        ]);
+
+        $id = $request->input('id'); //get id from edit modal
+       
+        $account = Account::where('store_id', $store_id)->where('id', $id)->first();
+        $account->name = $request->input('name');
+        $account->holder_name = $request->input('holder_name');
+        $account->bank_name = $request->input('bank_name');
+        $account->bank_acc_num = $request->input('bank_acc_num');
+        $account->account_info = $request->input('account_info');
+        $account->opening_balance = $request->input('opening_balance');
+        $account->balance = $request->input('opening_balance'); //since at starting open and actual balance is same
+     
+        $account->store_id = $store_id;
+
+        if ($account->save()) {
+            $accountTransaction = Transaction::where('account_id', $account->id)->where('transaction_type', 'opening_balance')->first();
+            $accountTransaction->amount = $request->input('opening_balance');
+            if ($accountTransaction->save()) {
+                return response()->json([
+                    'msg' => 'Account updated successfully',
+                    'status' => 'success',
+                ]);
+
+            } else {
+                return response()->json([
+                    'msg' => 'Error while updating account transaction',
+                    'status' => 'error',
+                ]);
+            }
+        } else {
+            return response()->json([
+                'msg' => 'Error while updating account',
+                'status' => 'error',
+            ]);
+        }
+
+    }
+    public function show($id)
+    {
+
+        $this->authorize('hasPermission', 'show_account');
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        $store_id = $user->stores[0]->id;
+
+        $account = Account::where('store_id', $store_id)->where('id', $id)->first();
+
+        // $invoice_amount=Invoice::where('store_id',$store_id)->where('account_id',$id)->sum('grand_total');
+        
+        // $paid_amount=AccountPayment::where('store_id',$store_id)->where('account_id',$id)->sum('amount');
+        
+        // $balance_due= $invoice_amount - $paid_amount + ( $account->opening_balance) ;
+
+        if ($account->save()) {
+            return response()->json([
+                'account' => $account,
+                // 'invoice_amount'=>$invoice_amount,
+                // 'paid_amount'=>$paid_amount,
+                // 'balance_due'=>$balance_due,
+                'status' => 'success',
+            ]);
+        } else {
+            return response()->json([
+                'msg' => 'Error while retriving Account',
+                'status' => 'error',
+            ]);
+        }
+    }
+
+    public function searchAccounts(Request $request)
+    {
+
+        $this->authorize('hasPermission', 'search_account');
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        $store_id = $user->stores[0]->id;
+
+        $searchKey = $request->input('searchQuery');
+        if ($searchKey != '') {
+            return AccountResource::collection(Account::where('store_id', $store_id)->where('name', 'like', '%' . $searchKey . '%')->paginate(8));
+        } else {
+            return response()->json([
+                'msg' => 'Error while retriving Account. No Data Supplied as key.',
+                'status' => 'error',
+            ]);
+        }
+    }
+
 }
