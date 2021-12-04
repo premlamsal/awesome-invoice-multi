@@ -1,0 +1,104 @@
+/* --------------------------------
+
+Nucleo Web Font
+Generated using nucleoapp.com
+
+-------------------------------- */
+@icon-account2-font-path: "../fonts";
+
+@font-face {
+  font-family: 'Nucleo';
+  src: url('@{icon-account2-font-path}/Nucleo.eot');
+  src: url('@{icon-account2-font-path}/Nucleo.eot') format('embedded-opentype'),
+    url('@{icon-account2-font-path}/Nucleo.woff2') format('woff2'),
+    url('@{icon-account2-font-path}/Nucleo.woff') format('woff'),
+    url('@{icon-account2-font-path}/Nucleo.ttf') format('truetype'),
+    url('@{icon-account2-font-path}/Nucleo.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/*------------------------
+	base class definition
+-------------------------*/
+
+.icon {
+  display: inline-block;
+  font: normal normal normal 1em/1 'Nucleo';
+  color: inherit;
+  flex-shrink: 0;
+  speak: none;
+  text-transform: none;
+  /* Better Font Rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*------------------------
+  change icon size
+-------------------------*/
+
+/* relative units */
+.icon-sm {
+	font-size: 0.8em;
+}
+.icon-lg {
+  font-size: 1.2em;
+}
+/* absolute units */
+.icon-16 {
+  font-size: 16px;
+}
+.icon-32 {
+  font-size: 32px;
+}
+
+/*------------------------
+  spinning icons
+-------------------------*/
+
+.icon-is-spinning {
+  animation: icon-spin 1s infinite linear;
+}
+
+@keyframes icon-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*------------------------
+  rotated/flipped icons
+-------------------------*/
+
+.icon-rotate-90  {
+	transform: rotate(90deg);
+}
+
+.icon-rotate-180 {
+	transform: rotate(180deg);
+}
+
+.icon-rotate-270 {
+	transform: rotate(270deg);
+}
+
+.icon-flip-y {
+	transform: scaleY(-1);
+}
+.icon-flip-x {
+	transform: scaleX(-1);
+}
+
+/*------------------------
+	icons
+-------------------------*/
+@icon-account2-account_balance_wallet: "\ea01";
+
+.icon-account2-account_balance_wallet::before {
+  content: @icon-account2-account_balance_wallet;
+}
+

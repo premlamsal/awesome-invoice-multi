@@ -63,6 +63,14 @@
             </router-link>
           </li>
 
+          @can('hasPermission','view_accounts')
+           <li>
+            <router-link  to="/accounts" aria-expanded="false">
+                <span> Accounts</span>
+            </router-link>
+          </li>
+          @endcan
+
           @can('hasPermission','view_customers')
            <li>
             <router-link  to="/customers" aria-expanded="false">

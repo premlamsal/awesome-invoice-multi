@@ -208,8 +208,10 @@ class CustomerController extends Controller
         $customer = Customer::where('store_id', $store_id)->where('id', $id)->first();
 
         $invoice_amount=Invoice::where('store_id',$store_id)->where('customer_id',$id)->sum('grand_total');
+        
         $paid_amount=CustomerPayment::where('store_id',$store_id)->where('customer_id',$id)->sum('amount');
-        $balance_due=$customer->opening_balance-$invoice_amount-$paid_amount;
+        
+        $balance_due= $invoice_amount - $paid_amount + ( $customer->opening_balance) ;
 
         if ($customer->save()) {
             return response()->json([

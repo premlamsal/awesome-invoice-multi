@@ -24,11 +24,13 @@ class CustomerTransactionController extends Controller
         $store_id = $user->stores[0]->id;
 
         $CustomerTransaction=CustomerTransaction::where('customer_id',$customer_id)->where('store_id',$store_id)->get();
+       
         $transactions=array();
+       
         $balance=0.00;
         for($i=0;$i<$CustomerTransaction->count();$i++){
             if($CustomerTransaction[$i]->transaction_type==='opening_balance'){
-                $opening_balance=$CustomerTransaction[$i]->amount;
+                $opening_balance = $CustomerTransaction[$i]->amount;
                 $balance=$opening_balance; 
 
             }
@@ -39,7 +41,9 @@ class CustomerTransactionController extends Controller
                 $balance = $balance - $CustomerTransaction[$i]->amount;
             }
             $balance= number_format((float)$balance, 2, '.', '');
+            
             $CustomerTransaction[$i]->balance=$balance;
+            
             $transactions[$i]=$CustomerTransaction[$i];
         }
 

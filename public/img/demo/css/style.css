@@ -1,0 +1,185 @@
+/*--------------------------------
+
+Nucleo Web Font
+Generated using nucleoapp.com
+
+-------------------------------- */
+@font-face {
+  font-family: 'Nucleo';
+  src: url('../../fonts/Nucleo.eot');
+  src: url('../../fonts/Nucleo.eot') format('embedded-opentype'), url('../../fonts/Nucleo.woff2') format('woff2'), url('../../fonts/Nucleo.woff') format('woff'), url('../../fonts/Nucleo.ttf') format('truetype'), url('../../fonts/Nucleo.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* --------------------------------
+
+Reset
+
+-------------------------------- */
+
+*, *::after, *::before {
+  box-sizing: inherit;
+}
+
+* {
+  font: inherit;
+}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video, hr {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: white;
+  font-family: system-ui, sans-serif;
+  color: hsl(240, 4%, 20%);
+  padding: 1em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section, main, form legend {
+  display: block;
+}
+
+ol, ul {
+  list-style: none;
+}
+
+button, input, textarea, select {
+  margin: 0;
+}
+
+a {
+  color: hsl(230, 93%, 66%);
+}
+
+/* --------------------------------
+
+Main components
+
+-------------------------------- */
+header {
+  text-align: center;
+  margin: 3em auto;
+}
+
+header h1 {
+  font-size: 2.6rem;
+  font-weight: 600;
+}
+
+header p {
+  font-size: 1rem;
+  margin-top: 1em;
+  color: hsla(0, 0%, 0%, 0.5);
+}
+
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+ul li {
+  border-radius: .4em;
+  transition: background-color .2s;
+  user-select: none;
+  overflow: hidden;
+  text-align: center;
+  padding: 1em;
+}
+
+ul li:hover {
+  background: hsla(0, 0%, 0%, 0.05);
+}
+
+ul p, ul em, ul input {
+  display: block;
+  font-size: 0.75rem;
+  color: hsla(0, 0%, 0%, 0.5);
+  user-select: auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  max-width: 6rem;
+}
+
+ul p {
+  padding: 8px 0 4px;
+}
+
+ul p::selection, ul em::selection {
+  background: hsl(230, 93%, 66%);
+  color: #fff;
+}
+
+ul p::-moz-selection, ul em::-moz-selection {
+  background: hsl(230, 93%, 66%);
+  color: #fff;
+}
+
+ul em {
+  margin-bottom: 4px;
+}
+
+ul em::before {
+  content: '[';
+}
+ul em::after {
+  content: ']';
+}
+
+ul input {
+  text-align: center;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  outline: none;
+  font-family: auto;
+}
+
+/* --------------------------------
+
+icons
+
+-------------------------------- */
+.icon {
+  display: inline-block;
+  font: normal normal normal 32px/1 'Nucleo';
+  speak: none;
+  text-transform: none;
+  /* Better Font Rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/*------------------------
+  font icons
+-------------------------*/
+
+.icon-account2-account_balance_wallet::before {
+  content: "\ea01";
+}
+

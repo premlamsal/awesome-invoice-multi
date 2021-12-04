@@ -539,6 +539,12 @@ let routes = [
     component: require('./components/dashboard/selectStore.vue').default,
 
   },
+  {
+    path: '/accounts',
+    name: 'accounts',
+    component: require('./components/account/accounts.vue').default,
+
+  },
 
   {
     path: '/app/info',

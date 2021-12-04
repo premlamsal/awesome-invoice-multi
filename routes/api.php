@@ -349,3 +349,25 @@ Route::put('permission','PermissionController@update');
 Route::get('permission/{id}','PermissionController@show');
 
 Route::delete('permission/{id}','PermissionController@destroy');
+
+
+
+//accounts
+
+//List account
+Route::get('accounts','AccountController@index');
+
+//Create new account
+Route::post('account','AccountController@store');
+
+//List single account
+Route::get('account/{id}','AccountController@show');
+
+//Update account
+Route::put('account','AccountController@update');
+
+//Delete account
+Route::delete('account/{id}','AccountController@destroy');
+
+//search accounts
+Route::post('accounts/search','AccountController@searchAccounts');
