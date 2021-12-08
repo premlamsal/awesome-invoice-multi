@@ -131,7 +131,7 @@ class AccountController extends Controller
             'name' => 'required|regex:/^[\pL\s\-]+$/u',
             'holder_name' => 'required|string|max:200',
             'bank_name' => 'required|string|max:200',
-            'bank_acc_num' => 'required|unique:accounts',
+            'bank_acc_num' => 'required|unique:accounts,bank_acc_num,'.$request->get('id'),
             'account_info' => 'required|string|max:400',
             'opening_balance' => 'required|numeric',
         ]);

@@ -395,7 +395,7 @@ export default {
       let formData = new FormData();
       formData.append('_method', 'PUT'); //add this otherwise data won't pass to backend
       formData.append('name', this.account.name);
-      formData.append('balance', this.account.balance);
+      // formData.append('balance', this.account.balance);
       formData.append('bank_name', this.account.bank_name);
       formData.append('opening_balance', this.account.opening_balance);
       formData.append('account_info', this.account.account_info);

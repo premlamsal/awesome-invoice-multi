@@ -55,7 +55,7 @@ Route::get('customer/payment/{payment_id}','CustomerPaymentController@show');
 //Delete customer payment
 Route::delete('customer/delete-payment/{payment_id}','CustomerPaymentController@destroy');
 
-//Delete customer payment
+//update customer payment
 Route::post('customer/update-payment/','CustomerPaymentController@update');
 
 
