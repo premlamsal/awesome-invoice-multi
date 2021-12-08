@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use App\Account;
 use App\User;
 use Auth;
-use App\Transaction;
+use App\AccountTransaction;
 use App\Http\Resources\Account as AccountResource;
 
 class AccountController extends Controller
@@ -58,16 +58,16 @@ class AccountController extends Controller
 
         if ($account->save()) {
 
-            $transaction = new Transaction();
-            $transaction->transaction_type = 'opening_balance';
-            $transaction->image = $request->input('image');
-            $transaction->notes = $request->input('notes'); //some notes
-            $transaction->amount = $request->input('amount');
-            $transaction->purpose = $request->input('purpose'); //some purpose
-            $transaction->account_id = $account->id;
-            $transaction->store_id = $store_id;
+            $AccountTransaction = new AccountTransaction();
+            $AccountTransaction->transaction_type = 'opening_balance';
+            $AccountTransaction->image = $request->input('image');
+            $AccountTransaction->notes = $request->input('notes'); //some notes
+            $AccountTransaction->amount = $request->input('opening_balance');
+            $AccountTransaction->purpose = $request->input('purpose'); //some purpose
+            $AccountTransaction->account_id = $account->id;
+            $AccountTransaction->store_id = $store_id;
 
-            if ($transaction->save()) {
+            if ($AccountTransaction->save()) {
                 return response()->json([
                     'msg' => 'Account added successfully',
                     'status' => 'success',
@@ -99,18 +99,16 @@ class AccountController extends Controller
 
         $account = Account::where('store_id', $store_id)->where('id', $id)->first();
         if ($account->delete()) {
-            $accountTransaction = Transaction::where('account_id', $account->id)->where('transaction_type', 'opening_balance')->first();
-            if ($accountTransaction->delete()) {
-                return response()->json([
-                    'msg' => 'successfully Deleted',
-                    'status' => 'success',
-                ]);
-            } else {
-                return response()->json([
-                    'msg' => 'Error while deleting account transaction',
-                    'status' => 'error',
-                ]);
-            }
+
+            //no need to delete account transaction since its cascade but we will delete checking null if already delete or not
+            $accountTransaction = AccountTransaction::where('account_id', $id)->where('transaction_type','opening_balance')->where('store_id',$store_id)->first();
+            if ($accountTransaction != null) {
+              $accountTransaction->delete();
+            } 
+            return response()->json([
+                'msg' => 'successfully Deleted',
+                'status' => 'success',
+            ]);
 
         } else {
             return response()->json([
@@ -152,7 +150,7 @@ class AccountController extends Controller
         $account->store_id = $store_id;
 
         if ($account->save()) {
-            $accountTransaction = Transaction::where('account_id', $account->id)->where('transaction_type', 'opening_balance')->first();
+            $accountTransaction = AccountTransaction::where('account_id', $account->id)->where('transaction_type', 'opening_balance')->where('store_id',$store_id)->first();
             $accountTransaction->amount = $request->input('opening_balance');
             if ($accountTransaction->save()) {
                 return response()->json([
