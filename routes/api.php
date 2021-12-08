@@ -371,3 +371,8 @@ Route::delete('account/{id}','AccountController@destroy');
 
 //search accounts
 Route::post('accounts/search','AccountController@searchAccounts');
+
+
+//Get Account Transactions
+Route::get('account/transactions/{id}','AccountTransactionController@index');
+

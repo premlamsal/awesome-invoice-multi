@@ -20,6 +20,7 @@ class CreateAccountTransactionsTable extends Migration
             $table->text('notes')->nullable();
             $table->decimal('amount');
             $table->string('purpose')->nullable();
+            $table->decimal('refID');
             $table->unsignedBigInteger('account_id');
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
             $table->unsignedBigInteger('store_id');

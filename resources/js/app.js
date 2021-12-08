@@ -543,8 +543,40 @@ let routes = [
     path: '/accounts',
     name: 'accounts',
     component: require('./components/account/accounts.vue').default,
+    beforeEnter(to, from, next) {
+      let hasAccess = store.getters.permissions
+      if (hasAccess.includes('view_accounts') || hasAccess.includes('all')) {
+        next()
+      }
+    }
 
   },
+  {
+    path: '/transactions',
+    name: 'transactions',
+    component: require('./components/transaction/transactions.vue').default,
+    beforeEnter(to, from, next) {
+      let hasAccess = store.getters.permissions
+      if (hasAccess.includes('view_transactions') || hasAccess.includes('all')) {
+        next()
+      }
+    }
+
+  },
+  
+//account profile routes
+{
+  path: '/:id/account-profile',
+  name: 'accountProfile',
+  component: require('./components/account/accountProfile.vue').default,
+
+   beforeEnter(to, from, next) {
+      let hasAccess = store.getters.permissions
+      if (hasAccess.includes('view_account_profile') || hasAccess.includes('all')) {
+        next()
+      }
+    }
+},
 
   {
     path: '/app/info',

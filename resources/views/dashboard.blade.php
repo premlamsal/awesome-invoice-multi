@@ -66,7 +66,16 @@
           @can('hasPermission','view_accounts')
            <li>
             <router-link  to="/accounts" aria-expanded="false">
+            <i class="nc-icon nc-credit-card"></i>
                 <span> Accounts</span>
+            </router-link>
+          </li>
+          @endcan
+          @can('hasPermission','view_transactions')
+           <li>
+            <router-link  to="/transactions" aria-expanded="false">
+            <i class="nc-icon nc-chart-bar-32"></i>
+                <span> Transactions</span>
             </router-link>
           </li>
           @endcan
