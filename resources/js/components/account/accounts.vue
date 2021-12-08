@@ -22,27 +22,27 @@
           <span v-if="errors.name" :class="['errorText']">{{ errors.name[0] }}</span>
         </div>
         <div class="form-group">
-          <label for="Address">Bank Name:</label>
+          <label for="bank_name">Bank Name:</label>
           <input type="text" v-model="account.bank_name" :class="['form-control']">
           <span v-if="errors.address" :class="['errorText']">{{ errors.bank_name[0] }}</span>
         </div>
          <div class="form-group">
-          <label for="Address">Account Holder:</label>
+          <label for="holder_name">Account Holder:</label>
           <input type="text" v-model="account.holder_name" :class="['form-control']">
           <span v-if="errors.address" :class="['errorText']">{{ errors.holder_name[0] }}</span>
         </div>
         <div class="form-group">
-          <label for="Phone">Account Number:</label>
-          <input type="phone" v-model="account.bank_acc_num" :class="['form-control']">
+          <label for="bank_acc_num">Account Number:</label>
+          <input type="text" v-model="account.bank_acc_num" :class="['form-control']">
           <span v-if="errors.phone" :class="['errorText']">{{ errors.bank_acc_num[0] }}</span>
         </div>
          <div class="form-group">
-          <label for="Opening_balance">Opening Balance:</label>
+          <label for="opening_balance">Opening Balance:</label>
           <input type="text" v-model="account.opening_balance" :class="['form-control']">
           <span v-if="errors.opening_balance" :class="['errorText']">{{ errors.opening_balance[0] }}</span>
         </div>
         <div class="form-group">
-          <label for="Phone">Account Information :</label>
+          <label for="account_info">Account Information :</label>
           <textarea v-model="account.account_info" :class="['form-control']"></textarea>
           <span v-if="errors.details" :class="['errorText']">{{ errors.account_info[0] }}</span>
         </div>
@@ -373,6 +373,7 @@ export default {
           Vue.set(this.account, 'name', response.data.account.name);
           Vue.set(this.account, 'balance', response.data.account.balance);
           Vue.set(this.account, 'bank_name', response.data.account.bank_name);
+          Vue.set(this.account, 'bank_acc_num', response.data.account.bank_acc_num);
           Vue.set(this.account, 'opening_balance', response.data.account.opening_balance);
           Vue.set(this.account, 'balance', response.data.account.balance);
           Vue.set(this.account, 'account_info', response.data.account.account_info);
