@@ -374,7 +374,7 @@ Route::post('accounts/search', 'AccountController@searchAccounts');
 
 
 //Get Account Transactions
-Route::get('account/transactions/{id}', 'AccountTransactionController@index');
+Route::get('account/transactions/{id}', 'AccountController@getAccountTransactions');
 
 
 //get all transactions

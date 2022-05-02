@@ -17,10 +17,10 @@ class CreateTransactionsTable extends Migration
             
             $table->bigIncrements('id');
             
-            $table->enum('transaction_type', ['income','expense']);
+            $table->enum('transaction_type', ['income','expense','sales','purchase','opening_balance']);
             
             $table->integer('refID')->nullable();//will keep sales i.e invoice id or payment as per transaction type initiated
-            
+           
             $table->decimal('amount');
 
             $table->string('transaction_name')->nullable();

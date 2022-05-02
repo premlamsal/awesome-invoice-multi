@@ -5,8 +5,8 @@ use Illuminate\Http\Request;
 use App\Account;
 use App\User;
 use Auth;
-use App\AccountTransaction;
 use App\Http\Resources\Account as AccountResource;
+use App\Transaction;
 
 class AccountController extends Controller
 {
@@ -58,16 +58,17 @@ class AccountController extends Controller
 
         if ($account->save()) {
 
-            $AccountTransaction = new AccountTransaction();
-            $AccountTransaction->transaction_type = 'opening_balance';
-            $AccountTransaction->image = $request->input('image');
-            $AccountTransaction->notes = $request->input('notes'); //some notes
-            $AccountTransaction->amount = $request->input('opening_balance');
-            $AccountTransaction->purpose = $request->input('purpose'); //some purpose
-            $AccountTransaction->account_id = $account->id;
-            $AccountTransaction->store_id = $store_id;
+            $Transaction = new Transaction();
+            $Transaction->transaction_type = 'opening_balance';
+            $Transaction->image = $request->input('image');
+            $Transaction->date = time();
+            $Transaction->notes = $request->input('notes'); //some notes
+            $Transaction->amount = $request->input('opening_balance');
+            $Transaction->transaction_name = $request->input('transaction_name'); //some purpose
+            $Transaction->account_id = $account->id;
+            $Transaction->store_id = $store_id;
 
-            if ($AccountTransaction->save()) {
+            if ($Transaction->save()) {
                 return response()->json([
                     'msg' => 'Account added successfully',
                     'status' => 'success',
@@ -101,7 +102,7 @@ class AccountController extends Controller
         if ($account->delete()) {
 
             //no need to delete account transaction since its cascade but we will delete checking null if already delete or not
-            $accountTransaction = AccountTransaction::where('account_id', $id)->where('transaction_type','opening_balance')->where('store_id',$store_id)->first();
+            $accountTransaction = Transaction::where('account_id', $id)->where('transaction_type','opening_balance')->where('store_id',$store_id)->first();
             if ($accountTransaction != null) {
               $accountTransaction->delete();
             } 
@@ -150,7 +151,7 @@ class AccountController extends Controller
         $account->store_id = $store_id;
 
         if ($account->save()) {
-            $accountTransaction = AccountTransaction::where('account_id', $account->id)->where('transaction_type', 'opening_balance')->where('store_id',$store_id)->first();
+            $accountTransaction = Transaction::where('account_id', $account->id)->where('transaction_type', 'opening_balance')->where('store_id',$store_id)->first();
             $accountTransaction->amount = $request->input('opening_balance');
             if ($accountTransaction->save()) {
                 return response()->json([
@@ -223,6 +224,41 @@ class AccountController extends Controller
                 'status' => 'error',
             ]);
         }
+    }
+
+    public function getAccountTransactions($account_id){
+        
+        // $this->authorize('hasPermission','view_customer_transactions');
+
+        $user = User::findOrFail(Auth::user()->id);
+
+        $store_id = $user->stores[0]->id;
+
+        $Transaction=Transaction::where('account_id',$account_id)->where('store_id',$store_id)->get();
+       
+        $transactions=array();
+       
+        $balance=0.00;
+        for($i=0;$i<$Transaction->count();$i++){
+            if($Transaction[$i]->transaction_type==='opening_balance'){
+                $opening_balance = $Transaction[$i]->amount;
+                $balance=$opening_balance; 
+
+            }
+            if($Transaction[$i]->transaction_type==='income'){
+                $balance=$balance + $Transaction[$i]->amount;
+            }
+            if($Transaction[$i]->transaction_type==='expense'){
+                $balance = $balance - $Transaction[$i]->amount;
+            }
+            $balance= number_format((float)$balance, 2, '.', '');
+            
+            $Transaction[$i]->balance=$balance;
+            
+            $transactions[$i]=$Transaction[$i];
+        }
+
+        return response()->json(['transactions'=>$transactions]);
     }
 
 }
