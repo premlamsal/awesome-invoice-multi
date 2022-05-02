@@ -28,7 +28,9 @@ class TransactionController extends Controller
 
         $store_id = $user->stores[0]->id;
 
-        return TransactionResource::collection(Transaction::where('store_id', $store_id)->paginate(8));
+        return TransactionResource::collection(Transaction::where('store_id', $store_id)
+        ->where('transaction_type','!=','opening_balance')
+        ->paginate(8));
     }
 
     public function store(Request $request)
