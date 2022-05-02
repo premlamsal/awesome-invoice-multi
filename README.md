@@ -2,6 +2,7 @@
 <p>Developed by Prem Lamsal</p>
 <p>Laravel 6.10.1 and VueJs 2</p>
 <p>Multi User Registration</p>
+<p>Note: Please use composer 1.10.25. If you are using new composer please downgrade using 'composer self-update --1' command. </p>
 
 <h4>used npm packages</h4>
 <ul>

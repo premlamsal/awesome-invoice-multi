@@ -707,9 +707,7 @@ export default {
     },
 
     taxAmount: function() {
-
-      return this.subTotal * this.store.tax_percentage;
-
+     return this.subTotal * parseFloat(this.store.tax_percentage/100);
     },
 
     grandTotal: function() {

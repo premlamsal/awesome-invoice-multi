@@ -297,7 +297,7 @@ class InvoiceController extends Controller
 
                 $invoice->invoiceDetail()->saveMany($items);
 
-                $CustomerTransaction = new CustomerTransaction();
+                $CustomerTransaction = CustomerTransaction::where('refID',$invoice->id)->where('store_id',$store_id)->first();
                 // $CustomerTransaction->transaction_type = "sales";
                 // $CustomerTransaction->refId = $invoice->id;
                 $CustomerTransaction->amount = $data['grand_total'];
@@ -501,13 +501,22 @@ class InvoiceController extends Controller
 
                     if ($Invoice->delete()) {
 
-                        return response()->json([
-                            'msg' => 'successfully Deleted',
-                            'status' => 'success',
-                        ]);
+                        $CustomerTransaction = CustomerTransaction::where('refID',$Invoice->id)->where('store_id',$store_id)->first();
+                            if($CustomerTransaction->delete()){
+                                return response()->json([
+                                    'msg' => 'successfully Deleted',
+                                    'status' => 'success',
+                                ]);
+                            }else{
+                                return response()->json([
+                                    'msg' => 'Customer Transaction Delete Failed',
+                                    'status' => 'error',
+                                ]);
+                            }
+                     
                     } else {
                         return response()->json([
-                            'msg' => 'Delete Failed',
+                            'msg' => 'Invoice Delete Failed',
                             'status' => 'error',
                         ]);
                     }

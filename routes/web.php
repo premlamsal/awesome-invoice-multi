@@ -12,6 +12,7 @@
 */
 
 
+
 Auth::routes(['verify' => true]);
 
 Route::get('/', 'HomeController@dashboard');

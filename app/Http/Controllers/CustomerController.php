@@ -32,7 +32,6 @@ class CustomerController extends Controller
         $store_id = $user->stores[0]->id;
 
         return CustomerResource::collection(Customer::where('store_id', $store_id)->paginate(8));
-
     }
 
     public function store(Request $request)
@@ -73,31 +72,29 @@ class CustomerController extends Controller
                     'msg' => 'Customer added successfully',
                     'status' => 'success',
                 ]);
-
             } else {
                 return response()->json([
                     'msg' => 'Error while adding customer transaction',
                     'status' => 'error',
                 ]);
             }
-
         } else {
             return response()->json([
                 'msg' => 'Error while adding customer',
                 'status' => 'error',
             ]);
         }
-
     }
-    public function getPayments($customer_id){
-        
+    public function getPayments($customer_id)
+    {
+
         $user = User::findOrFail(Auth::user()->id);
 
         $store_id = $user->stores[0]->id;
 
-        $CustomerPayments=CustomerPayment::where('store_id',$store_id)->where('customer_id',$customer_id)->get();
-       
-        return response()->json(['data'=>$CustomerPayments,'status'=>'success']);
+        $CustomerPayments = CustomerPayment::where('store_id', $store_id)->where('customer_id', $customer_id)->get();
+
+        return response()->json(['data' => $CustomerPayments, 'status' => 'success']);
     }
 
     public function update(Request $request)
@@ -134,7 +131,6 @@ class CustomerController extends Controller
                     'msg' => 'Customer updated successfully',
                     'status' => 'success',
                 ]);
-
             } else {
                 return response()->json([
                     'msg' => 'Error while updating customer transaction',
@@ -147,7 +143,6 @@ class CustomerController extends Controller
                 'status' => 'error',
             ]);
         }
-
     }
 
     // public function search(Request $request){
@@ -186,14 +181,12 @@ class CustomerController extends Controller
                     'status' => 'error',
                 ]);
             }
-
         } else {
             return response()->json([
                 'msg' => 'Error while deleting data',
                 'status' => 'error',
             ]);
         }
-
     }
 
     public function show($id)
@@ -207,18 +200,18 @@ class CustomerController extends Controller
 
         $customer = Customer::where('store_id', $store_id)->where('id', $id)->first();
 
-        $invoice_amount=Invoice::where('store_id',$store_id)->where('customer_id',$id)->sum('grand_total');
-        
-        $paid_amount=CustomerPayment::where('store_id',$store_id)->where('customer_id',$id)->sum('amount');
-        
-        $balance_due= $invoice_amount - $paid_amount + ( $customer->opening_balance) ;
+        $invoice_amount = Invoice::where('store_id', $store_id)->where('customer_id', $id)->sum('grand_total');
+
+        $paid_amount = CustomerPayment::where('store_id', $store_id)->where('customer_id', $id)->sum('amount');
+
+        $balance_due = $invoice_amount - $paid_amount + ($customer->opening_balance);
 
         if ($customer->save()) {
             return response()->json([
                 'customer' => $customer,
-                'invoice_amount'=>$invoice_amount,
-                'paid_amount'=>$paid_amount,
-                'balance_due'=>$balance_due,
+                'invoice_amount' => $invoice_amount,
+                'paid_amount' => $paid_amount,
+                'balance_due' => $balance_due,
                 'status' => 'success',
             ]);
         } else {

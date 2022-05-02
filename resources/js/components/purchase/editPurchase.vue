@@ -9,39 +9,63 @@
         <div class="row">
           <div class="col-sm-4">
             <label>Purchase No.</label>
-            {{info.custom_purchase_id}}
+            {{ info.custom_purchase_id }}
             <br />
             <div class="form-group">
               <label>Status</label>
-              <template v-if="(info.status==='Paid')">
+              <template v-if="info.status === 'Paid'">
                 <select class="form-control" v-model="info.status">
-                  <option selected style="background: green;color: #fff">Paid</option>
-                  <option style="background: red;color: #fff">To Pay</option>
+                  <option selected style="background: green; color: #fff">
+                    Paid
+                  </option>
+                  <option style="background: red; color: #fff">To Pay</option>
                 </select>
               </template>
-              <template v-else-if="(info.status==='To Pay')">
+              <template v-else-if="info.status === 'To Pay'">
                 <select class="form-control" v-model="info.status">
-                  <option selected style="background: red;color: #fff">To Pay</option>
-                  <option style="background: green;color: #fff">Paid</option>
+                  <option selected style="background: red; color: #fff">
+                    To Pay
+                  </option>
+                  <option style="background: green; color: #fff">Paid</option>
                 </select>
               </template>
             </div>
-            <div class="form-group" style="position: relative;">
+            <div class="form-group" style="position: relative">
               <label>Supplier</label>
-              <input type="text" v-model="info.supplier_name" v-on:keyup="autoComplete" class="form-control" />
+              <input
+                type="text"
+                v-model="info.supplier_name"
+                v-on:keyup="autoComplete"
+                class="form-control"
+              />
               <span v-if="errors['info.supplier_name']" :class="['errorText']">
-                {{errors['info.supplier_name'][0]}}
+                {{ errors["info.supplier_name"][0] }}
                 <br />
               </span>
               <!-- Search suggestion block -->
               <div class="supplier-search-suggestion">
-                <div v-for="queryResult in queryResults" v-bind:key="queryResult.id" class="supplier-search-suggestion-inner">
+                <div
+                  v-for="queryResult in queryResults"
+                  v-bind:key="queryResult.id"
+                  class="supplier-search-suggestion-inner"
+                >
                   <ul>
-                    <li @click="clickSearchSuggestion(queryResult.id,queryResult.name)">{{queryResult.name}}</li>
+                    <li
+                      @click="
+                        clickSearchSuggestion(queryResult.id, queryResult.name)
+                      "
+                    >
+                      {{ queryResult.name }}
+                    </li>
                   </ul>
                 </div>
               </div>
-              <b-button id="show-btn" @click="$bvModal.show('bv-modal-example')" class="btn btn-warning" style="margin-top: 8px;">
+              <b-button
+                id="show-btn"
+                @click="$bvModal.show('bv-modal-example')"
+                class="btn btn-warning"
+                style="margin-top: 8px"
+              >
                 <span class="fa fa-plus-circle"></span> Add Supplier
               </b-button>
               <b-modal id="bv-modal-example" hide-footer>
@@ -51,32 +75,65 @@
                     <input type="hidden" v-model="supplier.id" />
                     <label for="Name">Name:</label>
                     <!--  <input type="text"  v-model="supplier.name" :class="['form-control', errors.name ? 'is-invalid' : '']"> -->
-                    <input type="text" v-model="supplier.name" :class="['form-control']" />
-                    <span v-if="errors.name" :class="['errorText']">{{ errors.name[0] }}</span>
+                    <input
+                      type="text"
+                      v-model="supplier.name"
+                      :class="['form-control']"
+                    />
+                    <span v-if="errors.name" :class="['errorText']">{{
+                      errors.name[0]
+                    }}</span>
                   </div>
                   <div class="form-group">
                     <label for="Address">Address:</label>
-                    <input type="text" v-model="supplier.address" :class="['form-control']" />
-                    <span v-if="errors.address" :class="['errorText']">{{ errors.address[0] }}</span>
+                    <input
+                      type="text"
+                      v-model="supplier.address"
+                      :class="['form-control']"
+                    />
+                    <span v-if="errors.address" :class="['errorText']">{{
+                      errors.address[0]
+                    }}</span>
                   </div>
 
                   <div class="form-group">
                     <label for="Phone">Phone:</label>
-                    <input type="phone" v-model="supplier.phone" :class="['form-control']" />
-                    <span v-if="errors.phone" :class="['errorText']">{{ errors.phone[0] }}</span>
+                    <input
+                      type="phone"
+                      v-model="supplier.phone"
+                      :class="['form-control']"
+                    />
+                    <span v-if="errors.phone" :class="['errorText']">{{
+                      errors.phone[0]
+                    }}</span>
                   </div>
-                      <div class="form-group">
-          <label for="Opening_balance">Opening Balance:</label>
-          <input type="text" v-model="supplier.opening_balance" :class="['form-control']">
-          <span v-if="errors.opening_balance" :class="['errorText']">{{ errors.opening_balance[0] }}</span>
-        </div>
+                  <div class="form-group">
+                    <label for="Opening_balance">Opening Balance:</label>
+                    <input
+                      type="text"
+                      v-model="supplier.opening_balance"
+                      :class="['form-control']"
+                    />
+                    <span
+                      v-if="errors.opening_balance"
+                      :class="['errorText']"
+                      >{{ errors.opening_balance[0] }}</span
+                    >
+                  </div>
                   <div class="form-group">
                     <label for="Phone">Details:</label>
-                    <textarea v-model="supplier.details" :class="['form-control']"></textarea>
-                    <span v-if="errors.details" :class="['errorText']">{{ errors.details[0] }}</span>
+                    <textarea
+                      v-model="supplier.details"
+                      :class="['form-control']"
+                    ></textarea>
+                    <span v-if="errors.details" :class="['errorText']">{{
+                      errors.details[0]
+                    }}</span>
                   </div>
                 </div>
-                <b-button class="mt-3" block @click="addSupplier">Add Supplier</b-button>
+                <b-button class="mt-3" block @click="addSupplier"
+                  >Add Supplier</b-button
+                >
               </b-modal>
               <!-- Search suggestion block ends -->
             </div>
@@ -93,20 +150,36 @@
             <div class="form-group">
               <label>Note</label>
               <textarea v-model="info.note" class="form-control"></textarea>
-              <span v-if="errors['info.note']" :class="['errorText']">{{errors['info.note'][0]}}</span>
+              <span v-if="errors['info.note']" :class="['errorText']">{{
+                errors["info.note"][0]
+              }}</span>
             </div>
             <div class="row">
               <div class="col-sm-6">
                 <label>Purchase Date</label>
-                <date-picker v-model="info.purchase_date" :config="options" :class="['form-control']"></date-picker>
+                <date-picker
+                  v-model="info.purchase_date"
+                  :config="options"
+                  :class="['form-control']"
+                ></date-picker>
                 <!-- <input type="date" v-model="info.purchase_date" class="form-control"> -->
-                <span v-if="errors['info.purchase_date']" :class="['errorText']">{{errors['info.purchase_date'][0]}}</span>
+                <span
+                  v-if="errors['info.purchase_date']"
+                  :class="['errorText']"
+                  >{{ errors["info.purchase_date"][0] }}</span
+                >
               </div>
               <div class="col-sm-6">
                 <label>Due Date</label>
                 <!-- <input type="date" v-model="info.due_date" class="form-control">    -->
-                <date-picker v-model="info.due_date" :config="options" :class="['form-control']"></date-picker>
-                <span v-if="errors['info.due_date']" :class="['errorText']">{{errors['info.due_date'][0]}}</span>
+                <date-picker
+                  v-model="info.due_date"
+                  :config="options"
+                  :class="['form-control']"
+                ></date-picker>
+                <span v-if="errors['info.due_date']" :class="['errorText']">{{
+                  errors["info.due_date"][0]
+                }}</span>
               </div>
             </div>
           </div>
@@ -125,45 +198,82 @@
                 <h6>Quanity</h6>
               </div>
               <div class="col-md-1">
-                <h6> Unit</h6>
+                <h6>Unit</h6>
               </div>
               <div class="col-md-2">
                 <h6>Price</h6>
               </div>
               <div class="col-md-2">
-                <h6> Total</h6>
+                <h6>Total</h6>
               </div>
               <div class="col-md-2">
-                <h6> Action</h6>
+                <h6>Action</h6>
               </div>
             </div>
           </div>
           <!-- end of purchase head-->
-             <div class="purchase-body">
-            <div class="purchase-items" v-for="(item,index) in items" v-bind:key="item.id">
+          <div class="purchase-body">
+            <div
+              class="purchase-items"
+              v-for="(item, index) in items"
+              v-bind:key="item.id"
+            >
               <div class="row">
-                <div class="col-md-1" v-if="item.product.custom_product_id!=null">
-                  {{item.product.custom_product_id}} | {{item.stock_id}}
+                <div
+                  class="col-md-1"
+                  v-if="item.product.custom_product_id != null"
+                >
+                  {{ item.product.custom_product_id }} | {{ item.stock_id }}
                 </div>
 
-                <div class="col-md-1" v-else>
-                  #
-                </div>
+                <div class="col-md-1" v-else>#</div>
                 <div class="col-md-3">
                   <div class="auto-complete-product-container">
                     <div class="form-group">
-                      <input type="text" class="form-control" placeholder="Product Name" v-model="item.product_name" v-on:keydown="autoCompleteProduct(index)" :class="{'is-invalid':errors['items.' + index + '.product_name']}" />
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Product Name"
+                        v-model="item.product_name"
+                        v-on:keydown="autoCompleteProduct(index)"
+                        :class="{
+                          'is-invalid':
+                            errors['items.' + index + '.product_name'],
+                        }"
+                      />
 
-                      <span v-if="errors['items.' + index + '.product_name']" :class="['errorText']">{{errors['items.' + index + '.product_name'][0]}}</span>
-
+                      <span
+                        v-if="errors['items.' + index + '.product_name']"
+                        :class="['errorText']"
+                        >{{
+                          errors["items." + index + ".product_name"][0]
+                        }}</span
+                      >
 
                       <!--  suggestion block -->
-                      <div class="product-search-suggestion-purchase" >
+                      <div class="product-search-suggestion-purchase">
                         <ul>
-                          <li v-for="queryResultsProduct in queryResultsProducts[index]" v-bind:key="queryResultsProduct.id" @click="clickSearchProductSuggestion(queryResultsProduct.id,queryResultsProduct.product.id,queryResultsProduct.product.custom_product_id,queryResultsProduct.product.name,queryResultsProduct.product.unit.id,queryResultsProduct.product.sp,index)">
-                           
-                          {{queryResultsProduct.product.name}} -- {{queryResultsProduct.quantity}} {{queryResultsProduct.product.unit.short_name}} --  Rs. {{queryResultsProduct.price}}
-
+                          <li
+                            v-for="queryResultsProduct in queryResultsProducts[
+                              index
+                            ]"
+                            v-bind:key="queryResultsProduct.id"
+                            @click="
+                              clickSearchProductSuggestion(
+                                queryResultsProduct.id,
+                                queryResultsProduct.product.id,
+                                queryResultsProduct.product.custom_product_id,
+                                queryResultsProduct.product.name,
+                                queryResultsProduct.product.unit.id,
+                                queryResultsProduct.product.sp,
+                                index
+                              )
+                            "
+                          >
+                            {{ queryResultsProduct.product.name }} --
+                            {{ queryResultsProduct.quantity }}
+                            {{ queryResultsProduct.product.unit.short_name }} --
+                            Rs. {{ queryResultsProduct.price }}
                           </li>
                         </ul>
                       </div>
@@ -174,26 +284,67 @@
                   </div>
                 </div>
                 <div class="col-md-1">
-                  <input type="number" class="form-control" placeholder="Quantity" v-model="item.quantity" 
-                   :class="{'is-invalid':errors['items.' + index + '.quantity']}" />
+                  <input
+                    type="number"
+                    class="form-control"
+                    placeholder="Quantity"
+                    v-model="item.quantity"
+                    :class="{
+                      'is-invalid': errors['items.' + index + '.quantity'],
+                    }"
+                  />
                 </div>
                 <div class="col-md-1">
-                  <template v-if="units.length>0">
-                    <select class="form-control" disabled="" v-model="item.unit_id" v-if="item.product_id" :class="{'is-invalid':errors['items.' + index + '.id']}">
-                      <option selected v-for="unit in units" :value="unit.id" v-bind:key="unit.id">{{unit.short_name}}</option>
+                  <template v-if="units.length > 0">
+                    <select
+                      class="form-control"
+                      disabled=""
+                      v-model="item.unit_id"
+                      v-if="item.product_id"
+                      :class="{
+                        'is-invalid': errors['items.' + index + '.id'],
+                      }"
+                    >
+                      <option
+                        selected
+                        v-for="unit in units"
+                        :value="unit.id"
+                        v-bind:key="unit.id"
+                      >
+                        {{ unit.short_name }}
+                      </option>
                     </select>
                   </template>
                   <template v-else>add some unit</template>
                 </div>
                 <div class="col-md-2">
-                  <input type="text" class="form-control" placeholder="Enter the price" v-model="item.price" v-if="item.product_id" :class="{'is-invalid':errors['items.' + index + '.price']}" />
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Enter the price"
+                    v-model="item.price"
+                    v-if="item.product_id"
+                    :class="{
+                      'is-invalid': errors['items.' + index + '.price'],
+                    }"
+                  />
                 </div>
                 <div class="col-md-2">
-                  <span class="table-text">{{item.quantity * item.price}}</span>
+                  <span class="table-text">{{
+                    item.quantity * item.price
+                  }}</span>
                 </div>
                 <div class="col-md-2">
-                  <button href class="btn btn-danger" style="border: none" @click="removeLine(index)">
-                    <span class="nc-icon nc-simple-remove" style="font-size: 15px"></span>
+                  <button
+                    href
+                    class="btn btn-danger"
+                    style="border: none"
+                    @click="removeLine(index)"
+                  >
+                    <span
+                      class="nc-icon nc-simple-remove"
+                      style="font-size: 15px"
+                    ></span>
                   </button>
                 </div>
               </div>
@@ -204,26 +355,35 @@
           <div class="purchase-foot">
             <div class="row">
               <div class="col-md-2">
-               <!--  <button class="table-add_line btn btn-primary" @click="addNewLine">
+                <!--  <button class="table-add_line btn btn-primary" @click="addNewLine">
                   <span class="fa fa-plus-circle"></span>
                 </button> -->
               </div>
               <div class="col-md-2">
-                <h6>Grand Total</h6> {{grandTotal}}
+                <h6>Grand Total</h6>
+                {{ grandTotal }}
               </div>
               <div class="col-md-2">
                 <h6>Discount</h6>
-                <input type="text" class="table-discount_input form-control" v-model="info.discount" :class="{'is-invalid':errors['info.discount']}" />
-                <span v-if="errors['info.discount']" :class="['errorText']">{{errors['info.discount'][0]}}</span>
+                <input
+                  type="text"
+                  class="table-discount_input form-control"
+                  v-model="info.discount"
+                  :class="{ 'is-invalid': errors['info.discount'] }"
+                />
+                <span v-if="errors['info.discount']" :class="['errorText']">{{
+                  errors["info.discount"][0]
+                }}</span>
               </div>
               <div class="col-md-2">
-                <h6>{{store.tax_percentage}} % Tax</h6> {{taxAmount}}
+                <h6>{{ store.tax_percentage }} % Tax</h6>
+                {{ taxAmount }}
               </div>
               <div class="col-md-2">
-                <h6>SubTotal</h6> {{subTotal}}
+                <h6>SubTotal</h6>
+                {{ subTotal }}
               </div>
-              <div class="col-md-2">
-              </div>
+              <div class="col-md-2"></div>
             </div>
           </div>
           <!-- end of purchase foot -->
@@ -240,28 +400,32 @@
 export default {
   data() {
     return {
-      items: [{
-        product_name: '',
-        price: '',
-        quantity: '',
-        product: {
-          custom_product_id: '',
-          unit: {},
+      items: [
+        {
+          product_name: "",
+          price: "",
+          quantity: "",
+          product: {
+            custom_product_id: "",
+            unit: {},
+          },
+          line_total: "",
+          changed: false,
         },
-        line_total: '',
-        changed: false,
-      }],
-      cloneItems: [{
-        product_name: "",
-        price: "0",
-        quantity: "1",
-        product: {
-          custom_product_id: '',
-          unit: {},
+      ],
+      cloneItems: [
+        {
+          product_name: "",
+          price: "0",
+          quantity: "1",
+          product: {
+            custom_product_id: "",
+            unit: {},
+          },
+          line_total: "",
+          changed: false,
         },
-        line_total: "",
-        changed: false
-      }],
+      ],
       store: {},
 
       info: {},
@@ -279,8 +443,8 @@ export default {
         format: "YYYY-MM-DD",
         useCurrent: true,
         showClear: true,
-        showClose: true
-      } //this variable for the date picker
+        showClose: true,
+      }, //this variable for the date picker
     };
   },
   async mounted() {
@@ -288,6 +452,7 @@ export default {
     await this.getIdFromUrl();
     await this.fetchPurchase();
     this.fetchUnits();
+    this.fetchStore();
   },
 
   methods: {
@@ -297,61 +462,58 @@ export default {
       axios
         .get("/api/store")
 
-      .then(function(response) {
-        Vue.set(currObj.store, "id", response.data.store.id),
-          // Vue.set(currObj.store, 'name', response.data.store.name),
-          // Vue.set(currObj.store, 'detail', response.data.store.detail),
-          Vue.set(
-            currObj.store,
-            "tax_number",
-            response.data.store.tax_number
-          ),
-          Vue.set(
-            currObj.store,
-            "tax_percentage",
-            response.data.store.tax_percentage
-          );
-        // Vue.set(currObj.store, 'email', response.data.store.email),
-        // Vue.set(currObj.store, 'address', response.data.store.address),
-        // Vue.set(currObj.store, 'phone', response.data.store.phone),
-        // Vue.set(currObj.store, 'mobile', response.data.store.mobile),
-        // Vue.set(currObj.store, 'url', response.data.store.url),
-        // //company image
-        // Vue.set(currObj.store, 'store_logo',"/img/"+ response.data.store.store_logo),
+        .then(function (response) {
+          Vue.set(currObj.store, "id", response.data.store.id),
+            // Vue.set(currObj.store, 'name', response.data.store.name),
+            // Vue.set(currObj.store, 'detail', response.data.store.detail),
+            Vue.set(
+              currObj.store,
+              "tax_number",
+              response.data.store.tax_number
+            ),
+            Vue.set(
+              currObj.store,
+              "tax_percentage",
+              response.data.store.tax_percentage
+            );
+          // Vue.set(currObj.store, 'email', response.data.store.email),
+          // Vue.set(currObj.store, 'address', response.data.store.address),
+          // Vue.set(currObj.store, 'phone', response.data.store.phone),
+          // Vue.set(currObj.store, 'mobile', response.data.store.mobile),
+          // Vue.set(currObj.store, 'url', response.data.store.url),
+          // //company image
+          // Vue.set(currObj.store, 'store_logo',"/img/"+ response.data.store.store_logo),
 
-        // this.company_logo="/img/"+data.store.company_logo //concatenate image location and image name
+          // this.company_logo="/img/"+data.store.company_logo //concatenate image location and image name
 
-        // console.log(data.store.company_name)
-      });
+          // console.log(data.store.company_name)
+        });
     }, //end of fetchStores()
 
     //fetch(){} //all memeber functions will be created here
     addNewLine() {
-
       this.items.push({
-        product_name: '',
-        price: '0',
-        quantity: '1',
+        product_name: "",
+        price: "0",
+        quantity: "1",
         product: {
-          custom_product_id: '',
+          custom_product_id: "",
           unit: {},
         },
-        line_total: '',
+        line_total: "",
         changed: false,
-
       });
 
       this.cloneItems.push({
-        product_name: '',
-        price: '0',
-        quantity: '1',
+        product_name: "",
+        price: "0",
+        quantity: "1",
         product: {
-          custom_product_id: '',
+          custom_product_id: "",
           unit: {},
         },
-        line_total: '',
+        line_total: "",
         changed: false,
-
       });
     }, // end of add new line
     removeLine(index) {
@@ -362,7 +524,7 @@ export default {
         // alert('You can\'t delete this');
         this.$toast.error({
           title: "Opps!!",
-          message: "You can't delete this."
+          message: "You can't delete this.",
         });
       }
     }, //end of removeLine function
@@ -382,23 +544,23 @@ export default {
         .put("/api/purchase", {
           info: this.info,
           items: this.items,
-          id: this.id
+          id: this.id,
         })
-        .then(function(response) {
+        .then(function (response) {
           currObj.output = response.data.msg;
           currObj.status = response.data.status;
           currObj.$swal("Info", currObj.output, currObj.status);
           currObj.$router.push({ name: "purchases" });
           // currObj.errors = '';//clearing errors
         })
-        .catch(function(error) {
+        .catch(function (error) {
           if (error.response.status == 422) {
             currObj.validationErrors = error.response.data.errors;
             currObj.errors = currObj.validationErrors;
             // console.log(currObj.errors);
             currObj.$toast.error({
               title: "Opps!!",
-              message: error.response.data.message
+              message: error.response.data.message,
             });
           }
         });
@@ -411,7 +573,7 @@ export default {
       let currObj = this;
       axios
         .post("/api/supplier", this.supplier)
-        .then(function(response) {
+        .then(function (response) {
           currObj.output = response.data.msg;
           currObj.status = response.data.status;
           currObj.$swal("Info", currObj.output, currObj.status);
@@ -427,56 +589,56 @@ export default {
 
           currObj.fetchSuppliers();
         })
-        .catch(function(error) {
+        .catch(function (error) {
           if (error.response.status == 422) {
             currObj.validationErrors = error.response.data.errors;
             currObj.errors = currObj.validationErrors;
             // console.log(currObj.errors);
             currObj.$toast.error({
               title: "Opps!!",
-              message: error.response.data.message
+              message: error.response.data.message,
             });
           }
         });
     },
-    autoComplete: _.debounce(function() {
+    autoComplete: _.debounce(function () {
       let currObj = this;
       if (this.info.supplier_name === "") {
         this.queryResults = null;
       } else {
         axios
           .post("api/supplier/search", {
-            searchQuery: this.info.supplier_name
+            searchQuery: this.info.supplier_name,
           })
-          .then(response => {
+          .then((response) => {
             this.queryResults = response.data.queryResults;
           })
-          .catch(error => {
+          .catch((error) => {
             if (error.response.status == 422) {
               currObj.validationErrors = error.response.data.errors;
               currObj.errors = currObj.validationErrors;
               // console.log(currObj.errors);
               currObj.$toast.error({
                 title: "Opps!!",
-                message: error.response.data.message
+                message: error.response.data.message,
               });
             }
           });
       }
     }, 500),
 
-    autoCompleteProduct: _.debounce(function(index) {
+    autoCompleteProduct: _.debounce(function (index) {
       if (this.items[index].product_name === "") {
         this.items[index].product_id = "";
-        this.cloneItems[index].product_id=="";
+        this.cloneItems[index].product_id == "";
         this.queryResultsProducts = new Array();
         this.showProductSuggestion = false;
       } else {
         axios
-          .post('/api/products/search',{
-              searchQuery:this.items[index].product_name
+          .post("/api/products/search", {
+            searchQuery: this.items[index].product_name,
           })
-          .then(response => {
+          .then((response) => {
             this.queryResultsProducts[index] = response.data.data;
 
             if (this.queryResultsProducts[index].length > 0) {
@@ -485,26 +647,22 @@ export default {
               this.showProductSuggestion = false;
             }
           })
-          .catch(error => {
+          .catch((error) => {
             console.log(error);
           });
       }
       // alert(this.items[index].product_name);
     }, 300),
- //will find item exits in that items array or not
+    //will find item exits in that items array or not
     //used to elimate duplicate produt/item in items/products
     hasItem(key) {
-
-      if (this.items.find(item => item.stock_id === key)) {
-
+      if (this.items.find((item) => item.stock_id === key)) {
         return true;
       } else {
         return false;
       }
     },
 
-
-  
     clickSearchProductSuggestion(
       stock_id,
       product_id,
@@ -514,8 +672,6 @@ export default {
       cp,
       index
     ) {
-
-
       if (!this.hasItem(stock_id)) {
         // console.log("Item not in List. So adding");
         Vue.set(this.items[index], "product_id", product_id);
@@ -528,11 +684,7 @@ export default {
 
         Vue.set(this.items[index], "stock_id", stock_id);
 
-
-        Vue.set(
-          this.items[index], "price" , parseFloat(cp)
-        );
-
+        Vue.set(this.items[index], "price", parseFloat(cp));
 
         Vue.set(this.cloneItems[index], "product_id", product_id);
 
@@ -544,11 +696,7 @@ export default {
 
         Vue.set(this.items[index], "stock_id", stock_id);
 
-        Vue.set(
-          this.cloneItems[index],
-          "price",
-          parseFloat(cp) 
-        );
+        Vue.set(this.cloneItems[index], "price", parseFloat(cp));
 
         // this.items[index] = this.items[index] + (this.store.profit_percentage)/100;
 
@@ -556,18 +704,19 @@ export default {
         // console.log(product_name);
         // console.log(index);
         this.queryResultsProducts = new Array();
-
       } else {
         // console.log("Item exits in list so deleting the current index item to remove duplicate entry in items array");
-        this.displayToastErrorMessage('Opps', product_name + ' already on the list. You can increase the quantity or choose different stock ');
-
+        this.displayToastErrorMessage(
+          "Opps",
+          product_name +
+            " already on the list. You can increase the quantity or choose different stock "
+        );
 
         this.items.splice(index);
 
         this.cloneItems.splice(index);
 
         this.queryResultsProducts = new Array();
-        
       }
     },
 
@@ -581,7 +730,7 @@ export default {
 
       axios
         .get("/api/purchase/" + this.id)
-        .then(function(response) {
+        .then(function (response) {
           Vue.set(currObj.info, "purchase_no", response.data.purchase.id),
             Vue.set(currObj.info, "note", response.data.purchase.note),
             Vue.set(
@@ -609,11 +758,10 @@ export default {
             Vue.set(currObj.info, "discount", response.data.purchase.discount),
             Vue.set(currObj.info, "status", response.data.purchase.status),
             //veu.set will make data reactive and updated
-            currObj.items = response.data.purchase.purchase_detail,
-
-            currObj.cloneItems = currObj.items
+            (currObj.items = response.data.purchase.purchase_detail),
+            (currObj.cloneItems = currObj.items);
         })
-        .catch(function(error) {
+        .catch(function (error) {
           if (error.response.status == 404) {
             currObj.$router.push({ name: "404" });
           }
@@ -624,67 +772,67 @@ export default {
       let vm = this; // current pointer instance while going inside the another functional instance
       axios
         .get("/api/units")
-        .then(function(response) {
+        .then(function (response) {
           vm.units = response.data.data;
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log();
         });
-    }
+    },
   }, // end of methods
 
   computed: {
-    subTotal: function() {
+    subTotal: function () {
       //reduce function is used to sum the array elements
-      this.info.subTotal = this.items.reduce(function(carry, item) {
+      this.info.subTotal = this.items.reduce(function (carry, item) {
         return carry + parseFloat(item.quantity) * parseFloat(item.price);
       }, 0);
       return this.info.subTotal;
     },
-    setPurchaseVars: function() {},
+    setPurchaseVars: function () {},
 
-    taxAmount: function() {
-      return this.subTotal * this.store.tax_percentage;
+    taxAmount: function () {
+     return this.subTotal * parseFloat(this.store.tax_percentage/100);
     },
 
-    grandTotal: function() {
+    grandTotal: function () {
       if (this.info.discount != null) {
         return this.subTotal - parseFloat(this.info.discount) + this.taxAmount;
       } else {
         return this.subTotal + this.taxAmount;
       }
-    }
+    },
   }, //end of computed
 
   watch: {
-    "info.title": function(val, oldVal) {
+    "info.title": function (val, oldVal) {
       // console.log(this.errors['info.title'][0]);
       if (this.errors != "") {
         this.errors["info.title"][0] = "";
       }
     },
 
-    "info.due_date": function(val, oldVal) {
+    "info.due_date": function (val, oldVal) {
       // console.log('due_date changes');
       if (this.errors != "") {
         this.errors["info.due_date"][0] = "";
       }
     },
 
-    "info.purchase_date": function(val, oldVal) {
+    "info.purchase_date": function (val, oldVal) {
       // console.log('estimate_date changes');
       if (this.errors != "") {
         this.errors["info.purchase_date"][0] = "";
       }
     },
 
-    "info.supplier_name": function(val, oldVal) {
+    "info.supplier_name": function (val, oldVal) {
       // console.log('supplier_name changes');
       if (this.errors != "") {
         this.errors["info.supplier_name"][0] = "";
       }
-    }
-  } //end of watch
+    },
+  }, //end of watch
 }; //end of export default
 </script>
 
@@ -712,7 +860,8 @@ export default {
   border-top: 1px solid #eee;
 }
 
-.datetime-picker {}
+.datetime-picker {
+}
 
 .datetime-picker input {
   display: block;
