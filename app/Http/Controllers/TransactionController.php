@@ -82,11 +82,6 @@ class TransactionController extends Controller
                 ]);
             }
 
-            //success code
-            return response()->json([
-                'msg' => 'Transaction successfully added ',
-                'status' => 'success',
-            ]);
         } else {
             //fail code
             return response()->json([
@@ -105,15 +100,9 @@ class TransactionController extends Controller
             'account_id' => 'required|numeric',
             'transaction_type' => 'required|string:max:50',
             'transaction_name' => 'required|string:max:50'
-
-
-
         ]);
-
         // $this->authorize('hasPermission', 'add_customer_payment');
-
         $user = User::findOrFail(Auth::user()->id);
-
         $store_id = $user->stores[0]->id;
         //success code
         $transaction =  Transaction::where('id', $request->input('transaction_id'))->where('store_id', $store_id)->first();

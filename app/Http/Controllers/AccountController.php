@@ -248,6 +248,14 @@ class AccountController extends Controller
             if($Transaction[$i]->transaction_type==='income'){
                 $balance=$balance + $Transaction[$i]->amount;
             }
+            if($Transaction[$i]->transaction_type==='sales_payment'){
+                $balance=$balance + $Transaction[$i]->amount;
+            }
+            
+            if($Transaction[$i]->transaction_type==='purchase_payment'){
+                $balance=$balance - $Transaction[$i]->amount;
+            }
+
             if($Transaction[$i]->transaction_type==='expense'){
                 $balance = $balance - $Transaction[$i]->amount;
             }

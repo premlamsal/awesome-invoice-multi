@@ -8,6 +8,7 @@ class CreateAccountTransactionsTable extends Migration
 {
     /**
      * Run the migrations.
+     * this table is no useable
      *
      * @return void
      */

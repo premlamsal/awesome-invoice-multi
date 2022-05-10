@@ -42,6 +42,22 @@
                                     >
                                         Income
                                     </td>
+                                     <td
+                                        v-if="
+                                            transaction.transaction_type ===
+                                                'sales_payment'
+                                        "
+                                    >
+                                        Sales Payment
+                                    </td>
+                                     <td
+                                        v-if="
+                                            transaction.transaction_type ===
+                                                'purchase_payment'
+                                        "
+                                    >
+                                        Purchase Payment
+                                    </td>
                                   
                                     <td
                                         v-if="
@@ -62,11 +78,27 @@
                                     >
                                         {{ transaction.amount }}
                                     </td>
+                                     <td
+                                        v-if="
+                                            transaction.transaction_type ===
+                                                'purchase_payment'
+                                        "
+                                    >
+                                        {{ transaction.amount }}
+                                    </td>
                                     <td v-else></td>
                                     <td
                                         v-if="
                                             transaction.transaction_type ===
                                                 'income'
+                                        "
+                                    >
+                                        {{ transaction.amount }}
+                                    </td>
+                                    <td
+                                        v-if="
+                                            transaction.transaction_type ===
+                                                'sales_payment'
                                         "
                                     >
                                         {{ transaction.amount }}
@@ -129,7 +161,7 @@ export default {
             let totalExpense;
             //reduce function is used to sum the array elements
             totalExpense = this.transactions.reduce((carry, transaction) => {
-                if (transaction.transaction_type === "expense") {
+                if (transaction.transaction_type === "expense" || transaction.transaction_type =="purchase_payment") {
                     return carry + parseFloat(transaction.amount);
                 } else {
                     return carry + 0;
@@ -141,7 +173,7 @@ export default {
             let totalIncome;
             //reduce function is used to sum the array elements
             totalIncome = this.transactions.reduce((carry, transaction) => {
-                if (transaction.transaction_type === "income") {
+                if (transaction.transaction_type === "income" || transaction.transaction_type === "sales_payment") {
                     return carry + parseFloat(transaction.amount);
                 } else {
                     return carry + 0;

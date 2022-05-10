@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\CustomerPayment;
 use App\CustomerTransaction;
+use App\Transaction;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -19,17 +21,13 @@ class CustomerPaymentController extends Controller
 
     }
 
-    public function index()
-    {
-
-    }
     public function store(Request $request)
     {
         $this->validate($request, [
             'notes' => 'required|string|max:400',
             'amount' => 'required|numeric',
             'date' => 'required',
-
+            'account_id' => 'required|numeric',
 
         ]);
 
@@ -45,6 +43,7 @@ class CustomerPaymentController extends Controller
         $payment->amount = $request->input('amount');
         $payment->notes = $request->input('notes');
         $payment->date = $request->input('date');
+        $imageName="";
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->getClientOriginalExtension();
             $request->image->move(public_path('img'), $imageName);
@@ -60,11 +59,27 @@ class CustomerPaymentController extends Controller
             $customerTransaction->store_id = $store_id;
             $customerTransaction->date = $payment->date;
             if ($customerTransaction->save()) {
-                //success code
-                return response()->json([
-                    'msg' => 'Customer Payment & Transaction successfully added ',
-                    'status' => 'success',
-                ]);
+                $transaction = new Transaction();
+                $transaction->image = $imageName;
+                $transaction->transaction_type = 'sales_payment';
+                $transaction->refID = $payment->id;
+                $transaction->amount = $request->amount;
+                $transaction->transaction_name = 'Sales Payment';
+                $transaction->account_id = $request->input('account_id');
+                $transaction->notes = $request->input('notes');
+                $transaction->store_id = $store_id;
+                $transaction->date = $request->date;
+                if ($transaction->save()) {
+                    $account = Account::where('id', $request->account_id)->first();
+                    $account->balance = $account->balance + $request->input('amount');
+                    if ($account->save()) {
+                        //success code
+                        return response()->json([
+                            'msg' => 'Customer Payment, Transaction & Account successfully added ',
+                            'status' => 'success',
+                        ]);
+                    }
+                }
             } else {
                 //fail code
                 return response()->json([
@@ -72,7 +87,6 @@ class CustomerPaymentController extends Controller
                     'status' => 'error',
                 ]);
             }
-
         } else {
             //fail code
             return response()->json([
@@ -80,7 +94,6 @@ class CustomerPaymentController extends Controller
                 'status' => 'error',
             ]);
         }
-
     }
     public function show(Request $request)
     {
@@ -91,8 +104,14 @@ class CustomerPaymentController extends Controller
 
         $payment = CustomerPayment::where('store_id', $store_id)->where('id', $request->payment_id)->get();
 
-        return response()->json(['data' => $payment, 'status' => 'success']);
+        //lets find our account_id  
+        //since we have column 'refID' & 'account_id' on 'transaction' table
+        //so we match both by suppling 'customerPayment' id to refID and get account_id
 
+        $transaction = Transaction::where('refID', $request->payment_id)->where('store_id', $store_id);
+
+
+        return response()->json(['data' => $payment, 'account_id' => $transaction->value('account_id'), 'status' => 'success']);
     }
     public function update(Request $request)
     {
@@ -100,8 +119,9 @@ class CustomerPaymentController extends Controller
             'notes' => 'required|string|max:400',
             'amount' => 'required|numeric',
             'date' => 'required',
-
-
+            'account' => 'required|numeric',
+            'old_account' => 'required|numeric',
+            'old_amount' => 'required|numeric',
         ]);
 
         // $this->authorize('hasPermission', 'add_customer_payment');
@@ -126,16 +146,50 @@ class CustomerPaymentController extends Controller
             $customerTransaction = CustomerTransaction::where('customer_id', $payment->customer_id)
                 ->where('transaction_type', 'payment')
                 ->where('refID', $request->input('payment_id'))
-                ->where('store_id',$store_id)
+                ->where('store_id', $store_id)
                 ->first();
             $customerTransaction->amount = $payment->amount;
             $customerTransaction->date = $payment->date;
             if ($customerTransaction->save()) {
-                //success code
-                return response()->json([
-                    'msg' => 'Customer Payment & Transaction successfully updated ',
-                    'status' => 'success',
-                ]);
+
+
+
+                $transaction = Transaction::where('refID', $payment->id)->first();
+                if ($request->hasFile('image')) {
+                    $imageName = time() . '.' . $request->image->getClientOriginalExtension();
+                    $request->image->move(public_path('img'), $imageName);
+                    $transaction->image = $imageName;
+                }
+                $transaction->transaction_type = 'sales_payment';
+                $transaction->refID = $customerTransaction->id;
+                $transaction->amount = $request->amount;
+                $transaction->transaction_name = 'Sales Payment';
+                $transaction->account_id = $request->input('account_id');
+                $transaction->notes = $request->input('notes');
+                $transaction->store_id = $store_id;
+                $transaction->date = $request->date;
+
+                if ($transaction->save()) {
+
+
+                    //check if account has past payment if yes deduce the amount from that account
+
+                    $account = Account::where('id', $request->old_account_id)->first();
+                    $account->balance = $account->balance - $request->input('old_amount');
+                    $account->save();
+
+
+                    //inserting new amount to new account
+
+                    $account = Account::where('id', $request->account_id)->first();
+                    $account->balance = $account->balance + $request->input('amount');
+                    $account->save();
+
+                    return response()->json([
+                        'msg' => 'Customer Payment , Transaction & Accounts successfully updated ',
+                        'status' => 'success',
+                    ]);
+                }
             } else {
                 //fail code
                 return response()->json([
@@ -143,7 +197,6 @@ class CustomerPaymentController extends Controller
                     'status' => 'error',
                 ]);
             }
-
         } else {
             //fail code
             return response()->json([
@@ -151,7 +204,6 @@ class CustomerPaymentController extends Controller
                 'status' => 'error',
             ]);
         }
-
     }
     public function destroy($payment_id)
     {
@@ -175,7 +227,6 @@ class CustomerPaymentController extends Controller
                     'status' => 'error',
                 ]);
             }
-
         } else {
             return response()->json([
                 'msg' => 'Error while deleting customer payment',

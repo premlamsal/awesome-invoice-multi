@@ -28,6 +28,7 @@ class CustomerTransactionController extends Controller
         $transactions=array();
        
         $balance=0.00;
+        
         for($i=0;$i<$CustomerTransaction->count();$i++){
             if($CustomerTransaction[$i]->transaction_type==='opening_balance'){
                 $opening_balance = $CustomerTransaction[$i]->amount;
