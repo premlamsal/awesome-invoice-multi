@@ -70,6 +70,7 @@
 
 
                                     <td>{{ transaction.refID }}</td>
+
                                     <td
                                         v-if="
                                             transaction.transaction_type ===
@@ -79,7 +80,7 @@
                                         {{ transaction.amount }}
                                     </td>
                                      <td
-                                        v-if="
+                                        v-else-if="
                                             transaction.transaction_type ===
                                                 'purchase_payment'
                                         "
@@ -96,7 +97,7 @@
                                         {{ transaction.amount }}
                                     </td>
                                     <td
-                                        v-if="
+                                        v-else-if="
                                             transaction.transaction_type ===
                                                 'sales_payment'
                                         "
