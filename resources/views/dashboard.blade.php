@@ -136,6 +136,15 @@
           </li>
           @endcan
 
+          @can('hasPermission','view_returns')
+          <li>
+            <router-link  to="/returns" aria-expanded="false">
+              <i class="nc-icon nc-refresh-69"></i>
+                <span>Returns</span>
+            </router-link>
+          </li>
+          @endcan
+
           @can('hasPermission','view_stocks')
           <li>
             <router-link  to="/stocks" aria-expanded="false">
