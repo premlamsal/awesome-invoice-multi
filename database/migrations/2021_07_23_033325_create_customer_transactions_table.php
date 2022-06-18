@@ -15,7 +15,7 @@ class CreateCustomerTransactionsTable extends Migration
     {
         Schema::create('customer_transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enum('transaction_type', ['sales', 'payment','opening_balance']);
+            $table->enum('transaction_type', ['sales', 'payment','opening_balance','sales_return']);
             $table->integer('refID');//will keep sales i.e invoice id or payment as per transaction type initiated
             $table->decimal('amount');
             $table->text('date');

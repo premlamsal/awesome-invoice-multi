@@ -563,6 +563,82 @@ let routes = [
     }
 
   },
+
+  {
+    path: '/returns',
+    name: 'returns',
+    component: require('./components/return/returns.vue').default,
+    beforeEnter(to, from, next) {
+      let hasAccess = store.getters.permissions
+      if (hasAccess.includes('view_returns') || hasAccess.includes('all')) {
+        next()
+      }
+    }
+
+  },//returns
+  {
+    path: '/returnPurchases',
+    name: 'returnPurchases',
+    component: require('./components/return/purchase/returnPurchases.vue').default,
+    beforeEnter(to, from, next) {
+      let hasAccess = store.getters.permissions
+      if (hasAccess.includes('view_return_purchases') || hasAccess.includes('all')) {
+        next()
+      }
+    }
+
+  },//returnPurchases
+  {
+    path: '/returnInvoices',
+    name: 'returnInvoices',
+    component: require('./components/return/invoice/returnInvoices.vue').default,
+    beforeEnter(to, from, next) {
+      let hasAccess = store.getters.permissions
+      if (hasAccess.includes('view_return_invoices') || hasAccess.includes('all')) {
+        next()
+      }
+    }
+
+  },//returnInvoices
+  
+  {
+    path: '/newInvoiceReturn',
+    name: 'newInvoiceReturn',
+    component: require('./components/return/invoice/newInvoiceReturn.vue').default,
+    beforeEnter(to, from, next) {
+      let hasAccess = store.getters.permissions
+      if (hasAccess.includes('view_new_invoice_return') || hasAccess.includes('all')) {
+        next()
+      }
+    }
+
+  },//newInvoice
+
+  {
+    path: '/:id/showReturnInvoice/',
+    name: 'showReturnInvoice',
+    component: require('./components/return/invoice/showInvoiceReturn.vue').default,
+   
+     beforeEnter(to, from, next) {
+        let hasAccess = store.getters.permissions
+        if (hasAccess.includes('show_invoice_return') || hasAccess.includes('all')) {
+          next()
+        }
+      }
+  },
+  {
+    path: '/:id/editReturnInvoice',
+    name: 'editReturnInvoice',
+    component: require('./components/return/invoice/editInvoiceReturn.vue').default,
+
+     beforeEnter(to, from, next) {
+        let hasAccess = store.getters.permissions
+        if (hasAccess.includes('edit_invoice_return') || hasAccess.includes('all')) {
+          next()
+        }
+      }
+  },
+  
   
 //account profile routes
 {

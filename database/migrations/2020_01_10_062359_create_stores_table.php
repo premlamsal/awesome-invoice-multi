@@ -28,6 +28,8 @@ class CreateStoresTable extends Migration
             $table->string('product_id_count')->default('PRO-0');
             $table->string('invoice_id_count')->default('INV-0');
             $table->string('purchase_id_count')->default('PUR-0');
+            $table->string('return_invoice_id_count')->default('RINV-0');
+            $table->string('return_purchase_id_count')->default('RPUR-0');
             $table->string('store_logo')->nullable();
             $table->timestamps();
         });

@@ -389,3 +389,39 @@ Route::post('transaction', 'TransactionController@update');
 
 //Delete transaction
 Route::delete('transaction/delete/{id}', 'TransactionController@destroy');
+
+
+
+///////........RETURN INVOICE......../////////
+
+
+//List return_invoices
+Route::get('return_invoices', 'ReturnInvoiceController@index');
+
+//List single return_invoice
+Route::get('return_invoice/{id}', 'ReturnInvoiceController@show');
+
+//Create new return_invoice
+Route::post('return_invoice', 'ReturnInvoiceController@store');
+
+//Update return_invoice
+Route::put('return_invoice', 'ReturnInvoiceController@update');
+
+//return return_invoice
+// Route::put('return_invoice/return','ReturnInvoiceController@returnReturnInvoice');
+
+//Delete return_invoice
+Route::delete('return_invoice/{id}', 'ReturnInvoiceController@destroy');
+
+
+//search return_invoices
+Route::post('return_invoices/search', 'ReturnInvoiceController@searchReturnInvoices');
+
+
+//update status of return_invoice i.e To Pay or Paid 
+Route::put('changeReturnInvoiceStatus', 'ReturnInvoiceController@changeReturnInvoiceStatus');
+
+
+
+///////........RETURN INVOICE......../////////
+

@@ -38,6 +38,9 @@ class CustomerTransactionController extends Controller
             if($CustomerTransaction[$i]->transaction_type==='sales'){
                 $balance=$balance + $CustomerTransaction[$i]->amount;
             }
+            if($CustomerTransaction[$i]->transaction_type==='sales_return'){
+                $balance=$balance - $CustomerTransaction[$i]->amount;
+            }
             if($CustomerTransaction[$i]->transaction_type==='payment'){
                 $balance = $balance - $CustomerTransaction[$i]->amount;
             }

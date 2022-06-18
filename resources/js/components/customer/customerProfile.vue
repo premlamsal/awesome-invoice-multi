@@ -210,6 +210,7 @@
                     Opening Balance
                   </td>
                   <td v-if="transaction.transaction_type === 'sales'">Sales</td>
+                  <td v-if="transaction.transaction_type === 'sales_return'">Sales Return</td>
                   <td v-if="transaction.transaction_type === 'payment'">
                     Payment
                   </td>
@@ -219,6 +220,9 @@
                   </td>
                   <td v-else></td>
                   <td v-if="transaction.transaction_type === 'payment'">
+                    {{ transaction.amount }}
+                  </td>
+                   <td v-else-if="transaction.transaction_type === 'sales_return'">
                     {{ transaction.amount }}
                   </td>
                   <td v-else></td>
@@ -290,7 +294,7 @@ export default {
       let totalPayment;
       //reduce function is used to sum the array elements
       totalPayment = this.transactions.reduce((carry, transaction) => {
-        if (transaction.transaction_type === "payment") {
+        if (transaction.transaction_type === "payment" || transaction.transaction_type==="sales_return") {
           return carry + parseFloat(transaction.amount);
         } else {
           return carry + 0;

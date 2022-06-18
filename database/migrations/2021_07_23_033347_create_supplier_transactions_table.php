@@ -15,7 +15,7 @@ class CreateSupplierTransactionsTable extends Migration
     {
         Schema::create('supplier_transactions', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->enum('transaction_type', ['purchase', 'payment','opening_balance']);
+            $table->enum('transaction_type', ['purchase', 'payment','opening_balance','purchase_return']);
             $table->integer('refID');
             $table->decimal('amount');
             $table->text('date');
