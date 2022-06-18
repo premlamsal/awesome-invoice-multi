@@ -445,7 +445,7 @@ export default {
           currObj.output = response.data.msg;
           currObj.status = response.data.status;
           currObj.$swal('Info', currObj.output, currObj.status);
-          currObj.$router.push({ name: 'invoices' });
+          currObj.$router.push({ name: 'returnInvoices' });
           // currObj.errors = '';//clearing errors
 
         })

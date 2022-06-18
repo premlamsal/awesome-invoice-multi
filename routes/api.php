@@ -424,3 +424,38 @@ Route::put('changeReturnInvoiceStatus', 'ReturnInvoiceController@changeReturnInv
 
 ///////........RETURN INVOICE......../////////
 
+
+
+///////........RETURN PURCHASE......../////////
+
+
+//List return_purchases
+Route::get('return_purchases', 'ReturnPurchaseController@index');
+
+//List single return_purchase
+Route::get('return_purchase/{id}', 'ReturnPurchaseController@show');
+
+//Create new return_purchase
+Route::post('return_purchase', 'ReturnPurchaseController@store');
+
+//Update return_purchase
+Route::put('return_purchase', 'ReturnPurchaseController@update');
+
+//return return_purchase
+// Route::put('return_purchase/return','ReturnPurchaseController@returnReturnPurchase');
+
+//Delete return_purchase
+Route::delete('return_purchase/{id}', 'ReturnPurchaseController@destroy');
+
+
+//search return_purchases
+Route::post('return_purchases/search', 'ReturnPurchaseController@searchReturnPurchases');
+
+
+//update status of return_purchase i.e To Pay or Paid 
+Route::put('changeReturnPurchaseStatus', 'ReturnPurchaseController@changeReturnPurchaseStatus');
+
+
+
+///////........RETURN PURCHASE......../////////
+
