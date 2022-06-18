@@ -586,8 +586,47 @@ let routes = [
         next()
       }
     }
-
   },//returnPurchases
+
+  {
+    path: '/newPurchaseReturn',
+    name: 'newPurchaseReturn',
+    component: require('./components/return/purchase/newPurchaseReturn.vue').default,
+    beforeEnter(to, from, next) {
+      let hasAccess = store.getters.permissions
+      if (hasAccess.includes('view_new_purchase_return') || hasAccess.includes('all')) {
+        next()
+      }
+    }
+
+  },//newPurchaseReturn
+  {
+    path: '/:id/showReturnPurchase/',
+    name: 'showReturnPurchase',
+    component: require('./components/return/purchase/showPurchaseReturn.vue').default,
+   
+     beforeEnter(to, from, next) {
+        let hasAccess = store.getters.permissions
+        if (hasAccess.includes('show_purchase_return') || hasAccess.includes('all')) {
+          next()
+        }
+      }
+  },
+  {
+    path: '/:id/editReturnPurchase',
+    name: 'editReturnPurchase',
+    component: require('./components/return/purchase/editPurchaseReturn.vue').default,
+
+     beforeEnter(to, from, next) {
+        let hasAccess = store.getters.permissions
+        if (hasAccess.includes('edit_purchase_return') || hasAccess.includes('all')) {
+          next()
+        }
+      }
+  },
+
+
+
   {
     path: '/returnInvoices',
     name: 'returnInvoices',

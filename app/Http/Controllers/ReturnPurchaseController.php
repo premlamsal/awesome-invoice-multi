@@ -107,7 +107,7 @@ class ReturnPurchaseController extends Controller
 
         $return_purchase = ReturnPurchase::create($data);
 
-        $return_purchase->return_purchaseDetail()->saveMany($items);
+        $return_purchase->returnPurchaseDetail()->saveMany($items);
 
         //for inserting in stock and altering if already has one initialized stock and previous stock
         $items = collect($request->items);
@@ -317,7 +317,7 @@ class ReturnPurchaseController extends Controller
 
                 ReturnPurchaseDetail::where('return_purchase_id', $return_purchase->id)->delete();
 
-                $return_purchase->return_purchaseDetail()->saveMany($items);
+                $return_purchase->returnPurchaseDetail()->saveMany($items);
 
                 $SupplierTransaction = SupplierTransaction::where('refID', $return_purchase->id)->where('store_id', $store_id)->first();
                 // $SupplierTransaction->transaction_type = "sales";

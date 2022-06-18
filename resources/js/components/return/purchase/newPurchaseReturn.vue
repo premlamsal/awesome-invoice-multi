@@ -92,7 +92,7 @@
             </div>
             <div class="row">
               <div class="col-sm-6">
-                <label>Purchase Date</label>
+                <label>Return Purchase Date</label>
                 <date-picker v-model="info.return_purchase_date" :config="options" :class="['form-control']"></date-picker>
                 <span v-if="errors['info.return_purchase_date']" :class="['errorText']">{{errors['info.return_purchase_date'][0]}}</span>
               </div>
@@ -376,7 +376,7 @@ export default {
         this.items[index].price * this.items[index].quantity;
       this.cloneItems[index].line_total = this.items[index].line_total;
     },
-    createPurchase() {
+    createReturnPurchase() {
       //Add
       this.info.status = "To Pay";
       if (this.info.discount == null || this.info.discount == "") {
