@@ -4,6 +4,15 @@
 <p>Multi User Registration</p>
 <p>Note: Please use composer 1.10.25. If you are using new composer please downgrade using 'composer self-update --1' command. </p>
 
+<h3>Updated Modules</h3>
+<ul>
+<li>Payments Statement</li>
+<li>Accounts Ledger</li>
+<li>Income / Expense </li>
+<li>Customer / Supplier Ledger</li>
+<li>Transaction Management</li>
+</ul>
+
 <h4>used npm packages</h4>
 <ul>
 	<li>vue-router</li>
