@@ -391,7 +391,6 @@ Route::post('transaction', 'TransactionController@update');
 Route::delete('transaction/delete/{id}', 'TransactionController@destroy');
 
 
-
 ///////........RETURN INVOICE......../////////
 
 
