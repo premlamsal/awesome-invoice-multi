@@ -16,7 +16,7 @@ class CreateReturnInvoiceDetailsTable extends Migration
         Schema::create('return_invoice_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('return_invoice_id');
-            $table->foreign('return_invoice_id')->references('id')->on('invoices')->onDelete('cascade');
+            $table->foreign('return_invoice_id')->references('id')->on('return_invoices')->onDelete('cascade');
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->string('product_name');

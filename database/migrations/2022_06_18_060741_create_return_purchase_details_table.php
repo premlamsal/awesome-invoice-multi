@@ -16,7 +16,7 @@ class CreateReturnPurchaseDetailsTable extends Migration
         Schema::create('return_purchase_details', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('return_purchase_id');
-            $table->foreign('return_purchase_id')->references('id')->on('purchases')->onDelete('cascade');
+            $table->foreign('return_purchase_id')->references('id')->on('return_purchases')->onDelete('cascade');
 
             $table->unsignedBigInteger('product_id');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
