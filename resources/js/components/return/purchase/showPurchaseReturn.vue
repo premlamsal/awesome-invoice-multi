@@ -33,16 +33,16 @@
 
                     <div class="row pb-5 p-5">
                         <div class="col-md-6">
-                            <p class="font-weight-bold mb-4">Client Information</p>
-                            <p class="mb-1">{{info.customer_name}}</p>
-                            <p class="mb-1">{{info.customer_address}}</p>
-                            <p class="mb-1">{{info.customer_phone}}</p>
+                            <p class="font-weight-bold mb-4">Suppliers Information</p>
+                            <p class="mb-1">{{info.supplier_name}}</p>
+                            <p class="mb-1">{{info.supplier_address}}</p>
+                            <p class="mb-1">{{info.supplier_phone}}</p>
                         </div>
 
                         <div class="col-md-6 text-right">
 
-                             <p class="font-weight-bold mb-4">Client Details</p>
-                            <p class="mb-1"><span class="text-muted">{{info.customer_details}}</span> </p>
+                             <p class="font-weight-bold mb-4">Suppliers Details</p>
+                            <p class="mb-1"><span class="text-muted">{{info.supplier_details}}</span> </p>
 
                         </div>
                     </div>
