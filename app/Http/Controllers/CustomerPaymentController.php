@@ -43,7 +43,7 @@ class CustomerPaymentController extends Controller
         $payment->amount = $request->input('amount');
         $payment->notes = $request->input('notes');
         $payment->date = $request->input('date');
-        $imageName="";
+        $imageName = "";
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->getClientOriginalExtension();
             $request->image->move(public_path('img'), $imageName);
@@ -217,10 +217,31 @@ class CustomerPaymentController extends Controller
         if ($CustomerPayment->delete()) {
             $customerTransaction = CustomerTransaction::where('transaction_type', 'payment')->where('refID', $payment_id)->where('customer_id', $CustomerPayment->customer_id)->first();
             if ($customerTransaction->delete()) {
-                return response()->json([
-                    'msg' => 'successfully Deleted customer payment',
-                    'status' => 'success',
-                ]);
+
+
+                $transaction = Transaction::where('refID', $payment_id)->first();
+
+                $transaction_account_id = $transaction->account_id;
+
+                $transaction_amount = $transaction->amount;
+
+                if ($transaction->delete()) {
+
+
+                    //check if account has past payment if yes deduce the amount from that account
+
+                    $account = Account::where('id', $transaction_account_id)->first();
+                    $account->balance = $account->balance - $transaction_amount;
+
+                    if ($account->delete()) {
+
+
+                        return response()->json([
+                            'msg' => 'Deleted successfully!! ',
+                            'status' => 'success',
+                        ]);
+                    }
+                }
             } else {
                 return response()->json([
                     'msg' => 'Error while deleting customer transaction for payment',
