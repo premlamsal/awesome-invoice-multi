@@ -275,10 +275,10 @@
 
                                     <td></td>
                                     <td style="font-weight:bold;">
-                                        Dr.{{ totalPurchase }}
+                                        Dr. {{ totalPurchase }}
                                     </td>
                                     <td style="font-weight:bold;">
-                                        Cr.{{ totalPayment }}
+                                        Cr. {{ totalPayment }}
                                     </td>
                                     <td></td>
                                 </tr>
@@ -333,7 +333,7 @@ export default {
             let totalPayment;
             //reduce function is used to sum the array elements
             totalPayment = this.transactions.reduce((carry, transaction) => {
-                if (transaction.transaction_type === "payment" || transaction.transaction_type === "") {
+                if (transaction.transaction_type === "payment" || transaction.transaction_type === "purchase_return") {
                     return carry + parseFloat(transaction.amount);
                 } else {
                     return carry + 0;
