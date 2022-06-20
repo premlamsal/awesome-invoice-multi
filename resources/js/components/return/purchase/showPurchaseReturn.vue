@@ -196,13 +196,15 @@
                 Vue.set(currObj.info, 'sub_total', response.data.return_purchase.sub_total),
                 Vue.set(currObj.info, 'taxAmount', response.data.return_purchase.tax_amount),
                 Vue.set(currObj.info, 'grand_total', response.data.return_purchase.grand_total),
-                Vue.set(currObj.info, 'customer_address', response.data.return_purchase.customer.address),
-                Vue.set(currObj.info, 'customer_phone', response.data.return_purchase.customer.phone),
-                Vue.set(currObj.info, 'customer_details', response.data.return_purchase.customer.details),
+                Vue.set(currObj.info, 'supplier_address', response.data.return_purchase.supplier.address),
+                Vue.set(currObj.info, 'supplier_phone', response.data.return_purchase.supplier.phone),
+                Vue.set(currObj.info, 'supplier_details', response.data.return_purchase.supplier.details),
                 Vue.set(currObj.info, 'status', response.data.return_purchase.status),
                    
                 //veu.set will make data reactive and updated
                 currObj.items=response.data.return_purchase.return_purchase_detail,
+                // console.log(response.data.return_purchase)
+
 
                 //converting number to words
                 currObj.convertToWords()
