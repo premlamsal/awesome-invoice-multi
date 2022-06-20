@@ -226,10 +226,36 @@ class SupplierPaymentController extends Controller
         if ($SupplierPayment->delete()) {
             $supplierTransaction = SupplierTransaction::where('transaction_type', 'payment')->where('refID', $payment_id)->where('supplier_id', $SupplierPayment->supplier_id)->first();
             if ($supplierTransaction->delete()) {
-                return response()->json([
-                    'msg' => 'successfully Deleted supplier payment',
-                    'status' => 'success',
-                ]);
+
+
+
+                $transaction = Transaction::where('refID', $payment_id)->first();
+
+                $transaction_account_id = $transaction->account_id;
+
+                $transaction_amount = $transaction->amount;
+
+                if ($transaction->delete()) {
+
+
+                    //check if account has past payment if yes deduce the amount from that account
+
+                    $account = Account::where('id', $transaction_account_id)->first();
+                    $account->balance = $account->balance - $transaction_amount;
+
+                    if ($account->delete()) {
+
+
+                        return response()->json([
+                            'msg' => 'Deleted successfully!! ',
+                            'status' => 'success',
+                        ]);
+                    }
+                }
+
+
+
+
             } else {
                 return response()->json([
                     'msg' => 'Error while deleting supplier transaction for payment',
