@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Account;
 use App\SupplierPayment;
 use App\SupplierTransaction;
+use App\Transaction;
 use App\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -56,11 +58,33 @@ class SupplierPaymentController extends Controller
             $supplierTransaction->store_id = $store_id;
             $supplierTransaction->date = $payment->date;
             if ($supplierTransaction->save()) {
-                //success code
-                return response()->json([
-                    'msg' => 'Supplier Payment & Transaction successfully added ',
-                    'status' => 'success',
-                ]);
+
+                $transaction = new Transaction();
+                $transaction->image = $imageName;
+                $transaction->transaction_type = 'purchase_payment';
+                $transaction->refID = $payment->id;
+                $transaction->amount = $request->amount;
+                $transaction->transaction_name = 'Purchase Payment';
+                $transaction->account_id = $request->input('account_id');
+                $transaction->notes = $request->input('notes');
+                $transaction->store_id = $store_id;
+                $transaction->date = $request->date;
+                if ($transaction->save()) {
+                    $account = Account::where('id', $request->account_id)->first();
+                    $account->balance = $account->balance + $request->input('amount');
+                    if ($account->save()) {
+                        //success code
+                        return response()->json([
+                            'msg' => 'Supplier Payment, Transaction & Account successfully added ',
+                            'status' => 'success',
+                        ]);
+                    }
+                }
+
+
+
+
+
             } else {
                 //fail code
                 return response()->json([
@@ -127,11 +151,52 @@ class SupplierPaymentController extends Controller
             $supplierTransaction->amount = $payment->amount;
             $supplierTransaction->date = $payment->date;
             if ($supplierTransaction->save()) {
-                //success code
-                return response()->json([
-                    'msg' => 'Supplier Payment & Transaction successfully updated ',
-                    'status' => 'success',
-                ]);
+
+
+                $transaction = Transaction::where('refID', $payment->id)->first();
+                if ($request->hasFile('image')) {
+                    $imageName = time() . '.' . $request->image->getClientOriginalExtension();
+                    $request->image->move(public_path('img'), $imageName);
+                    $transaction->image = $imageName;
+                }
+                $transaction->transaction_type = 'purchase_payment';
+                $transaction->refID = $supplierTransaction->id;
+                $transaction->amount = $request->amount;
+                $transaction->transaction_name = 'Purchase Payment';
+                $transaction->account_id = $request->input('account_id');
+                $transaction->notes = $request->input('notes');
+                $transaction->store_id = $store_id;
+                $transaction->date = $request->date;
+
+                if ($transaction->save()) {
+
+
+                    //check if account has past payment if yes deduce the amount from that account
+
+                    $account = Account::where('id', $request->old_account_id)->first();
+                    $account->balance = $account->balance + $request->input('old_amount');
+                    $account->save();
+
+
+                    //inserting new amount to new account
+
+                    $account = Account::where('id', $request->account_id)->first();
+                    $account->balance = $account->balance - $request->input('amount');
+                    $account->save();
+
+                    return response()->json([
+                        'msg' => 'Supplier Payment , Transaction & Accounts successfully updated ',
+                        'status' => 'success',
+                    ]);
+                }
+
+
+
+            
+
+
+
+
             } else {
                 //fail code
                 return response()->json([
