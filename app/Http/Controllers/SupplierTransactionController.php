@@ -35,6 +35,9 @@ class SupplierTransactionController extends Controller
             if($SupplierTransaction[$i]->transaction_type==='purchase'){
                 $balance=$balance + $SupplierTransaction[$i]->amount;
             }
+            if($SupplierTransaction[$i]->transaction_type==='purchase_return'){
+                $balance=$balance + $SupplierTransaction[$i]->amount;
+            }
             if($SupplierTransaction[$i]->transaction_type==='payment'){
                 $balance = $balance - $SupplierTransaction[$i]->amount;
             }

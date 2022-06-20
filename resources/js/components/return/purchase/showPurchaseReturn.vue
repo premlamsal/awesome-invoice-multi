@@ -20,7 +20,7 @@
                         </div>
 
                         <div class="col-md-6 text-right">
-                            <p class="font-weight-bold mb-1">Purchase # {{info.return_custom_purchase_id}}</p>
+                            <p class="font-weight-bold mb-1">Return Purchase # {{info.return_custom_purchase_id}}</p>
                             <p class="text-muted">Return Purchase on: {{info.return_purchase_date}}</p>
                             <p class="text-muted">Due to: {{info.due_date}}</p>
 
