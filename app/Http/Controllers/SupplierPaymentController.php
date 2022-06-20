@@ -243,7 +243,7 @@ class SupplierPaymentController extends Controller
                     $account = Account::where('id', $transaction_account_id)->first();
                     $account->balance = $account->balance - $transaction_amount;
 
-                    if ($account->delete()) {
+                    if ($account->save()) {
 
 
                         return response()->json([
