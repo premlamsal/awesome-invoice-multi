@@ -226,7 +226,7 @@ class SupplierController extends Controller
 
         $purchase_amount=Purchase::where('store_id',$store_id)->where('supplier_id',$id)->sum('grand_total');
         $paid_amount=SupplierPayment::where('store_id',$store_id)->where('supplier_id',$id)->sum('amount');
-        $balance_due=floatval($supplier->opening_balance)-floatval($purchase_amount)-floatval($paid_amount);
+        $balance_due=floatval($purchase_amount)-floatval($paid_amount)-floatval($supplier->opening_balance);
 
         if ($supplier->save()) {
             return response()->json([
