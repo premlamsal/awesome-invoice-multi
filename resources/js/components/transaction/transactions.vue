@@ -155,11 +155,21 @@
                   {{ transaction.date }}
                 </td>
                 <td>{{ transaction.transaction_name }}</td>
-                <td>{{ transaction.transaction_type }}</td>
+                <td>{{ transaction.transaction_type | remove_underscore}}</td>
                 <td>{{ transaction.amount }}</td>
                 <td>{{ transaction.notes }}</td>
                 <td>{{ transaction.account_id }}</td>
-                <td>{{ transaction.image }}</td>
+                <td>
+                  <img :src="'/img/'+transaction.image" width="100" height="100"  @click="$bvModal.show('modal-transaction-image')" />
+                </td>
+                      <b-modal id="modal-transaction-image" title="BootstrapVue" hide-footer size="xl" >
+                      <template #modal-title>
+                        Transaction Reference Image
+                      </template>
+                      <div style="display:flex; justify-content:center">
+                      <b-img fluid class="my-4" :src="'/img/'+transaction.image" style="max-height:700px"/>
+                      </div>
+                    </b-modal>
                 <td>
                   <button
                     class="btn btn-success custom_btn_table"
@@ -303,6 +313,12 @@ export default {
       };
       this.pagination = pagination;
     },
+    // showTransactionImageModal(){
+    //   this.$bvModal.show('modal-transaction-image')
+    // },
+    // hideTransactionImageModal(){
+    //   this.$bvModal.hide('modal-transaction-image')
+    // },
     showAddModal() {
       this.modalForName = "Add Transaction";
       this.modalForCode = 0; //0 for add

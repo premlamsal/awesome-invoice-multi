@@ -102,6 +102,14 @@ import VueBlobJsonCsv from 'vue-blob-json-csv';
 Vue.use(VueBlobJsonCsv);
 
 
+//custom filter to filter underscore from value
+Vue.filter('remove_underscore', function (value) {
+  return value.replace(/_/g," ");
+})
+
+
+
+
 
 
 
