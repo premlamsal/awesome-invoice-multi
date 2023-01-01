@@ -12,7 +12,7 @@
     </button>
 
     <!-- add transaction model start -->
-    <b-modal id="bv-modal-add-transaction" hide-footer>
+    <b-modal id="bv-modal-add-transaction" hide-footer size="lg">
       <template v-slot:modal-title>
         <span class="text-primary">{{ modalForName }}</span>
       </template>
@@ -162,14 +162,7 @@
                 <td>
                   <img :src="'/img/'+transaction.image" width="100" height="100"  @click="$bvModal.show('modal-transaction-image')" />
                 </td>
-                      <b-modal id="modal-transaction-image" title="BootstrapVue" hide-footer size="xl" >
-                      <template #modal-title>
-                        Transaction Reference Image
-                      </template>
-                      <div style="display:flex; justify-content:center">
-                      <b-img fluid class="my-4" :src="'/img/'+transaction.image" style="max-height:700px"/>
-                      </div>
-                    </b-modal>
+                     
                 <td>
                   <button
                     class="btn btn-success custom_btn_table"
@@ -189,6 +182,14 @@
               </tr>
             </tbody>
           </table>
+           <b-modal id="modal-transaction-image" title="BootstrapVue" hide-footer size="xl" >
+                      <template #modal-title>
+                        Transaction Reference Image
+                      </template>
+                      <div style="display:flex; justify-content:center">
+                      <b-img fluid class="my-4" :src="'/img/'+transaction.image" style="max-height:700px"/>
+                      </div>
+          </b-modal>
         </div>
         <div class="row">
           <div class="col-md-8">

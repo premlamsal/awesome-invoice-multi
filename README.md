@@ -51,7 +51,7 @@
 	<li>Navigate to app</li>
 </ul>
 <p>
-<a href="#">
+<a href="https://www.buymeacoffee.com/premlamsal">
 <img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg"/>
 </a>
 </p>
