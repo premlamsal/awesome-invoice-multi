@@ -50,3 +50,8 @@
 	<li>npm install</li>
 	<li>Navigate to app</li>
 </ul>
+<p>
+<a href="#">
+<img src="https://www.buymeacoffee.com/assets/img/guidelines/download-assets-sm-2.svg"/>
+</a>
+</p>
